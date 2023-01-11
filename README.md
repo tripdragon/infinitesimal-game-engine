@@ -1,6 +1,14 @@
 # infinitesimal-game-engine
 chibi
 
+web
+https://tripdragon.github.io/infinitesimal-game-engine/
+
+local
+```
+python3 -m http.server 8001
+```
+
 Things to do like
 
 * webgl view
