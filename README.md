@@ -12,7 +12,7 @@ python3 -m http.server 8001
 
 Things to do like
 
-* webgl view
+~~~* webgl view~~~
 * drag input
 * button to make an object
 * edit ui viewy
