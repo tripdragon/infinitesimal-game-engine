@@ -75,7 +75,8 @@
           console.log(ev.key);
           
           
-          let text = words.innerHTML;
+          //let text = words.innerHTML;
+          let text = words.innerText;
           
           if(ev.key === "Backspace"){
             // text = "";
@@ -84,15 +85,24 @@
           else if(ev.key === "Shift"){
             
           }
+          // ??????
+          else if(ev.key === "Enter"){
+            // text = text+"\n";
+            text = `${text} 
+            `;
+          }
           else if(ev.key === " "){
             text = `${text} `;
             // text += '&nbsp';
             console.log("Spaces¿¿");
           }
           else {
-            text += ev.key;
+            //text += ev.key;
+            text = `${text}${ev.key}`;
           }
-          words.innerHTML = text;
+          //words.innerHTML = text;
+          words.innerText = text;
+          
           
         });
         
