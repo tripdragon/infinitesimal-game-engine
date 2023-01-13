@@ -78,6 +78,9 @@
           //let text = words.innerHTML;
           let text = words.innerText;
           
+          // cheap cursor
+          text = text.slice(0, -1);
+          
           if(ev.key === "Backspace"){
             // text = "";
             console.log("Backspace 2222");
@@ -102,6 +105,9 @@
             //text += ev.key;
             text = `${text}${ev.key}`;
           }
+          
+          // cheap cursor
+          text += "_";
           //words.innerHTML = text;
           words.innerText = text;
           
