@@ -80,6 +80,7 @@
           
           if(ev.key === "Backspace"){
             // text = "";
+            console.log("Backspace 2222");
             text = text.slice(0, -1);
           }
           else if(ev.key === "Shift"){
@@ -88,14 +89,14 @@
           // ??????
           else if(ev.key === "Enter"){
             // text = text+"\n";
-            console.log("¿¿ enter ¿¿");
+            console.log("¿¿ enter 222 ¿¿");
             text = `${text} 
             `;
           }
           else if(ev.key === " "){
             text = `${text}\u00A0`;
             // text += '&nbsp';
-            console.log("Spaces¿¿");
+            console.log("Spaces 222¿¿");
           }
           else {
             //text += ev.key;
