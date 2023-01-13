@@ -16,10 +16,47 @@
           padding: 0;
         }
     </style>
+    
+    <style media="screen">
+      #controls{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        /* background: green; */
+        width: 100px;
+        height: 100px;
+        padding: 20px 0 0 20px;
+        
+      }
+      #controls .add{
+        width: 22px;
+        height: 22px;
+      }
+      
+      #words {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        padding: 20px;
+        max-width: 700px;
+        color: white;
+        font-size: 24px;
+        font-style: normal;
+      }
+    </style>
   </head>
 
   <body>
     <canvas id="canvassss" width="400" height="400"></canvas>
+    
+    <div id="controls">
+      <button class="add">+</button>
+    </div>
+    
+    <div id="words">
+    </div>
+    
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js" type="text/javascript"></script>
     
@@ -31,6 +68,33 @@
         //   pos.
         // }
         
+        
+        // Words module, move to place
+        let words = document.getElementById("words");
+        document.addEventListener('keydown', function(ev) {
+          console.log(ev.key);
+          
+          
+          let text = words.innerHTML;
+          
+          if(ev.key === "Backspace"){
+            // text = "";
+            text = text.slice(0, -1);
+          }
+          else if(ev.key === "Shift"){
+            
+          }
+          else if(ev.key === " "){
+            text = `${text} `;
+            // text += '&nbsp';
+            console.log("Spaces¿¿");
+          }
+          else {
+            text += ev.key;
+          }
+          words.innerHTML = text;
+          
+        });
         
     </script>
     
