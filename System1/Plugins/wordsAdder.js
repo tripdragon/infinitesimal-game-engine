@@ -2,7 +2,8 @@ import { keyboard } from '../Modules/input.js';
 import { setStyles } from '../Modules/elUtils.js';
 import { bind } from '../Modules/classUtils.js';
 
-const CURSOR_BLINK = 5000;
+const CURSOR_BLINK = 1000;
+const SPACE = '\u00A0';
 
 export class WordsAdder {
 
@@ -24,14 +25,14 @@ export class WordsAdder {
     } });
   }
 
-  // TODO update this to blink
-  _appendCursor = (text) => {
+  _manageCursor = (text) => {
+    text = String(text).replaceAll(/$\s|_/g, '');
     return text + "_";
   }
 
   _renderWords(text) {
     this.lastRender = Date.now();
-    this.element.innerText = this._appendCursor(text.replace(/$\s|_/, ''));
+    this.element.innerText = this._manageCursor(text);
   }
 
   _text() {
@@ -58,8 +59,8 @@ export class WordsAdder {
 `);
       },
       " ": () => {
-        // _renderWords(_text() + '\u00A0');
-        _renderWords(_text() + '&nbsp');
+        _renderWords(_text() + SPACE);
+        // _renderWords(_text() + '&nbsp');
         console.log("Spaces 222¿¿");
       },
       rest: (evt) => {
