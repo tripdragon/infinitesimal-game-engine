@@ -16,7 +16,8 @@ export class WordsAdder {
       maxWidth: "700px",
       color: "white",
       fontSize: "24px",
-      fontStyle: "normal"
+      fontStyle: "normal",
+      overflow: "scroll"
     } });
   }
 
