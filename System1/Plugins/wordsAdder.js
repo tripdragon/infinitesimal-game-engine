@@ -1,3 +1,4 @@
+import { addListener } from '../Modules/listeners.js';
 
 export class WordsAdder{
 
@@ -20,14 +21,14 @@ export class WordsAdder{
     this.element = element;
     this._setStyles(this.element);
 
-    let words = this.element;
+    const words = this.element;
 
     // cheap cursor
     let text = words.innerText;
     text += "_";
     words.innerText = text;
 
-    document.addEventListener('keydown', function(ev) {
+    addListener('keydown', function(ev) {
       console.log(ev.key);
 
       //let text = words.innerHTML;

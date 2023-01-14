@@ -6,9 +6,11 @@ export default function AppMain() {
   // APPPP.bootUp_CM();
 
   // words module lv 1
-  let words = document.createElement('div');
+  const words = document.createElement('div');
   const injectionPoint = document.getElementById("bodyInjectionPointMain");
   injectionPoint.appendChild(words);
+
+  // Init words with an element
   APPPP.words1 = new WordsAdder(words);
 
   console.log('APPPP');
