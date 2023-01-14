@@ -2,6 +2,8 @@ import { keyboard } from '../Modules/input.js';
 import { setStyles } from '../Modules/elUtils.js';
 import { bind } from '../Modules/classUtils.js';
 
+const CURSOR_BLINK = 5000;
+
 export class WordsAdder {
 
   element;
@@ -9,6 +11,7 @@ export class WordsAdder {
 
   _setStyles(element) {
     setStyles({ element, styles: {
+      fontFamily: "Roboto",
       position: "absolute",
       top: 0,
       right: 0,
@@ -27,6 +30,7 @@ export class WordsAdder {
   }
 
   _renderWords(text) {
+    this.lastRender = Date.now();
     this.element.innerText = this._appendCursor(text.replace(/$\s|_/, ''));
   }
 
