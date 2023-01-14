@@ -50,23 +50,11 @@
         // APPPP.model1 = {
         //   pos.
         // }
-
-
     </script>
 
     <script type="module" type="text/javascript">
-
-      import { Basestation } from './Core/System1.js';
-      import { WordsAdder } from './Plugins/wordsAdder.js';
-
-      APPPP = new Basestation("canvassss");
-      // APPPP.bootUp_CM();
-
-      // words module lv 1
-      let words = document.createElement('div');
-      const injectionPoint = document.getElementById("bodyInjectionPointMain");
-      injectionPoint.appendChild(words);
-      APPPP.words1 = new WordsAdder(words);
+      import AppMain from './AppMain.js';
+      AppMain();
     </script>
   </body>
 </html>
