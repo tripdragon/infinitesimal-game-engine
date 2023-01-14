@@ -13,7 +13,7 @@ const getRunListenersForEvent = (eventName) => {
 }
 
 // This is not a pure function.
-// It'll side-effect create a new cache obj and add an event listener to the document if needed.
+// It'll side-effect create a new cache obj and add an event listener to the LISTENERS_REGISTRAR if needed.
 const getFromCache = (eventName) => {
   if (!listenersCache[eventName]) {
     listenersCache[eventName] = { handler: getRunListenersForEvent(eventName), listeners: new Map() };
