@@ -70,10 +70,12 @@ export class Basestation{
     
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
-    const buffers = initBuffers(gl);
+    // const buffers = initBuffers(gl, shaderProgram);
+
 
     // Draw the scene
-    drawScene(gl, programInfo, buffers);
+    //drawScene(gl, programInfo, buffers);
+    drawScene(gl, programInfo);
 
     
 
@@ -103,7 +105,9 @@ export class Basestation{
       fauxPointer.y = that.pointer.y * that.pointerXYScalar;
       fauxPointer.z = that.pointer.z;
       
-      drawScene(gl, programInfo, buffers, fauxPointer);
+      //drawScene(gl, programInfo, buffers, fauxPointer);
+      // drawScene(gl, programInfo);
+      drawScene(gl, programInfo, fauxPointer);
       
 		};
 
