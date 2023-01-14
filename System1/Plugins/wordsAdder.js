@@ -26,7 +26,7 @@ export class WordsAdder {
   }
 
   _renderWords(text) {
-    this.element.innerText = this._appendCursor(text);
+    this.element.innerText = this._appendCursor(text.replace(/$\s|_/, ''));
   }
 
   _text() {
