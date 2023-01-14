@@ -1,9 +1,15 @@
-import { addListener } from '../Modules/listeners.js';
+import { keyboard } from '../Modules/input.js';
 import { setStyles } from '../Modules/elUtils.js';
+import { bind } from '../Modules/classUtils.js';
 
-const _appendCursor = (text) => {
-  return text + "_";
-}
+const CURSOR_BLINK = 1000;
+const SPACE = '\u00A0';
+const IGNORE_KEYS = {
+  Meta: true,
+  Shift: true,
+  Alt: true,
+  CapsLock: true
+};
 
 export class WordsAdder {
 
@@ -12,6 +18,7 @@ export class WordsAdder {
 
   _setStyles(element) {
     setStyles({ element, styles: {
+      fontFamily: "Roboto",
       position: "absolute",
       top: 0,
       right: 0,
@@ -19,58 +26,54 @@ export class WordsAdder {
       maxWidth: "700px",
       color: "white",
       fontSize: "24px",
-      fontStyle: "normal"
+      fontStyle: "normal",
+      overflow: "scroll"
     } });
   }
 
-  constructor(element){
+  _manageCursor = (text) => {
+    text = String(text).replaceAll(/$\s|_/g, '');
+    return text + "_";
+  }
+
+  _renderWords(text) {
+    this.lastRender = Date.now();
+    this.element.innerText = this._manageCursor(text);
+  }
+
+  _text() {
+    return this.element.innerText;
+  }
+
+  constructor(element) {
+
+    const { _renderWords, _text } = bind(this, { _renderWords: this._renderWords, _text: this._text });
 
     this.element = element;
     this._setStyles(this.element);
 
-    const words = this.element;
-
-    // cheap cursor
-    let text = words.innerText;
-    text += "_";
-    words.innerText = text;
-
-    addListener({ event: 'keydown', func: function(ev) {
-      console.log(ev.key);
-
-      //let text = words.innerHTML;
-      let text = words.innerText;
-
-      // cheap cursor
-      text = text.slice(0, -1);
-
-      if(ev.key === "Backspace"){
+    keyboard({
+      Backspace: () => {
         // text = "";
         console.log("Backspace 2222");
-        text = text.slice(0, -1);
-      }
-      else if(ev.key === "Shift"){
-
-      }
-      // ??????
-      else if(ev.key === "Enter"){
+        _renderWords(_text().slice(0, -1));
+      },
+      Enter: () => {
         // text = text+"\n";
         console.log("¿¿ enter 222 ¿¿");
-        text = `${text}
-        `;
-      }
-      else if(ev.key === " "){
-        text = `${text}\u00A0`;
-        // text += '&nbsp';
+        _renderWords(`${_text()}
+`);
+      },
+      " ": () => {
+        _renderWords(_text() + SPACE);
+        // _renderWords(_text() + '&nbsp');
         console.log("Spaces 222¿¿");
+      },
+      rest: (evt) => {
+        if (!IGNORE_KEYS[evt.key]) {
+          _renderWords(_text() + evt.key);
+        }
       }
-      else {
-        //text += ev.key;
-        text = `${text}${ev.key}`;
-      }
-
-      //words.innerHTML = text;
-      words.innerText = _appendCursor(text);
-    }});
+    });
   }
 }

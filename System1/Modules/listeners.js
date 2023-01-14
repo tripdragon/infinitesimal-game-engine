@@ -1,4 +1,3 @@
-
 // =P zill wuz here
 
 const LISTENERS_REGISTRAR = document;
