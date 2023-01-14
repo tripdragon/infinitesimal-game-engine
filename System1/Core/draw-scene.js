@@ -1,6 +1,8 @@
 
 // https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js
 // import { mat4 } from "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
+// import { randomBetween } from "../Modules/mathness.js";
+import { loadSquares } from "../Demos/loadSquares.js";
 
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {
 export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
@@ -103,26 +105,40 @@ export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} )
   //   false,
   //   modelViewMatrix
   // );
+
   const offset2 = 0;
   const vertexCount = 6;// 3 for tri, 6 for 2 tris making a square
   var primitiveType = gl.TRIANGLES;
   
-  setRectangle(gl, 4, 8, 12, 8);
-  gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
-
-  gl.drawArrays(primitiveType, offset2, vertexCount);
-
-
-  setRectangle(gl, -9, -9, 8, 8);
-  gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+  // setRectangle(gl, randomBetween(-4,4), 8, 12, 8);
+  // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+  // gl.drawArrays(primitiveType, offset2, vertexCount);
+  // 
+  // 
+  // setRectangle(gl, -9, randomBetween(-4,4), 8, 8);
+  // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+  // gl.drawArrays(primitiveType, offset2, vertexCount);
+  // 
+  // 
+  // 
+  // setRectangle(gl,-24, randomBetween(-4,4) + -22, 8, 12);
+  // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+  // gl.drawArrays(primitiveType, offset2, vertexCount);
+  // 
+  
+  var gg = loadSquares(gl, colorUniformLocation);
+  
+  for (var i = 0; i < gg.length; i++) {
+    gg[i]();
+    gl.drawArrays(primitiveType, offset2, vertexCount);
+    
+  }
   
 
   // {
-    
-    // var primitiveType = gl.TRIANGLE_STRIP;
-    gl.drawArrays(primitiveType, offset2, vertexCount);
-    
-    
+
+    // gl.drawArrays(primitiveType, offset2, vertexCount);
+
   // }
   
   // {
@@ -155,28 +171,28 @@ export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} )
 //   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 // }
 
-
-// Fills the buffer with the values that define a rectangle.
-function setRectangle(gl, x, y, width, height) {
-  var x1 = x;
-  var x2 = x + width;
-  var y1 = y;
-  var y2 = y + height;
- 
-  // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-  // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-  // but so far we only have one buffer. If we had more than one
-  // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
-  
-  var positions = [
-    x1 + 2, y1,
-    x1, y2 + 2,
-    x2 + 4, y2,
-    x2 + 2, y1,
-    // other tri
-    x1 + 2, y1,
-    x2 + 4, y2
-  ];
-
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-}
+// 
+// // Fills the buffer with the values that define a rectangle.
+// function setRectangle(gl, x, y, width, height) {
+//   var x1 = x;
+//   var x2 = x + width;
+//   var y1 = y;
+//   var y2 = y + height;
+// 
+//   // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+//   // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+//   // but so far we only have one buffer. If we had more than one
+//   // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+// 
+//   var positions = [
+//     x1 + 2, y1,
+//     x1, y2 + 2,
+//     x2 + 4, y2,
+//     x2 + 2, y1,
+//     // other tri
+//     x1 + 2, y1,
+//     x2 + 4, y2
+//   ];
+// 
+//   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+// }
