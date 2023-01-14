@@ -3,6 +3,8 @@ import { initShaderProgram, vsSource, fsSource} from './shaders.js';
 import { initBuffers } from './init-buffers.js';
 import { drawScene } from "./draw-scene.js";
 
+import { loadSquares } from "../Demos/loadSquares.js";
+
 export class Basestation{
   
   canvas = null;

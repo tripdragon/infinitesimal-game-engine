@@ -3,6 +3,8 @@
 // import { mat4 } from "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 // import { randomBetween } from "../Modules/mathness.js";
 import { loadSquares } from "../Demos/loadSquares.js";
+import { SquareLike } from "../Primitives/squareLike.js";
+import { randomBetween } from "../Modules/mathness.js";
 
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {
 export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
@@ -126,14 +128,26 @@ export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} )
   // gl.drawArrays(primitiveType, offset2, vertexCount);
   // 
   
-  var gg = loadSquares(gl, colorUniformLocation);
+  // var gg = loadSquares(gl, colorUniformLocation);
+  // 
+  // for (var i = 0; i < gg.length; i++) {
+  //   gg[i]();
+  //   gl.drawArrays(primitiveType, offset2, vertexCount);
+  // 
+  // }
   
-  for (var i = 0; i < gg.length; i++) {
-    gg[i]();
+  // thiws goes into a APP cache
+  var ff = [
+      new SquareLike(gl, randomBetween(-4,4), randomBetween(-4,4), 12, 8),
+      new SquareLike(gl, randomBetween(-4,4) + 12, randomBetween(-4,4) - 12, 12, 8),
+      new SquareLike(gl, randomBetween(-22,-18) , randomBetween(-22-18), 12, 8),
+  ];
+  
+  for (var i = 0; i < ff.length; i++) {
+    //ff[i].draw(colorUniformLocation);
+    ff[i].play(colorUniformLocation);
     gl.drawArrays(primitiveType, offset2, vertexCount);
-    
   }
-  
 
   // {
 

@@ -1,4 +1,9 @@
 
+import { Quark } from "../Core/Quark.js";
+
+import { randomBetween } from "../Modules/mathness.js";
+// import { setRectangle } from "../Modules/setRectangle.js";
+
 
 // Fill the buffer with the values that define a rectangle.
 // export function setRectangle(gl, x, y, width, height) {
@@ -17,29 +22,89 @@
 // }
 
 
-export class SquareLike {
+function sdkjfgndf(){
   
+  var ff = [
+      new SquareLike(gl, 4, 4, 12, 8),
+      new SquareLike(gl, 12, -12, 12, 8)
+  ];
+  
+}
+
+export class SquareLike extends Quark {
+  
+
+  // this could use some of that fancy {deconstructor} or ... new stuff
   constructor(gl, x, y, height, width, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-    this.gl = gl;
-    this.height = height;
-    this.width = width;
-    this.x = x;
-    this.y = y;
-    this.color = color;
+    super(gl, x, y, height, width, color = {x:1.0, y:1.0, z:1.0, w:1.0});
   }
   
-  drawBuffer(){
+  // draws to the buffer
+  draw(colorUniformLocation){
+    // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+    this.gl.uniform4f(colorUniformLocation, this.color.x, this.color.y, this.color.z, 1);
     setSquareLike(this.gl, this.x, this.y, this.width, this.height);
   }
+  
+  /*
+  https://stackoverflow.com/questions/939326/execute-javascript-code-stored-as-a-string
+  aa = `return {rr : 4}`; 
+  var gg = new Function(aa);
+  ww = gg()
+  ww.rr => 4
+  
+  
+  // this works but its noisy
+  a = { rr: 4 }
+  
+  mm = `return { ff : (obj) => {
+console.log("foof");
+console.log(obj);
+obj.rr = 45436;
+}}`;
+
+gg = new Function(mm);
+gg().ff(a)
+
+  */
+  play(colorUniformLocation){
+    
+    if(this.playCodeDecompressed === null){
+      
+      // this.playCode = `return {
+      //   x: randomBetween(-4,4),
+      //   y: this.y,
+      //   width: this.width,
+      //   height: this.height
+      // }`;
+      this.playCode = `return { do : function(obj, helpers){
+        
+        obj.x = helpers.randomBetween(-4,4);
+        obj.color.x = Math.random();
+        obj.color.y = Math.random();
+        obj.color.z = Math.random();
+        
+      }}`;
+      
+      this.playCodeDecompressed = new Function(this.playCode);
+      // debugger
+    }
+    // debugger
+    this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
+    // var gg = this.playCodeDecompressed;
+    //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
+    this.draw(colorUniformLocation);
+  }
+
 }
 
 
-function demo(gl){
-  setRectangle(gl, randomBetween(-4,4), 8, 12, 8) 
-  foooof = [
-    new SquareLike(gl, )
-  ];
-}
+// function demo(gl){
+//   setRectangle(gl, randomBetween(-4,4), 8, 12, 8) 
+//   foooof = [
+//     new SquareLike(gl, )
+//   ];
+// }
 
 
 
