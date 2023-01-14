@@ -4,6 +4,12 @@ import { bind } from '../Modules/classUtils.js';
 
 const CURSOR_BLINK = 1000;
 const SPACE = '\u00A0';
+const IGNORE_KEYS = {
+  Meta: true,
+  Shift: true,
+  Alt: true,
+  CapsLock: true
+};
 
 export class WordsAdder {
 
@@ -64,7 +70,9 @@ export class WordsAdder {
         console.log("Spaces 222¿¿");
       },
       rest: (evt) => {
-        _renderWords(_text() + evt.key);
+        if (!IGNORE_KEYS[evt.key]) {
+          _renderWords(_text() + evt.key);
+        }
       }
     });
   }
