@@ -1,19 +1,26 @@
 import { addListener } from '../Modules/listeners.js';
+import { setStyles } from '../Modules/elUtils.js';
 
-export class WordsAdder{
+const _appendCursor = (text) => {
+  return text + "_";
+}
+
+export class WordsAdder {
 
   element;
   lv = 1;
 
   _setStyles(element) {
-    element.style.position = "absolute";
-    element.style.top = 0;
-    element.style.right = 0;
-    element.style.padding = "20px";
-    element.style.maxWidth = "700px";
-    element.style.color = "white";
-    element.style.fontSize = "24px";
-    element.style.fontStyle = "normal";
+    setStyles({ element, styles: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      padding: "20px",
+      maxWidth: "700px",
+      color: "white",
+      fontSize: "24px",
+      fontStyle: "normal"
+    } });
   }
 
   constructor(element){
@@ -28,7 +35,7 @@ export class WordsAdder{
     text += "_";
     words.innerText = text;
 
-    addListener('keydown', function(ev) {
+    addListener({ event: 'keydown', func: function(ev) {
       console.log(ev.key);
 
       //let text = words.innerHTML;
@@ -62,10 +69,8 @@ export class WordsAdder{
         text = `${text}${ev.key}`;
       }
 
-      // cheap cursor
-      text += "_";
       //words.innerHTML = text;
-      words.innerText = text;
-    });
+      words.innerText = _appendCursor(text);
+    }});
   }
 }
