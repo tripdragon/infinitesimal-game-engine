@@ -123,6 +123,10 @@
           
           APPPP.sceneGrapth.add(sq1);
 
+          if(APPPP.runtimeState !== "play"){
+            // should have a draw command
+            APPPP.animate();
+          }
           
         }
         
@@ -130,6 +134,7 @@
         let add = controls.querySelector(".add");
         if(add){
             add.addEventListener( "click", addHipToBeSquare, false );
+            
         }
         
       }
