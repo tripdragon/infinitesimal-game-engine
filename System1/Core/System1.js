@@ -10,6 +10,15 @@ export class Basestation {
   
   canvas = null;
   
+  time = {
+    sinceStarted : 0,
+    sincePaused : 0,
+    constantRuntime : 0,
+    delta : 0
+  };
+  // time since game start, this is paused when game is paused
+  gameTime = 0;
+  
   // need a default far z
   pointer = { x: 0, y: 0, z:-76.0};
   pointerXYScalar = 12;
@@ -24,8 +33,8 @@ export class Basestation {
   
   
   fauxPointer = {};
-  programInfo;
   
+  programInfo;
   gl;
   
   

@@ -1,40 +1,23 @@
-import { Basestation } from './Core/System1.js';
-import { WordsAdder } from './Plugins/wordsAdder.js';
-
-import { SquareLike } from "./Primitives/squareLike.js";
 
 
-import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
+// Basic example of a basic buch of things in the view
+
+// hrmmm dont like going UP a folder for games stuff
+// it makes a game nested
+import { SquareLike } from "../Primitives/squareLike.js";
+
+import { Game } from "../Core/Game.js";
 
 
 
-// dont like this pattern
+export let disc = new Game("utzSquares");
 
-export default function AppMain() {
-  var APPPP = new Basestation("canvassss");
-  // APPPP.bootUp_CM();
-
-  // words module lv 1
-  const words = document.createElement('div');
-  const injectionPoint = document.getElementById("bodyInjectionPointMain");
-  injectionPoint.appendChild(words);
-
-  // Init words with an element
-  APPPP.words1 = new WordsAdder(words);
-
-  console.log('APPPP');
-  
-  
-  // Should have some stupid function like insertDisc ...
-  // moving Game setup into its class
-  squaresATron_I.start(APPPP);
-  
-  
-  
+disc.build = function(){
   
   // Need a scene grapth
   
-  /*
+  
+  // here we pump objects into the Systems scene grapth
   // Base charactor objects!!
   // here we have a wordy but very direct example of custom scripting for each object square
   // in this example the first arg is gl which is not available yet so well set it in the loop
@@ -63,11 +46,8 @@ export default function AppMain() {
   }}`;
   
   // APPPP.sceneGrapth.addActor();
-  APPPP.sceneGrapth.add(sq1);
-  APPPP.sceneGrapth.add(sq2);
-  APPPP.sceneGrapth.add(sq3);
-  */
+  this.system.sceneGrapth.add(sq1);
+  this.system.sceneGrapth.add(sq2);
+  this.system.sceneGrapth.add(sq3);
 
-  return APPPP;  
-  
-}
+};
