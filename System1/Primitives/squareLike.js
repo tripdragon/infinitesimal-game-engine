@@ -76,20 +76,23 @@ gg().ff(a)
       //   width: this.width,
       //   height: this.height
       // }`;
-      this.playCode = `return { do : function(obj, helpers){
-
-        obj.x = helpers.randomBetween(-4,4);
-        obj.color.x = Math.random();
-        obj.color.y = Math.random();
-        obj.color.z = Math.random();
-
-      }}`;
-
+      // this.playCode = `return { do : function(obj, helpers){
+      // 
+      //   obj.x = helpers.randomBetween(-4,4);
+      //   obj.color.x = Math.random();
+      //   obj.color.y = Math.random();
+      //   obj.color.z = Math.random();
+      // 
+      // }}`;
+// debugger
       this.playCodeDecompressed = new Function(this.playCode);
       // debugger
     }
-    // debugger
-    this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
+    
+    if( this.playCodeDecompressed().hasOwnProperty("do") ){
+      // 2nd arg is helper {} , temp solution to get mth functions into sandbox
+      this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
+    }
     // var gg = this.playCodeDecompressed;
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
     this.draw(colorUniformLocation);

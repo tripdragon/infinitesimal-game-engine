@@ -137,10 +137,35 @@ export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} )
   // }
   
   // thiws goes into a APP cache
+  {
+    // here we have a wordy but very direct example of custom scripting for each object square
+    var sq1 = new SquareLike(gl, -4, 4, 12, 8);
+    sq1.playCode = `return { do : function(obj, helpers){
+      obj.x = helpers.randomBetween(-4,4);
+      obj.color.x = Math.random();
+      obj.color.y = Math.random();
+      obj.color.z = Math.random();
+    }}`;
+    var sq2 = new SquareLike(gl, -4 + -12, 4, 12, 8);
+    sq2.playCode = `return { do : function(obj, helpers){
+      // obj.x = helpers.randomBetween(-14,14);
+      obj.y = helpers.randomBetween(-14,14);
+      obj.color.x = Math.random();
+      obj.color.y = Math.random();
+      obj.color.z = Math.random();
+    }}`;
+    var sq3 = new SquareLike(gl, -4 + -12, 4 + -12, 8, 12);
+    sq3.playCode = `return { do : function(obj, helpers){
+      obj.x = helpers.randomBetween(-24,24);
+      // obj.y = helpers.randomBetween(-14,14);
+      obj.color.x = Math.random();
+      obj.color.y = Math.random();
+      obj.color.z = Math.random();
+    }}`;
   var ff = [
-      new SquareLike(gl, randomBetween(-4,4), randomBetween(-4,4), 12, 8),
-      new SquareLike(gl, randomBetween(-4,4) + 12, randomBetween(-4,4) - 12, 12, 8),
-      new SquareLike(gl, randomBetween(-22,-18) , randomBetween(-22-18), 12, 8),
+      sq1, sq2, sq3
+      // new SquareLike(gl, randomBetween(-4,4) + 12, randomBetween(-4,4) - 12, 12, 8),
+      // new SquareLike(gl, randomBetween(-22,-18) , randomBetween(-22-18), 12, 8),
   ];
   
   for (var i = 0; i < ff.length; i++) {
@@ -148,6 +173,7 @@ export function drawScene(gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} )
     ff[i].play(colorUniformLocation);
     gl.drawArrays(primitiveType, offset2, vertexCount);
   }
+}
 
   // {
 

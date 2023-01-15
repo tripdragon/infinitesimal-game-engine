@@ -15,6 +15,7 @@ export class Quark {
   
   name = "";
   
+  // maybe rename to script
   playCode = `return {
     x: this.x,
     y: this.y,
