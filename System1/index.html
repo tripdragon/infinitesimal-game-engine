@@ -18,7 +18,7 @@
         position: absolute;
         top: 0px;
         left: 0px;
-        z-index: 1;
+        z-index: 2;
         /* background: green; */
         width: 100px;
         height: 100px;
@@ -26,9 +26,42 @@
       }
 
       #controls .add{
-        width: 22px;
-        height: 22px;
+        /* width: 22px; */
+        /* height: 22px; */
       }
+      
+      .button{
+        width: 32px;
+        height: 32px;
+      }
+      
+      #controls222 {
+        position: absolute;
+        top: 0px;
+        /* left: 0px; */
+        z-index: 1;
+        /* background: green; */
+        width: 100%;
+        height: 100px;
+        padding: 20px 0 0 20px;
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: flex-start;
+      }
+
+      #controls222 .button {
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+        margin: 0 4px;
+        font-size: 20px;
+        
+      }
+
     </style>
   </head>
 
@@ -36,8 +69,15 @@
     <canvas id="canvassss" width="400" height="400"></canvas>
 
     <div id="controls">
-      <button class="add">+</button>
+      <button class="add button">+</button>
     </div>
+    
+    <div id="controls222">
+      <button class="pause button">ℼ</button>
+      <button class="play button">☃</button>
+      <button class="step button">☂</button>
+    </div>
+    
 
     <div id="bodyInjectionPointMain"></div>
 
@@ -62,8 +102,9 @@
       import { randomBetween } from "./Modules/mathness.js";
       import { SquareLike } from "./Primitives/squareLike.js";
       
+      
+      // block for : add button for making squares
       {
-        
         function addHipToBeSquare(ev){
           // console.log(ev, "fish");
           
@@ -90,7 +131,40 @@
         if(add){
             add.addEventListener( "click", addHipToBeSquare, false );
         }
+        
       }
+      
+      
+      // block for pause play buttons
+      {
+        let pause = document.querySelector("#controls222 .pause");
+        if(pause){
+            pause.addEventListener( "click", function(){
+              APPPP.runtimeState = "pause";
+            }, false );
+        }
+        
+        let play = document.querySelector("#controls222 .play");
+        if(play){
+            play.addEventListener( "click", function(){
+              APPPP.runtimeState = "play";
+              APPPP.animate();
+            }, false );
+        }
+        
+        let step = document.querySelector("#controls222 .step");
+        if(step){
+            step.addEventListener( "click", function(){
+              APPPP.runtimeState = "step";
+              APPPP.animate();
+            }, false );
+        }
+        
+      }
+      
+      
+      
+      
       
     </script>
   </body>

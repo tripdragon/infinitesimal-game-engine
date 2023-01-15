@@ -6,7 +6,7 @@ import { drawScene } from "./draw-scene.js";
 import { loadSquares } from "../Demos/loadSquares.js";
 import { SceneGrapth } from "../Modules/SceneGrapth.js";
 
-export class Basestation{
+export class Basestation {
   
   canvas = null;
   
@@ -15,6 +15,18 @@ export class Basestation{
   pointerXYScalar = 12;
   
   sceneGrapth = new SceneGrapth();
+  
+  // need enum
+  runtimeState = "play"; // play pause step?
+  // APPPP.runtimeState = "pause"
+  // then step
+  //APPPP.animate()
+  
+  
+  fauxPointer = {};
+  programInfo;
+  
+  gl;
   
   
   constructor(canvasId) {
@@ -37,8 +49,10 @@ export class Basestation{
           
           
     // Initialize the GL context
+    // const gl = this.canvas.getContext("webgl");
     const gl = this.canvas.getContext("webgl");
-
+    this.gl = gl;
+    
     // Only continue if WebGL is available and working
     if (gl === null) {
       alert(
@@ -71,6 +85,7 @@ export class Basestation{
         modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
       },
     };
+    this.programInfo = programInfo;
     
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
@@ -92,35 +107,91 @@ export class Basestation{
     
     var that = this;
     
-    var fauxPointer = {};
+    // var fauxPointer = {};
     
-		function animate() {
-			requestAnimationFrame( animate );
-      // console.log("popcorn");
-			// cube.rotation.x += 0.01;
-			// cube.rotation.y += 0.01;
-
-			// renderer.render( scene, camera );
-      // console.log(that.pointer);
-      //console.log("moof");
-      
-      // we need a larger mouse mover
-      fauxPointer.x = that.pointer.x * that.pointerXYScalar;
-      fauxPointer.y = that.pointer.y * that.pointerXYScalar;
-      //fauxPointer.z = that.pointer.z;
-      fauxPointer.z = -100.0;
-      
-      //drawScene(gl, programInfo, buffers, fauxPointer);
-      // drawScene(gl, programInfo);
-      drawScene(that, gl, programInfo, fauxPointer);
-      
-		};
+		// function animate() {
+    //   if(that.runtimeState === "play"){
+    //     requestAnimationFrame( animate );
+    //   }
+    //   // console.log("popcorn");
+		// 	// cube.rotation.x += 0.01;
+		// 	// cube.rotation.y += 0.01;
+    // 
+		// 	// renderer.render( scene, camera );
+    //   // console.log(that.pointer);
+    //   //console.log("moof");
+    // 
+    //   // we need a larger mouse mover
+    //   fauxPointer.x = that.pointer.x * that.pointerXYScalar;
+    //   fauxPointer.y = that.pointer.y * that.pointerXYScalar;
+    //   //fauxPointer.z = that.pointer.z;
+    //   fauxPointer.z = -100.0;
+    // 
+    //   //drawScene(gl, programInfo, buffers, fauxPointer);
+    //   // drawScene(gl, programInfo);
+    //   drawScene(that, gl, programInfo, fauxPointer);
+    // 
+		// };
+    // function animate() {
+    //   //requestAnimationFrame( animate.bind(this) );
+    //   //requestAnimationFrame( animate.bind(this) );
+    //   requestAnimationFrame( animate.bind(this) );
+    // 
+    //   if(this.runtimeState === "play"){
+    //   }
+    //   // console.log("popcorn");
+    //   // cube.rotation.x += 0.01;
+    //   // cube.rotation.y += 0.01;
+    // 
+    //   // renderer.render( scene, camera );
+    //   // console.log(this.pointer);
+    //   //console.log("moof");
+    // 
+    //   // we need a larger mouse mover
+    //   fauxPointer.x = this.pointer.x * this.pointerXYScalar;
+    //   fauxPointer.y = this.pointer.y * this.pointerXYScalar;
+    //   //fauxPointer.z = this.pointer.z;
+    //   fauxPointer.z = -100.0;
+    // 
+    //   //drawScene(gl, programInfo, buffers, fauxPointer);
+    //   // drawScene(gl, programInfo);
+    //   drawScene(this, gl, programInfo, fauxPointer);
+    // 
+    // };
 
 		// animate.bind(this);
-    animate();
+    // animate(this);
+    // animate().bind(this);
+    this.animate.call(this);
 
 
   }
+  
+  animate() {
+    //requestAnimationFrame( animate.bind(this) );
+    //requestAnimationFrame( animate.bind(this) );
+    if(this.runtimeState === "play"){
+      requestAnimationFrame( this.animate.bind(this) );
+    }
+    // console.log("popcorn");
+    // cube.rotation.x += 0.01;
+    // cube.rotation.y += 0.01;
+
+    // renderer.render( scene, camera );
+    // console.log(this.pointer);
+    //console.log("moof");
+    
+    // we need a larger mouse mover
+    this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
+    this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
+    //this.fauxPointer.z = this.pointer.z;
+    this.fauxPointer.z = -100.0;
+    
+    //drawScene(gl, programInfo, buffers, fauxPointer);
+    // drawScene(gl, programInfo);
+    drawScene(this, this.gl, this.programInfo, this.fauxPointer);
+    
+  };
   
 
 }
