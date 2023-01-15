@@ -1,6 +1,9 @@
 
 
 
+
+// Obsolete
+
 export function initBuffers(gl, shaderProgram) {
   // const positionBuffer = initPositionBuffer(gl);
   

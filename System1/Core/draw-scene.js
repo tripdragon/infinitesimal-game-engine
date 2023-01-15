@@ -1,4 +1,7 @@
 
+// needs concept of camera next
+
+
 // https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js
 // import { mat4 } from "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 // import { randomBetween } from "../Modules/mathness.js";
@@ -27,7 +30,7 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
   const fieldOfView = (45 * Math.PI) / 180; // in radians
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
-  const zFar = 100.0;
+  const zFar = 400.0;
   const projectionMatrix = mat4.create();
 
   // note: glmatrix.js always has the first argument
@@ -44,7 +47,8 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
     modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to translate
     //[-20.0, 20.0, -76.0]
-    [positionCheap.x, positionCheap.y, positionCheap.z]
+    // [positionCheap.x, positionCheap.y, positionCheap.z]
+    [0,0,positionCheap.z]
   ); // amount to translate
 
 
@@ -64,7 +68,6 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
   // Tell WebGL to use our program when drawing
   gl.useProgram(programInfo.program);
   
-  // >>>>
   const positionBuffer = gl.createBuffer();
   
   var colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");

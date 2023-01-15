@@ -1,5 +1,7 @@
 
 
+// Obsolete???
+
 /*
 var array_of_functions = [
     function() { first_function('a string') },

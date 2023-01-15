@@ -11,6 +11,9 @@
           margin: 0;
           padding: 0;
         }
+        body{
+          overflow: hidden;
+        }
     </style>
 
     <style media="screen">
@@ -102,6 +105,21 @@
       import { randomBetween } from "./Modules/mathness.js";
       import { SquareLike } from "./Primitives/squareLike.js";
       
+      
+      import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
+      import { disc as bocky } from  "./Discs/bocky.js";
+
+      // Should have some stupid function like insertDisc ...
+      // moving Game setup into its class
+      // APPPP.insertDisc(squaresATron_I);
+      APPPP.insertDisc(bocky);
+      
+      
+      
+      
+      //
+      // Editor UI stuff, figure out where else to put
+      //
       
       // block for : add button for making squares
       {

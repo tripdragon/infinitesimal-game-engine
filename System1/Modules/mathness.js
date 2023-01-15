@@ -9,3 +9,6 @@ export function randomBetween(min, max) {
 export function randomInt(range) {
   return Math.floor(Math.random() * range);
 }
+
+
+export function isOdd(num) { return num % 2; }

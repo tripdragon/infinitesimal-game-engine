@@ -4,7 +4,7 @@ import { WordsAdder } from './Plugins/wordsAdder.js';
 import { SquareLike } from "./Primitives/squareLike.js";
 
 
-import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
+// import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
 
 
 
@@ -15,6 +15,8 @@ export default function AppMain() {
   // APPPP.bootUp_CM();
 
   // words module lv 1
+  // do these go in the game???
+  // Concept of game UI 
   const words = document.createElement('div');
   const injectionPoint = document.getElementById("bodyInjectionPointMain");
   injectionPoint.appendChild(words);
@@ -24,13 +26,13 @@ export default function AppMain() {
 
   console.log('APPPP');
   
-  
-  // Should have some stupid function like insertDisc ...
-  // moving Game setup into its class
-  APPPP.insertDisc(squaresATron_I);
-  
-  
-  
+  // 
+  // // Should have some stupid function like insertDisc ...
+  // // moving Game setup into its class
+  // APPPP.insertDisc(squaresATron_I);
+  // 
+  // 
+  // 
   
   
   // Need a scene grapth

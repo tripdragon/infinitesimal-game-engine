@@ -46,6 +46,15 @@ export class Basestation {
   
   currentGame = null;
   
+  
+  loopHookPoints = {
+    beforeDraw : function(){},
+    after1 : function(){},
+    
+  }
+  
+  
+  
   constructor(canvasId) {
     this.bootUp_CM(canvasId);
   }
@@ -219,6 +228,7 @@ export class Basestation {
     //this.fauxPointer.z = this.pointer.z;
     this.fauxPointer.z = -100.0;
     
+    this.loopHookPoints.beforeDraw();
     //drawScene(gl, programInfo, buffers, fauxPointer);
     // drawScene(gl, programInfo);
     drawScene(this, this.gl, this.programInfo, this.fauxPointer);

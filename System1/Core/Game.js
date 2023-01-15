@@ -8,6 +8,8 @@ export class Game {
   
   levels = [];
   
+  camera; // hrrrrmmm ???
+  
   constructor(system = null){
     this.system = system;
   }

@@ -1,3 +1,9 @@
+
+// this is a BASIC idea
+// each game would have some different form
+// a great place for Composition maybe
+
+
 import { keyboard } from '../Modules/input.js';
 import { setStyles } from '../Modules/elUtils.js';
 import { bind } from '../Modules/classUtils.js';
@@ -35,7 +41,10 @@ export class WordsAdder {
     text = String(text).replaceAll(/$\s|_/g, '');
     return text + "_";
   }
-
+  
+  // pattern is before getting text, remove the last most char which is _
+  // add new char, then add _ back on
+  // regex is a bad idea cause we would liek to use _ in text
   _renderWords(text) {
     this.lastRender = Date.now();
     this.element.innerText = this._manageCursor(text);
@@ -56,13 +65,14 @@ export class WordsAdder {
       Backspace: () => {
         // text = "";
         console.log("Backspace 2222");
-        _renderWords(_text().slice(0, -1));
+        var tt = _renderWords(_text().slice(0, -1));
+        // console.log("tt ", tt); // tt undefined
       },
       Enter: () => {
         // text = text+"\n";
         console.log("¿¿ enter 222 ¿¿");
         _renderWords(`${_text()}
-`);
+`);// why u be trailing left flush???
       },
       " ": () => {
         _renderWords(_text() + SPACE);
