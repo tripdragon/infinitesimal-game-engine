@@ -4,6 +4,8 @@ export class Quark {
 
   lv = 0;
   
+  isType = "Quark";
+  
   gl;
   
   x;

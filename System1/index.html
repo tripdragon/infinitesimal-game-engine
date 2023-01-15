@@ -45,6 +45,9 @@
 
     <script type="text/javascript">
         var APPPP;
+        
+        // these are needed here for now cause the gl-matrix plugin is not import type module
+        // todo: swap out
         const { vec2, vec3, mat3, mat4 } = glMatrix;
 
         // APPPP.model1 = {
@@ -54,7 +57,41 @@
 
     <script type="module" type="text/javascript">
       import AppMain from './AppMain.js';
-      AppMain();
+      APPPP = AppMain();
+      
+      import { randomBetween } from "./Modules/mathness.js";
+      import { SquareLike } from "./Primitives/squareLike.js";
+      
+      {
+        
+        function addHipToBeSquare(ev){
+          // console.log(ev, "fish");
+          
+          const xx = randomBetween(-40,40);
+          const xy = randomBetween(-40,40);
+          const ww = randomBetween(2,20);
+          const wh = randomBetween(2,20);
+          
+          var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+          sq1.playCode = `return { do : function(obj, helpers){
+            obj.x = helpers.randomBetween(${-xx},${xy});
+            obj.color.x = Math.random();
+            obj.color.y = Math.random();
+            obj.color.z = Math.random();
+          }}`;
+          
+          APPPP.sceneGrapth.add(sq1);
+
+          
+        }
+        
+        let controls = document.getElementById('controls');
+        let add = controls.querySelector(".add");
+        if(add){
+            add.addEventListener( "click", addHipToBeSquare, false );
+        }
+      }
+      
     </script>
   </body>
 </html>

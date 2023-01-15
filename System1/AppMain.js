@@ -1,8 +1,14 @@
 import { Basestation } from './Core/System1.js';
 import { WordsAdder } from './Plugins/wordsAdder.js';
 
+import { SquareLike } from "./Primitives/squareLike.js";
+
+
+
+// dont like this pattern
+
 export default function AppMain() {
-  APPPP = new Basestation("canvassss");
+  var APPPP = new Basestation("canvassss");
   // APPPP.bootUp_CM();
 
   // words module lv 1
@@ -14,4 +20,42 @@ export default function AppMain() {
   APPPP.words1 = new WordsAdder(words);
 
   console.log('APPPP');
+  
+  
+  // Need a scene grapth
+  
+  // Base charactor objects!!
+  // here we have a wordy but very direct example of custom scripting for each object square
+  // in this example the first arg is gl which is not available yet so well set it in the loop
+  var sq1 = new SquareLike(null, -4, 4, 12, 8);
+  sq1.playCode = `return { do : function(obj, helpers){
+    obj.x = helpers.randomBetween(-4,4);
+    obj.color.x = Math.random();
+    obj.color.y = Math.random();
+    obj.color.z = Math.random();
+  }}`;
+  var sq2 = new SquareLike(null, -4 + -12, 4, 12, 8);
+  sq2.playCode = `return { do : function(obj, helpers){
+    // obj.x = helpers.randomBetween(-14,14);
+    obj.y = helpers.randomBetween(-14,14);
+    obj.color.x = Math.random();
+    obj.color.y = Math.random();
+    obj.color.z = Math.random();
+  }}`;
+  var sq3 = new SquareLike(null, -4 + -12, 4 + -12, 8, 12);
+  sq3.playCode = `return { do : function(obj, helpers){
+    obj.x = helpers.randomBetween(-24,24);
+    // obj.y = helpers.randomBetween(-14,14);
+    obj.color.x = Math.random();
+    obj.color.y = Math.random();
+    obj.color.z = Math.random();
+  }}`;
+  
+  // APPPP.sceneGrapth.addActor();
+  APPPP.sceneGrapth.add(sq1);
+  APPPP.sceneGrapth.add(sq2);
+  APPPP.sceneGrapth.add(sq3);
+
+  return APPPP;  
+  
 }

@@ -4,6 +4,7 @@ import { initBuffers } from './init-buffers.js';
 import { drawScene } from "./draw-scene.js";
 
 import { loadSquares } from "../Demos/loadSquares.js";
+import { SceneGrapth } from "../Modules/SceneGrapth.js";
 
 export class Basestation{
   
@@ -13,6 +14,7 @@ export class Basestation{
   pointer = { x: 0, y: 0, z:-76.0};
   pointerXYScalar = 12;
   
+  sceneGrapth = new SceneGrapth();
   
   
   constructor(canvasId) {
@@ -77,7 +79,7 @@ export class Basestation{
 
     // Draw the scene
     //drawScene(gl, programInfo, buffers);
-    drawScene(gl, programInfo);
+    drawScene(this, gl, programInfo);
 
     
 
@@ -105,11 +107,12 @@ export class Basestation{
       // we need a larger mouse mover
       fauxPointer.x = that.pointer.x * that.pointerXYScalar;
       fauxPointer.y = that.pointer.y * that.pointerXYScalar;
-      fauxPointer.z = that.pointer.z;
+      //fauxPointer.z = that.pointer.z;
+      fauxPointer.z = -100.0;
       
       //drawScene(gl, programInfo, buffers, fauxPointer);
       // drawScene(gl, programInfo);
-      drawScene(gl, programInfo, fauxPointer);
+      drawScene(that, gl, programInfo, fauxPointer);
       
 		};
 

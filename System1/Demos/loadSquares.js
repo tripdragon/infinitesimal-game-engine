@@ -19,7 +19,7 @@ import { setRectangle } from "../Modules/setRectangle.js";
 export function loadSquares(gl, colorUniformLocation){
   
   return [
-    function() { 
+    function() {
       gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
       setRectangle(gl, randomBetween(-4,4), 8, 12, 8) 
     },
