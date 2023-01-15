@@ -12,13 +12,18 @@ export class Game {
     this.system = system;
   }
   
-  build(){
+  
+  load(){
+    
+  }
+  
+  unload(){
     
   }
   
   start(system){
     this.system = system;
-    this.build();
+    this.load();
   }
   
   

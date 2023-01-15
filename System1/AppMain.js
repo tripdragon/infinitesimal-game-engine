@@ -27,7 +27,8 @@ export default function AppMain() {
   
   // Should have some stupid function like insertDisc ...
   // moving Game setup into its class
-  squaresATron_I.start(APPPP);
+  APPPP.insertDisc(squaresATron_I);
+  
   
   
   

@@ -1,4 +1,11 @@
 
+// should be "Console" but thats taken
+// so its "system"
+
+// This is the main APP of sorts
+// it holds the SceneGrapth and Render loopy loop
+
+
 import { initShaderProgram, vsSource, fsSource} from './shaders.js';
 import { initBuffers } from './init-buffers.js';
 import { drawScene } from "./draw-scene.js";
@@ -37,11 +44,26 @@ export class Basestation {
   programInfo;
   gl;
   
+  currentGame = null;
   
   constructor(canvasId) {
     this.bootUp_CM(canvasId);
   }
   
+  // type of Game
+  insertDisc(game){
+    if(this.currentGame !== null){
+      this.currentGame.unload();
+    }
+    this.unloadDisc();
+    this.currentGame = game;
+    game.start(this);
+  }
+  
+  unloadDisc(){
+    // simply trash arrays for now
+    this.sceneGrapth = new SceneGrapth();
+  }
   
   
   onPointerMove( event ) {
@@ -65,7 +87,7 @@ export class Basestation {
     // Only continue if WebGL is available and working
     if (gl === null) {
       alert(
-        "Unable to initialize WebGL. Your browser or machine may not support it."
+        "Unable to initialize WebGL. Your browser or machine may not support it guesses."
       );
       return;
     }
@@ -101,12 +123,13 @@ export class Basestation {
     // const buffers = initBuffers(gl, shaderProgram);
 
 
-    // Draw the scene
+    // Draw the scene once
+    // and later run loop
     //drawScene(gl, programInfo, buffers);
     drawScene(this, gl, programInfo);
 
-    
-
+    console.warn("pointermove, THIS DOES NOT BELONG HERE");
+    // THIS DOES NOT BELONG HERE
     // window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
     
