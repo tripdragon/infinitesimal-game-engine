@@ -5,6 +5,7 @@
 // hrmmm dont like going UP a folder for games stuff
 // it makes a game nested
 import { Polygon } from "../Primitives/Polygon.js";
+import { Rectangle } from "../Primitives/Rectangle.js";
 
 import { Game } from "../Core/Game.js";
 
@@ -45,7 +46,19 @@ disc.load = function(){
   // APPPP.sceneGrapth.addActor();
   this.system.sceneGrapth.add(sq1);
   
+  // render order, this renders next
+  var border1 = new Rectangle(null, -40, -20, 82, 2, {x:0,y:0.5,z:0,w:0});
+  this.system.sceneGrapth.add(border1);
   
+  // console.log(border1.origin.x);
+  // here we can see that origin is not correct yet
+  console.log(border1.origin.x, border1.origin.y);
+  var centerOfBorder = new Rectangle(null, border1.origin.x + border1.x, border1.origin.y + border1.y, 1, 1, {x:1.0,y:0.4,z:1.0,w:0});
+  this.system.sceneGrapth.add(centerOfBorder);
+  
+  //
+  // set up walk system, should go into a composition module
+  //
   var arrowsDown = {
     up: false, down: false, left: false, right: false
   }

@@ -17,6 +17,8 @@ export class Basestation {
   
   canvas = null;
   
+  cameraDefault = {x:0,y:0, z: -70};
+  
   time = {
     sinceStarted : 0,
     sincePaused : 0,

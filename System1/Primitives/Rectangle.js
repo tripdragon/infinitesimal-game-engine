@@ -1,8 +1,6 @@
 
 import { Quark } from "../Core/Quark.js";
 
-import { randomBetween } from "../Modules/mathness.js";
-// import { setRectangle } from "../Modules/setRectangle.js";
 
 
 // Fill the buffer with the values that define a rectangle.
@@ -25,68 +23,33 @@ import { randomBetween } from "../Modules/mathness.js";
 function sdkjfgndf(){
 
   var ff = [
-      new SquareLike(gl, 4, 4, 12, 8),
-      new SquareLike(gl, 12, -12, 12, 8)
+      new Rectangle(gl, 4, 4, 12, 8),
+      new Rectangle(gl, 12, -12, 12, 8)
   ];
 
 }
 
-export class SquareLike extends Quark {
+export class Rectangle extends Quark {
 
   // this could use some of that fancy {deconstructor} or ... new stuff
   constructor(gl, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-    super(gl, x, y, width, height, 0, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    // console.log("color", color);
+    super(gl, x, y, width, height, 0, color);
   }
 
   // draws to the buffer
   draw(colorUniformLocation){
     // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
     this.gl.uniform4f(colorUniformLocation, this.color.x, this.color.y, this.color.z, 1);
-    setSquareLike(this.gl, this.x, this.y, this.width, this.height);
+    setRectangle(this.gl, this.x, this.y, this.width, this.height);
   }
 
-  /*
-  https://stackoverflow.com/questions/939326/execute-javascript-code-stored-as-a-string
-  aa = `return {rr : 4}`;
-  var gg = new Function(aa);
-  ww = gg()
-  ww.rr => 4
-
-
-  // this works but its noisy
-  a = { rr: 4 }
-
-  mm = `return { ff : (obj) => {
-console.log("foof");
-console.log(obj);
-obj.rr = 45436;
-}}`;
-
-gg = new Function(mm);
-gg().ff(a)
-
-  */
   play(colorUniformLocation){
 
     if(this.playCodeDecompressed === null){
 
-      // this.playCode = `return {
-      //   x: randomBetween(-4,4),
-      //   y: this.y,
-      //   width: this.width,
-      //   height: this.height
-      // }`;
-      // this.playCode = `return { do : function(obj, helpers){
-      // 
-      //   obj.x = helpers.randomBetween(-4,4);
-      //   obj.color.x = Math.random();
-      //   obj.color.y = Math.random();
-      //   obj.color.z = Math.random();
-      // 
-      // }}`;
-// debugger
       this.playCodeDecompressed = new Function(this.playCode);
-      // debugger
+      
     }
     
     if( this.playCodeDecompressed().hasOwnProperty("do") ){
@@ -106,7 +69,7 @@ gg().ff(a)
 //   ];
 // }
 
-export function setSquareLike(gl, x, y, width, height) {
+export function setRectangle(gl, x, y, width, height) {
   var x1 = x;
   var x2 = x + width;
   var y1 = y;
@@ -118,13 +81,13 @@ export function setSquareLike(gl, x, y, width, height) {
   // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
 
   var positions = [
-    x1 + 2, y1,
-    x1, y2 + 2,
-    x2 + 4, y2,
-    x2 + 2, y1,
+    x1, y1,
+    x1, y2,
+    x2, y2,
+    x2, y1,
     // other tri
-    x1 + 2, y1,
-    x2 + 4, y2
+    x1, y1,
+    x2, y2
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);

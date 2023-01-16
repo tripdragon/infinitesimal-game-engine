@@ -9,6 +9,14 @@ import { loadSquares } from "../Demos/loadSquares.js";
 import { SquareLike } from "../Primitives/squareLike.js";
 import { randomBetween } from "../Modules/mathness.js";
 
+// https://github.com/toji/gl-matrix/issues/371
+// https://www.skypack.dev/view/gl-matrix?from=pika
+// https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js
+// import { mat4 } from "https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js";
+// import glMatrix from 'https://cdn.skypack.dev/gl-matrix';
+import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
+
+
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {
 export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque

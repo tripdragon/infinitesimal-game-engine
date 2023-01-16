@@ -42,7 +42,7 @@ export class Polygon extends Quark {
     // need to compute width and height
     var hh = 0;
     var ww = 0;
-    super(gl, x, y, hh, ww, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    super(gl, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
     
     this.points = points;
     this.scalar = scalar;
