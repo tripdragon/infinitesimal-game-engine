@@ -10,14 +10,13 @@ import { Game } from "../Core/Game.js";
 
 import { keyboard } from '../Modules/input.js';
 
-
 export let disc = new Game("bocky");
 
 disc.load = function(){
-  
+
   // Need a scene grapth
-  
-  
+
+
   // here we pump objects into the Systems scene grapth
   // Base charactor objects!!
   // here we have a wordy but very direct example of custom scripting for each object square
@@ -29,7 +28,7 @@ disc.load = function(){
   //   obj.color.y = Math.random();
   //   obj.color.z = Math.random();
   // }}`;
-  
+
   // constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
   var points = [
     -1,1,
@@ -44,12 +43,12 @@ disc.load = function(){
 
   // APPPP.sceneGrapth.addActor();
   this.system.sceneGrapth.add(sq1);
-  
-  
+
+
   var arrowsDown = {
     up: false, down: false, left: false, right: false
   }
-  
+
   var x = 0.5;
   var y = 0.5;
   this.system.loopHookPoints.beforeDraw = function(){
@@ -67,49 +66,44 @@ disc.load = function(){
     }
   }
 
-    
-
   keyboard({
-    ArrowLeft: (ev) => {
+    ArrowLeft_down: (ev) => {
       // console.log(ev);
       // console.log(sq1);
       // sq1.x += -1;
       // isArrowLeftDown = true;
       // console.log(ev);
-      if(ev.type === "keyup"){
-        console.log("up!");
-        arrowsDown.left = false;
-      }
-      if( ev.type === "keydown") {
-        console.log("down!");
-        arrowsDown.left = true;
-      }
+      console.log("down!");
+      arrowsDown.left = true;
     },
-    ArrowRight: (ev) => {
-      if(ev.type === "keyup"){
-        console.log("up!");
-        arrowsDown.right = false;
-      }
-      if( ev.type === "keydown") {
-        console.log("down!");
-        arrowsDown.right = true;
-      }
+    ArrowLeft_up: (ev) => {
+      // console.log(ev);
+      // console.log(sq1);
+      // sq1.x += -1;
+      // isArrowLeftDown = true;
+      // console.log(ev);
+      console.log("up!");
+      arrowsDown.left = false;
     },
-    ArrowUp: (ev) => {
-      if(ev.type === "keyup"){
-        arrowsDown.up = false;
-      }
-      if( ev.type === "keydown") {
-        arrowsDown.up = true;
-      }
+    ArrowRight_up: (ev) => {
+      console.log("up!");
+      arrowsDown.right = false;
     },
-    ArrowDown: (ev) => {
-      if(ev.type === "keyup"){
-        arrowsDown.down = false;
-      }
-      if( ev.type === "keydown") {
-        arrowsDown.down = true;
-      }
+    ArrowRight_down: (ev) => {
+      console.log("down!");
+      arrowsDown.right = true;
+    },
+    ArrowUp_up: (ev) => {
+      arrowsDown.up = false;
+    },
+    ArrowUp_down: (ev) => {
+      arrowsDown.up = true;
+    },
+    ArrowDown_up: (ev) => {
+      arrowsDown.down = false;
+    },
+    ArrowDown_down: (ev) => {
+      arrowsDown.down = true;
     },
 
   });

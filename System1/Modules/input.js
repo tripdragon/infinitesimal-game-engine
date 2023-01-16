@@ -5,9 +5,10 @@ import { addListener } from './listeners.js';
 // NEEDS: is keydown
 export function keyboard(config) {
   addListener({ event: 'keydown', func: function(evt) {
-    // console.log(evt.key);
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
+    } else if (typeof config[`${evt.key}_down`] === 'function') {
+      config[`${evt.key}_down`](evt);
     } else if (typeof config.rest === 'function') {
       config.rest(evt);
     }
@@ -16,11 +17,13 @@ export function keyboard(config) {
       config.any(evt);
     }
   }});
-  
+
   addListener({ event: 'keyup', func: function(evt) {
     // console.log(evt.key);
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
+    } else if (typeof config[`${evt.key}_up`] === 'function') {
+      config[`${evt.key}_up`](evt);
     } else if (typeof config.rest === 'function') {
       config.rest(evt);
     }
@@ -29,5 +32,4 @@ export function keyboard(config) {
       config.any(evt);
     }
   }});
-  
 }
