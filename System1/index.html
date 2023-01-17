@@ -190,7 +190,7 @@
 
           if(APPPP.runtimeState !== "play"){
             // should have a draw command
-            APPPP.animate();
+            APPPP.loop();
           }
           
         }
@@ -220,7 +220,7 @@
         if(play){
             play.addEventListener( "click", function(){
               APPPP.runtimeState = "play";
-              APPPP.animate();
+              APPPP.loop();
             }, false );
         }
         
@@ -228,7 +228,7 @@
         if(step){
             step.addEventListener( "click", function(){
               APPPP.runtimeState = "step";
-              APPPP.animate();
+              APPPP.loop();
             }, false );
         }
         
