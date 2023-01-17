@@ -2,8 +2,14 @@ import { addListener } from './listeners.js';
 
 // TODO add gameController
 
-// NEEDS: is keydown
-export function keyboard(config) {
+/*
+docs:
+
+*/
+
+
+// NEEDS: debug for turning on console logs
+export function keyboard(config, debug) {
   addListener({ event: 'keydown', func: function(evt) {
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
@@ -15,6 +21,10 @@ export function keyboard(config) {
 
     if (typeof config.any === 'function') {
       config.any(evt);
+    }
+    
+    if(evt && debug){
+      console.log("keyboard ev", evt, evt.key);
     }
   }});
 
