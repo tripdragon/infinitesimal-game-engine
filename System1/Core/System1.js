@@ -6,15 +6,18 @@
 // it holds the SceneGrapth and Render loopy loop
 
 
-import { initShaderProgram, vsSource, fsSource} from './shaders.js';
-import { initBuffers } from './init-buffers.js';
-import { drawScene as _drawScene } from "./draw-scene.js";
+import { initShaderProgram, vertexBasicShader, fragmentBasicShader} from './shaders.js';
+import { vScreen, fScreen } from '../Shaders/screenSpace.js';
+
+
+// import { initBuffers } from './initbuffers.js';
+import { drawScene as _drawScene } from "./drawscene.js";
+import { drawSceneScreenspace as _drawSceneScreenspace } from "./drawsceneScreenspace.js";
 
 import { loadSquares } from "../Demos/loadSquares.js";
 import { SceneGrapth } from "../Modules/SceneGrapth.js";
 
 import { loop as _loop } from "./loop.js";
-// import defaultExport, * as _loop from "./loop.js";
 
 
 
@@ -23,6 +26,8 @@ export class Basestation {
   canvas = null;
   
   cameraDefault = {x:0,y:0, z: -70};
+  
+  spaceMode = "3d"; // 3d Euclidean, screen, clip
   
   gamesCatalog = {};
   
@@ -56,8 +61,19 @@ export class Basestation {
   currentGame = null;
   
   loop = _loop;
+  loopID = 0;
+  stopLoop(){
+    cancelAnimationFrame(this.loopID);
+  }
+  startLoop(){
+    this.loop.call(this);
+  }
+  
   
   drawScene = _drawScene;
+  // drawScene = _drawSceneScreenspace;
+  
+  
   
   loopHookPoints = {
     beforeDraw : function(){},
@@ -68,7 +84,8 @@ export class Basestation {
   
   
   constructor(canvasId) {
-    this.bootUp_CM(canvasId);
+    this.canvas = document.getElementById(canvasId);
+    this.bootUp_CM();
   }
   
   addGameToCatalog(game){
@@ -98,9 +115,21 @@ export class Basestation {
     this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
   
+  reboot(){
+    this.stopLoop();
+    this.bootUp_CM();
+  }
   
-  bootUp_CM(canvasId){
-    this.canvas = document.getElementById(canvasId);
+  bootUp_CM(){
+    
+    // this.stopLoop();
+    
+    // this.spaceMode = "screen";
+    if(this.spaceMode === "screen"){
+      this.drawScene = _drawSceneScreenspace;
+    }
+    
+    // this.canvas = document.getElementById(canvasId);
         
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
@@ -128,7 +157,13 @@ export class Basestation {
     
     // Initialize a shader program; this is where all the lighting
     // for the vertices and so forth is established.
-    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+    var shaderProgram;
+    if(this.spaceMode === "screen"){
+      shaderProgram = initShaderProgram(gl, vScreen, fScreen);
+    }
+    else {
+      shaderProgram = initShaderProgram(gl, vertexBasicShader, fragmentBasicShader);
+    }
 
     // Collect all the info needed to use the shader program.
     // Look up which attribute our shader program is using
@@ -143,7 +178,14 @@ export class Basestation {
         modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
       },
     };
+    
+    if(this.spaceMode === "screen"){
+      programInfo.uniformLocations.resolution = gl.getUniformLocation(shaderProgram, "u_resolution");
+    }
+
+    
     this.programInfo = programInfo;
+    
     
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
@@ -224,7 +266,8 @@ export class Basestation {
     
     //this.animate.call(this);
     // debugger
-    this.loop.call(this);
+    // this.loop.call(this);
+    this.startLoop();
 
 
   }

@@ -32,9 +32,13 @@ function sdkjfgndf(){
 export class Rectangle extends Quark {
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(gl, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
     // console.log("color", color);
-    super(gl, x, y, width, height, 0, color);
+    super(name, x, y, width, height, 0, color);
+    
+    // we know this as two tris
+    this.pointsCount = 6;
+    
   }
 
   // draws to the buffer

@@ -64,13 +64,24 @@
         font-size: 20px;
         
       }
+      
+      #ksdjfg{
+        position: absolute;
+        z-index: 12;
+        bottom: 100px;
+        left: 100px;
+        background-color: white;
+        width: 1px;
+        height: 1px;
+      }
+      
 
     </style>
   </head>
 
   <body>
     <canvas id="canvassss" width="400" height="400"></canvas>
-
+<div id="ksdjfg"></div>
     <div id="controls">
       <button class="add button">+</button>
     </div>
@@ -118,12 +129,14 @@
       APPPP.addGameToCatalog(soundboard);
       
       // APPPP.insertDisc(squaresATron_I);
+      // APPPP.insertDisc(soundboard);
       APPPP.insertDisc(bocky);
       
       
       // block for games loadering
       // http://localhost:8001/System1/index.html?game=squaresATron_I
       // http://localhost:8001/System1/index.html?game=bocky
+      // http://localhost:8001/System1/index.html?game=soundboard
       {
         // const paramsString = 'q=URLUtils.searchParams&topic=api';
         // const searchParams = new URLSearchParams(paramsString);

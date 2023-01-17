@@ -6,7 +6,7 @@ export let loop = function(){
   //requestAnimationFrame( animate.bind(this) );
   //requestAnimationFrame( animate.bind(this) );
   if(this.runtimeState === "play"){
-    requestAnimationFrame( this.loop.bind(this) );
+    this.loopID = requestAnimationFrame( this.loop.bind(this) );
   }
   // console.log("popcorn");
   // cube.rotation.x += 0.01;

@@ -17,6 +17,8 @@ export class Quark {
   color = {x:1.0, y:1.0, z:1.0, w:1.0};
   origin = {x:0,y:0,z:0};
   
+  pointsCount = 0;
+  
   // when updating
   // need to update matrix stuff
   peeps = new Set();
@@ -42,9 +44,14 @@ export class Quark {
     height: this.height
   }`;
   playCodeDecompressed = null;
-
-  constructor(gl, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-    this.gl = gl;
+  
+  // we never have the gl available yet on start of game....
+  // maaaaybe we should, but for now just make it name
+  // also arguments shoudl become an object
+  //constructor(gl, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+    // this.gl = gl;
+    this.name = name;
     this.height = height;
     this.width = width;
     this.x = x;

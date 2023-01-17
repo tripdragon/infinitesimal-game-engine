@@ -37,15 +37,20 @@ export class Polygon extends Quark {
   points = [];
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  //constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
     
     // need to compute width and height
     var hh = 0;
     var ww = 0;
-    super(gl, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    super(name, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
     
     this.points = points;
     this.scalar = scalar;
+    
+    // we know this as two tris
+    // DONT KNOW count yet
+    // this.pointsCount = 6;
     
   }
 
@@ -118,6 +123,8 @@ function setPolygon(gl, x, y, scalar, points) {
   // num % 2; 
   // need some matrix magic here for scaling
   positions = [];
+  // for now its scaling the points from the center????
+  // would want to move that to the matrix and origin
   for (var i = 0; i < points.length; i++) {
     var og = points[i] * scalar;
     // var og = points[i];

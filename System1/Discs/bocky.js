@@ -15,8 +15,9 @@ export let disc = new Game("bocky");
 
 disc.load = function(){
 
-  // Need a scene grapth
-
+  // changing the sapce mode for a platformer game
+  this.system.spaceMode = "screen";
+  this.system.reboot();
 
   // here we pump objects into the Systems scene grapth
   // Base charactor objects!!
@@ -40,19 +41,26 @@ disc.load = function(){
     -1,1,
     1,-1
   ];
-  var sq1 = new Polygon(null, points, -2, 4, 2);
+  // the points units -1,1 makes for a width of 2
+  //var sq1 = new Polygon(null, points, -2, 4, 2);
+  //var sq1 = new Polygon(null, points, 10, 0, 0.5);
+  
+  var x = window.innerWidth / 2;
+  var y = window.innerHeight / 2;
+  var sq1 = new Polygon("player", points, x, y, 10);
 
   // APPPP.sceneGrapth.addActor();
   this.system.sceneGrapth.add(sq1);
   
+  
   // render order, this renders next
-  var border1 = new Rectangle(null, -40, -20, 82, 2, {x:0,y:0.5,z:0,w:0});
+  var border1 = new Rectangle("wall", 20, y + 40, 600, 30, {x:0,y:0.5,z:0,w:0});
   this.system.sceneGrapth.add(border1);
   
   // console.log(border1.origin.x);
   // here we can see that origin is not correct yet
   console.log(border1.origin.x, border1.origin.y);
-  var centerOfBorder = new Rectangle(null, border1.origin.x + border1.x, border1.origin.y + border1.y, 1, 1, {x:1.0,y:0.4,z:1.0,w:0});
+  var centerOfBorder = new Rectangle("wall 2", border1.origin.x + border1.x, border1.origin.y + border1.y, 1, 1, {x:1.0,y:0.4,z:1.0,w:0});
   this.system.sceneGrapth.add(centerOfBorder);
   
   //
@@ -61,9 +69,10 @@ disc.load = function(){
   var arrowsDown = {
     up: false, down: false, left: false, right: false
   }
-
-  var x = 0.5;
-  var y = 0.5;
+  
+  //speed
+  var x = 2.5;
+  var y = 2.5;
   this.system.loopHookPoints.beforeDraw = function(){
     if(arrowsDown.left){
       sq1.x += -x;
@@ -71,11 +80,12 @@ disc.load = function(){
     if(arrowsDown.right){
       sq1.x += x;
     }
+    // in screen space we need to flip y
     if(arrowsDown.down){
-      sq1.y += -y;
+      sq1.y += -y * -1;
     }
     if(arrowsDown.up){
-      sq1.y += y;
+      sq1.y += y * -1;
     }
   }
 
