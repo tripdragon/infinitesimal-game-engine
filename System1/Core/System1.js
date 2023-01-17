@@ -19,6 +19,8 @@ export class Basestation {
   
   cameraDefault = {x:0,y:0, z: -70};
   
+  gamesCatalog = {};
+  
   time = {
     sinceStarted : 0,
     sincePaused : 0,
@@ -61,6 +63,10 @@ export class Basestation {
     this.bootUp_CM(canvasId);
   }
   
+  addGameToCatalog(game){
+    this.gamesCatalog[game.name] = game;
+  }
+  
   // type of Game
   insertDisc(game){
     if(this.currentGame !== null){
@@ -68,6 +74,8 @@ export class Basestation {
     }
     this.unloadDisc();
     this.currentGame = game;
+    // or change to a Set()
+    this.gamesCatalog[game.name] = game;
     game.start(this);
   }
   

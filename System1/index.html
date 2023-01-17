@@ -108,11 +108,45 @@
       
       import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
       import { disc as bocky } from  "./Discs/bocky.js";
+      import { disc as soundboard } from  "./Discs/soundboard.js";
 
       // Should have some stupid function like insertDisc ...
       // moving Game setup into its class
+      
+      APPPP.addGameToCatalog(bocky);
+      APPPP.addGameToCatalog(squaresATron_I);
+      APPPP.addGameToCatalog(soundboard);
+      
       // APPPP.insertDisc(squaresATron_I);
       APPPP.insertDisc(bocky);
+      
+      
+      // block for games loadering
+      // http://localhost:8001/System1/index.html?game=squaresATron_I
+      // http://localhost:8001/System1/index.html?game=bocky
+      {
+        // const paramsString = 'q=URLUtils.searchParams&topic=api';
+        // const searchParams = new URLSearchParams(paramsString);
+        var params = {};
+        if (location.search) {
+            var parts = location.search.substring(1).split('&');
+            for (var i = 0; i < parts.length; i++) {
+                var nv = parts[i].split('=');
+                if (!nv[0]) continue;
+                params[nv[0]] = nv[1] || true;
+            }
+        }
+
+        if(params.hasOwnProperty("game")){
+          var gg = APPPP.gamesCatalog[params.game];
+          console.log("gaaame", gg);
+          if(gg){
+            console.log("??¿¿¿");
+            APPPP.insertDisc(gg);
+          }
+        }
+
+      }
       
       
       

@@ -10,7 +10,7 @@ import { Game } from "../Core/Game.js";
 
 
 
-export let disc = new Game("utzSquares");
+export let disc = new Game("squaresATron_I");
 
 disc.load = function(){
   
