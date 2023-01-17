@@ -61,6 +61,12 @@ disc.load = function(){
   var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
   this.system.sceneGrapth.add(border1);
   
+  
+  var border2 = new Rectangle("wall", 400, 200, 200, 50, {x:0,y:0.5,z:0,w:0});
+  this.system.sceneGrapth.add(border2);
+  
+  var walls = [border1, border2];
+  
   // console.log(border1.origin.x);
   // here we can see that origin is not correct yet
   // console.log(border1.origin.x, border1.origin.y);
@@ -78,14 +84,14 @@ disc.load = function(){
   // ADDIng to the loop
   // 
   //speed
-  var x = 4.5;
-  var y = 4.5;
+  var x = 19.5;
+  var y = 19.5;
   
   var previousPos = {x:player.x,y:player.y};
   
   this.system.loopHookPoints.beforeDraw = function(){
     
-    var isINnnn = false;
+    
     
     if(arrowsDown.left){
       player.x += -x;
@@ -114,124 +120,23 @@ disc.load = function(){
     //   origin : {x: 200 / 2, height : 20 /2 }
     // }
     {
+      var wasIn = false;
+    for (var i = 0; i < walls.length; i++) {
+      var wall = walls[i];
+    
+      
+      var isINnnn = false;
+      
       var p_minX = player.x; // if top left is origin
       var p_maxX = player.width + player.x;
       var p_minY = player.y; // if top lft is origin
       var p_maxY = player.height + player.y;
       
-      var w_minX = border1.x; // if top left is origin
-      var w_maxX = border1.width + border1.x;
-      var w_minY = border1.y; // if top lft is origin
-      var w_maxY = border1.height + border1.y;
+      var w_minX = wall.x; // if top left is origin
+      var w_maxX = wall.width + wall.x;
+      var w_minY = wall.y; // if top lft is origin
+      var w_maxY = wall.height + wall.y;
       
-      
-      // console.log("player w ", p_minX, p_maxX, "h ", p_minY, p_maxY);
-      // console.log("wall w ", w_minX, w_maxX, "h ", w_minY, w_maxY);
-      // console.log(p_minX, p_maxX, p_minY, p_maxY);
-      
-      // console.log(border1);
-      // console.log(player);
-      
-      // console.log("player.x ", p_minX);
-      
-      // var isIn = false;
-      // // border1.color = {x:0,y:0,z:1,w:0};
-      // if(p_minX >= w_minX || p_maxX <= w_maxX && p_minY >= w_minY || p_maxY <= w_maxY){
-      //   isIn = true;
-      // }
-      
-      
-      // 
-      // if(isIn){
-      //   console.log("in??");
-      //   border1.color = {x:0,y:0,z:1,w:0};
-      // }
-      // else {
-      //   console.log("out???");
-      //   border1.color = {x:0,y:1,z:0,w:0};
-      // }
-      
-      // console.log("player.x", player.x, player.width);
-      // console.log("wall.x", border1.x, border1.width, border1.height, border1.y);
-      
-      // if(p_minX >= w_minX && p_maxY <= w_maxY || p_maxY >= w_minY && p_maxY <= w_maxY){
-      //   console.log("x in");
-      // }
-      // else {
-      //   console.log("x out");
-      // }
-      
-      // if(p_minX >= w_minX && p_maxX <= w_maxX){
-      //   console.log("x in");
-      // }
-      // else {
-      //   console.log("x out");
-      // }
-      
-      // console.clear()
-      // if(p_minY >= w_minY && p_maxY <= w_maxY){
-      //   console.log("y in");
-      // }
-      // else {
-      //   console.log("y out");
-      // }
-      // 
-      // function testlike(p,w){
-      //   if(p.w.min >= w.w.min || p.w.max <= w.w.max &&
-      //     p.h.min >= w.h.min || p.h.max <= w.h.max){
-      //     console.log("in");
-      //   }
-      //   else {
-      //     console.log("out");
-      //   }
-      // }
-      
-      // pp =  {w:{min:10,max:20}, h:{min:10,max:20} };
-      // ww = {w:{min:0,max:40}, h:{min:8,max:30} };
-      // testlike(pp,ww)
-      
-      // player w  386.5 406.5 h  440 460
-      // wall w    400 600 h      447.5 497.5
-      // 
-      // player w  386.5 406.5 h  440 460 bocky.js:122:15
-      // wall w    400 600 h  447.5 497.5
-      
-      // player w  389 409 h  460 480 bocky.js:122:15
-        // wall w  400 600 h  447.5 497.5
-        
-        // console.log("player.height", player.height);
-        // console.log("wall.height", border1.height);
-      
-      // if (p_minX >= w_minX && p_minX <= w_maxX ||
-      //   p_maxX >= w_minY && p_maxX <= w_maxX) {
-      //   console.log("x in");
-      // }
-      // else {
-      //   console.log("x out");
-      // }
-      
-      // if (p_minY >= w_minY && p_minY <= w_maxY ||
-      // p_maxY >= w_minY && p_maxY <= w_maxY) {
-      //   console.log("y in");
-      // }
-      // else {
-      //   console.log("y out");
-      // }
-      
-      // 
-      // if(p_minX >= w_minX && p_minX <= w_maxX ||
-      //   p_maxX >= w_minY && p_maxX <= w_maxX
-      //   &&
-      //   p_minY >= w_minY && p_minY <= w_maxY ||
-      //   p_maxY >= w_minY && p_maxY <= w_maxY
-      // ){
-      //   console.log("in");
-      // }
-      // else {
-      //   console.log("out");
-      // }
-      
-      // var isINnnn = false;
       
       // if(p_minX >= w_minX && p_minX <= w_maxX ||
       //   p_maxX >= w_minY && p_maxX <= w_maxX) {
@@ -249,22 +154,6 @@ disc.load = function(){
       // }
       // 
       
-      
-      // 
-      // function intersect(a, b) {
-      //   return (
-      //     a.minX <= b.maxX &&
-      //     a.maxX >= b.minX &&
-      //     a.minY <= b.maxY &&
-      //     a.maxY >= b.minY
-      //   );
-      // }
-      // 
-      // isINnnn = intersect({minX:p_minX, maxX: p_maxX}, {minX:w_minX, maxX: w_maxX});
-      // 
-      
-      
-      
     //   if(player.x < border1.x + border1.width &&
     // player.x + player.width > border1.x &&
     // player.y < border1.y + border1.height &&
@@ -279,38 +168,41 @@ disc.load = function(){
 
       
       if(isINnnn){
-        console.log("innnn?");
-        border1.color = {x:0,y:0,z:1,w:0};
+        // console.log("innnn?");
+        wall.color = {x:0,y:0,z:1,w:0};
       }
       else {
-        console.log("ouuuut???");
-        border1.color = {x:0,y:0.5,z:0,w:0};
+        // console.log("ouuuut???");
+        wall.color = {x:0,y:0.5,z:0,w:0};
       }
       
-  if(isINnnn){
-    player.x = previousPos.x;
-    player.y = previousPos.y;
-  }
-  else {
-    previousPos.x = player.x;
-    previousPos.y = player.y;
-  }
+
+if(wasIn == false && isINnnn == true){
+  wasIn = true;
+}
       
+}
+// 
+// if(isINnnn){
+//   player.x = previousPos.x;
+//   player.y = previousPos.y;
+// }
+// else {
+//   previousPos.x = player.x;
+//   previousPos.y = player.y;
+// }
+// 
+
+if(wasIn){
+  player.x = previousPos.x;
+  player.y = previousPos.y;
+}
+else {
+  previousPos.x = player.x;
+  previousPos.y = player.y;
+}
       
-      // if(p_minX >= w_minX ){
-      //   console.log("x min in");
-      // }
-      // else {
-      //   console.log("x min out");
-      // }
-      
-      // if(p_maxX <= w_maxX ){
-      //   console.log("x max in");
-      // }
-      // else {
-      //   console.log("x max out");
-      // }
-      
+
       
     }
   }
