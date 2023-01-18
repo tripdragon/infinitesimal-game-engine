@@ -16,9 +16,7 @@ export let disc = new Game("bocky");
 
 disc.load = function(){
 
-  // changing the screen space mode for a platformer game
-  this.system.screenSpaceMode = this.system.screenModes.screen;
-  this.system.reboot();
+
 
   // here we pump objects into the Systems scene grapth
   // Base charactor objects!!
@@ -51,7 +49,7 @@ disc.load = function(){
   // var player = new Polygon("player", points, x, y, 10);
   var player = new Rectangle("player", x, 340, 20, 20);
   // var player = new Rectangle("player", x, 340, 120, 120);
-window.player = player;
+  window.player = player;
 
   // APPPP.sceneGrapth.addActor();
   this.system.sceneGrapth.add(player);
@@ -61,10 +59,18 @@ window.player = player;
   // var border1 = new Rectangle("wall", 20, y + 40, 600, 30, {x:0,y:0.5,z:0,w:0});
   var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
   this.system.sceneGrapth.add(border1);
+  border1.onCollide = function(){
+    console.log("wap!", border1.name);
+    soundboard1.play();
+  }
   
   
   var border2 = new Rectangle("wall", 400, 200, 200, 50, {x:0,y:0.5,z:0,w:0});
   this.system.sceneGrapth.add(border2);
+  border2.onCollide = function(){
+    console.log("wap!", border2.name);
+    soundboard1.play();
+  }
   
   var walls = [border1, border2];
   
@@ -208,6 +214,7 @@ window.player = player;
         if(isInMuch){
           // console.log("innnn?");
           wall.color = {x:0,y:0,z:1,w:0};
+          wall.onCollide();
         }
         else {
           // console.log("ouuuut???");
@@ -347,6 +354,44 @@ else {
     // document.body.appendChild(controls);
     gg.appendChild(controls);
 
+    //
+    // sound effect
+    // changing the screen space mode for a platformer game
+    this.system.screenSpaceMode = this.system.screenModes.screen;
+    this.system.reboot();
+
+    
+    var sound = document.createElement("audio");
+    // sound.src = "./Discs/Soundeffects/mixkit-player-jumping-in-a-video-game-2043.wav";
+    sound.src = "./Discs/Soundeffects/bleep-audiomass-output.wav";
+    sound.setAttribute("preload", "auto");
+    sound.setAttribute("controls", "none");
+    sound.style.display = "none";
+    var gg = document.getElementById("gamespace");
+    gg.appendChild(sound);
+  
+  // var sound = new Audio('./Discs/Soundeffects/mixkit-player-jumping-in-a-video-game-2043.wav');
+  // audio.play();
+    
+    var soundboard1 = {
+      el : sound,
+      play : function(){
+        sound.play();
+      },
+      stop : function(){
+        sound.pause();
+      }
+    };
+    window.soundboard1 = soundboard1;
+    // onCollide(){
+    //   console.log("wap!", this.name);
+    // }
+    
+
+
+
+
+
 
     
     var that = this;
@@ -371,6 +416,16 @@ else {
       
       that.system.sceneGrapth.add(border1);
       
+      border1.onCollide = function(){
+        soundboard1.stop();
+        soundboard1.play();
+        // setTimeout(()=> {
+        // 
+        //      window.soundboard1.stop();
+        // 
+        //  }, 10);
+      }
+      
       // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
       // sq1.playCode = `return { do : function(obj, helpers){
       //   obj.x = helpers.randomBetween(${-xx},${xy});
@@ -379,7 +434,7 @@ else {
       //   obj.color.z = Math.random();
       // }}`;
       
-      that.system.sceneGrapth.add(border1);
+      // that.system.sceneGrapth.add(border1);
 
       if(that.system.runtimeState !== "play"){
         // should have a draw command

@@ -39,7 +39,10 @@ export class Rectangle extends Quark {
     this.scalar = val;
     this.width = this.mWidth * this.scalar;
     this.height = this.scalar * this.mHeight;
-    
+  }
+  
+  onCollide(){
+    console.log("wap!", this.name);
   }
 
   // this could use some of that fancy {deconstructor} or ... new stuff
