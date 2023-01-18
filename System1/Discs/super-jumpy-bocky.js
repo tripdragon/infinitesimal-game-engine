@@ -47,6 +47,8 @@ disc.load = function(){
     // var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
     // ss.play();
   }
+  border1.shiftLeft = randomBetween(1,100);
+
   
   
   var border2 = new Rectangle("wall", 400, 200, 200, 50, {x:0,y:0.5,z:0,w:0});
@@ -57,6 +59,8 @@ disc.load = function(){
     // var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
     // ss.play();
   }
+  border2.shiftLeft = randomBetween(1,100);
+
   
   var walls = [border1, border2];
   
@@ -195,6 +199,14 @@ disc.load = function(){
         if(wall === player){
           continue;
         }
+        
+        if(wall.shiftLeft){
+          wall.x += wall.shiftLeft * 0.05;
+          if (wall.x > window.innerWidth){
+            wall.x = -wall.width;
+                wall.shiftLeft = randomBetween(1,100);
+          }
+        }
       
         isInMuch = AABBTest(player, wall);
         
@@ -317,6 +329,8 @@ disc.load = function(){
     // need a technique to make tall walls
     
     var border1 = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
+    
+    border1.shiftLeft = randomBetween(1,100);
     
     // cant play if the wall test is overlap for now
     if( AABBTest(player, border1) == true){
