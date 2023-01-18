@@ -31,6 +31,17 @@ function sdkjfgndf(){
 
 export class Rectangle extends Quark {
 
+
+  scalar = 1;
+  mHeight;
+  mWidth;
+  setScaletemp(val){
+    this.scalar = val;
+    this.width = this.mWidth * this.scalar;
+    this.height = this.scalar * this.mHeight;
+    
+  }
+
   // this could use some of that fancy {deconstructor} or ... new stuff
   constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
     // console.log("color", color);
@@ -38,7 +49,8 @@ export class Rectangle extends Quark {
     
     // we know this as two tris
     this.pointsCount = 6;
-    
+    this.mHeight = height;
+    this.mWidth = width;
   }
 
   // draws to the buffer

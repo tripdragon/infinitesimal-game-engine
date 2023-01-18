@@ -1,41 +1,5 @@
 
 
-/*
-<div id="controls">
-  <button class="add button">+</button>
-</div>
-*/
-
-// BLEGH string css
-// const cssblock = `
-// 
-//     <style media="screen">
-//       #controls{
-//         position: absolute;
-//         top: 0px;
-//         left: 0px;
-//         z-index: 2;
-//         /* background: green; */
-//         width: 100px;
-//         height: 100px;
-//         padding: 20px 0 0 20px;
-//       }
-// 
-//       #controls .add{
-//         /* width: 22px; */
-//         /* height: 22px; */
-//       }
-// 
-//       #controls .button{
-//         width: 32px;
-//         height: 32px;
-//       }
-// 
-// 
-//     </style>
-// `;
-
-
 
 // Basic example of a basic buch of things in the view
 
@@ -56,7 +20,10 @@ disc.load = function(){
   this.system.screenSpaceMode = this.system.screenModes.main3d;
   this.system.reboot();
 
-
+  
+  // THiS ADD button is a common pattern
+  // could move it back into index but as a optional
+  // "editor slot"
   
   //
   // Editor UI stuff, figure out where else to put
@@ -66,6 +33,8 @@ disc.load = function(){
   //   style.textContent = styleString;
   // 
   // }
+  
+  // block for : add button for making squares
   {
     var controls = document.createElement('div');
     controls.id = "controls";
@@ -86,15 +55,14 @@ disc.load = function(){
     button.style.cssText = `width: 32px;
     height: 32px;`;
     controls.appendChild(button);
-    document.body.appendChild(controls);
-  }
-  
-  
-  
-  
+    // var gg = document.getElementById("bodyInjectionPointMain");
+    var gg = document.getElementById("gamespace");
+    gg.innerHTML = "";
+    // document.body.appendChild(controls);
+    gg.appendChild(controls);
 
-  // block for : add button for making squares
-  {
+
+    
     var that = this;
     
     function addHipToBeSquare(ev){

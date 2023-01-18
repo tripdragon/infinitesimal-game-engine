@@ -10,13 +10,13 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Game } from "../Core/Game.js";
 
 import { keyboard } from '../Modules/input.js';
+import { randomBetween } from "../Modules/mathness.js";
 
 export let disc = new Game("bocky");
 
 disc.load = function(){
 
-  // changing the sapce mode for a platformer game
-
+  // changing the screen space mode for a platformer game
   this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
 
@@ -51,7 +51,7 @@ disc.load = function(){
   // var player = new Polygon("player", points, x, y, 10);
   var player = new Rectangle("player", x, 340, 20, 20);
   // var player = new Rectangle("player", x, 340, 120, 120);
-
+window.player = player;
 
   // APPPP.sceneGrapth.addActor();
   this.system.sceneGrapth.add(player);
@@ -90,6 +90,53 @@ disc.load = function(){
   
   var previousPos = {x:player.x,y:player.y};
   
+  
+  // temp for now place to hit test
+  function AABBTest(object1, object2){
+    
+    var isINnnn = false;
+    
+    var p_minX = object1.x; // if top left is origin
+    var p_maxX = object1.width + object1.x;
+    var p_minY = object1.y; // if top lft is origin
+    var p_maxY = object1.height + object1.y;
+    
+    var w_minX = object2.x; // if top left is origin
+    var w_maxX = object2.width + object2.x;
+    var w_minY = object2.y; // if top lft is origin
+    var w_maxY = object2.height + object2.y;
+    
+    
+    // if(p_minX >= w_minX && p_minX <= w_maxX ||
+    //   p_maxX >= w_minY && p_maxX <= w_maxX) {
+    //     if (p_minY >= w_minY && p_minY <= w_maxY ||
+    //       p_maxY >= w_minY && p_maxY <= w_maxY) {
+    //       console.log("in");
+    //       isINnnn = true;
+    //     }
+    //     else {
+    //       console.log("ouuttt¿¿¿");
+    //     }
+    //   }  
+    // else {
+    //   console.log("out");
+    // }
+    // 
+      
+    // winner function! from internets :<
+    if(p_minX < w_maxX &&
+      p_maxX > w_minX &&
+      p_minY < w_maxY &&
+      p_maxY > w_minY)
+    {
+        isINnnn = true;
+    }
+    
+    return isINnnn;
+    
+  } // AABBTest
+  
+  
   this.system.loopHookPoints.beforeDraw = function(){
     
     
@@ -108,6 +155,21 @@ disc.load = function(){
       player.y += y * -1;
     }
     
+    // ASTROIDS!!!! like
+    if(player.x > window.innerWidth){
+      player.x = 0;
+    }
+    else if(player.x < 0){
+      player.x = window.innerWidth;
+    }
+    if(player.y > window.innerHeight){
+      player.y = 0;
+    }
+    else if(player.y < 0){
+      player.y = window.innerHeight;
+    }
+    
+    
     //
     // AABB hit testing
     //
@@ -120,75 +182,44 @@ disc.load = function(){
     //   x: -20, y: -40, width: 200, height : 20,
     //   origin : {x: 200 / 2, height : 20 /2 }
     // }
-    {
-      var wasIn = false;
-    // for (var i = 0; i < walls.length; i++) {
-    for (var i = 0; i < APPPP.colliders.length; i++) {
-      var wall = APPPP.colliders[i];
-      // var wall = walls[i];
-      // cheap for now dont test player collide
-      if(wall === player){
-        continue;
-      }
     
-      
-      var isINnnn = false;
-      
-      var p_minX = player.x; // if top left is origin
-      var p_maxX = player.width + player.x;
-      var p_minY = player.y; // if top lft is origin
-      var p_maxY = player.height + player.y;
-      
-      var w_minX = wall.x; // if top left is origin
-      var w_maxX = wall.width + wall.x;
-      var w_minY = wall.y; // if top lft is origin
-      var w_maxY = wall.height + wall.y;
-      
-      
-      // if(p_minX >= w_minX && p_minX <= w_maxX ||
-      //   p_maxX >= w_minY && p_maxX <= w_maxX) {
-      //     if (p_minY >= w_minY && p_minY <= w_maxY ||
-      //       p_maxY >= w_minY && p_maxY <= w_maxY) {
-      //       console.log("in");
-      //       isINnnn = true;
-      //     }
-      //     else {
-      //       console.log("ouuttt¿¿¿");
-      //     }
-      //   }  
-      // else {
-      //   console.log("out");
-      // }
-      // 
-      
-    //   if(player.x < border1.x + border1.width &&
-    // player.x + player.width > border1.x &&
-    // player.y < border1.y + border1.height &&
-    // player.y + player.height > border1.y)
-    if(p_minX < w_maxX &&
-  p_maxX > w_minX &&
-  p_minY < w_maxY &&
-  p_maxY > w_minY)
-{
-    isINnnn = true;
-}
+    // this handles all tests so we can cache its position
+    var wasIn = false;
+    
+    
+    
+    {
 
+      // for (var i = 0; i < walls.length; i++) {
+      for (var i = 0; i < APPPP.colliders.length; i++) {
+        
+        var isInMuch = false;
+        
+        var wall = APPPP.colliders[i];
+        // var wall = walls[i];
+        // cheap for now dont test player collide
+        if(wall === player){
+          continue;
+        }
       
-      if(isINnnn){
-        // console.log("innnn?");
-        wall.color = {x:0,y:0,z:1,w:0};
-      }
-      else {
-        // console.log("ouuuut???");
-        wall.color = {x:0,y:0.5,z:0,w:0};
-      }
+        isInMuch = AABBTest(player, wall);
+        
+        if(isInMuch){
+          // console.log("innnn?");
+          wall.color = {x:0,y:0,z:1,w:0};
+        }
+        else {
+          // console.log("ouuuut???");
+          wall.color = {x:0,y:0.5,z:0,w:0};
+        }
       
 
-if(wasIn == false && isINnnn == true){
-  wasIn = true;
-}
+        if(wasIn == false && isInMuch == true){
+          wasIn = true;
+        }
+            
+      } // colliders loop
       
-}
 // 
 // if(isINnnn){
 //   player.x = previousPos.x;
@@ -217,6 +248,15 @@ else {
   
   // set up walking player
   keyboard({
+    1 : (ev) => {
+      player.setScaletemp(0.1);
+    },
+    2 : (ev) => {
+      player.setScaletemp(1);
+    },
+    3 : (ev) => {
+      player.setScaletemp(2);
+    },
     ArrowLeft_down: (ev) => {
       // console.log(ev);
       // console.log(player);
@@ -258,4 +298,119 @@ else {
 
   });
 
+
+
+  
+
+
+  //
+  // Editor UI stuff, figure out where else to put
+  //
+  // function addStyle(element, styleString) {
+  //   const style = document.createElement('style');
+  //   style.textContent = styleString;
+  // 
+  // }
+
+  // block for : add button for making squares
+  {
+    var controls = document.createElement('div');
+    controls.id = "controls";
+    controls.style.cssText = `
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    /* background: green; */
+    width: 100px;
+    height: 100px;
+    padding: 20px 0 0 20px;
+    `;
+    var button = document.createElement('button');
+    button.classList.add("button");
+    button.classList.add("add");
+    button.innerText = "+";
+    button.style.cssText = `width: 32px;
+    height: 32px;`;
+    controls.appendChild(button);
+    console.log("222222???");
+    // var gg = document.getElementById("bodyInjectionPointMain");
+    var gg = document.getElementById("gamespace");
+    gg.innerHTML = "";
+    // document.body.appendChild(controls);
+    gg.appendChild(controls);
+
+
+    
+    var that = this;
+    var index = 5;
+    function addHipToBeSquare(ev){
+      console.log(ev, "fish");
+      
+      index++;
+      
+      const xx = randomBetween(0,window.innerWidth);
+      const xy = randomBetween(0,window.innerHeight);
+      const ww = randomBetween(0.5,400);
+      const wh = randomBetween(1,50);
+      // need a technique to make tall walls
+      
+      var border1 = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
+      
+      // cant play if the wall test is overlap for now
+      if( AABBTest(player, border1) == true){
+        return;
+      }
+      
+      that.system.sceneGrapth.add(border1);
+      
+      // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+      // sq1.playCode = `return { do : function(obj, helpers){
+      //   obj.x = helpers.randomBetween(${-xx},${xy});
+      //   obj.color.x = Math.random();
+      //   obj.color.y = Math.random();
+      //   obj.color.z = Math.random();
+      // }}`;
+      
+      that.system.sceneGrapth.add(border1);
+
+      if(that.system.runtimeState !== "play"){
+        // should have a draw command
+        that.system.loop();
+      }
+      
+      console.log("?¿¿¿?!??!");
+      
+    }
+    
+    // let controls = document.getElementById('controls');
+    let add = document.querySelector("#controls .add");
+    if(add){
+        add.addEventListener( "click", function(){
+          for (var i = 0; i < 10; i++) {
+            addHipToBeSquare();
+          }
+        }
+          , false );
+    }
+    // for (var i = 0; i < 1000; i++) {
+    //   add.click()
+    // }
+    
+    
+    // make a ton!!!
+    for (var i = 0; i < 40; i++) {
+      addHipToBeSquare();
+    }
+    
+    
+    
+  }
+
+
+
+
+
+
 };
+// stop  loop??
