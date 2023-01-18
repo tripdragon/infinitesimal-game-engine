@@ -85,8 +85,9 @@ window.player = player;
   // ADDIng to the loop
   // 
   //speed
-  var x = 19.5;
-  var y = 19.5;
+  player.speed = 19.5;
+  // var x = 19.5;
+  // var y = 19.5;
   
   var previousPos = {x:player.x,y:player.y};
   
@@ -142,17 +143,17 @@ window.player = player;
     
     
     if(arrowsDown.left){
-      player.x += -x;
+      player.x += -player.speed;
     }
     if(arrowsDown.right){
-      player.x += x;
+      player.x += player.speed;
     }
     // in screen space we need to flip y
     if(arrowsDown.down){
-      player.y += -y * -1;
+      player.y += -player.speed * -1;
     }
     if(arrowsDown.up){
-      player.y += y * -1;
+      player.y += player.speed * -1;
     }
     
     // ASTROIDS!!!! like
@@ -256,6 +257,12 @@ else {
     },
     3 : (ev) => {
       player.setScaletemp(2);
+    },
+    q : (ev) => {
+      player.speed = Math.max(player.speed - 1, 1);
+    },
+    w : (ev) => {
+      player.speed = Math.max(player.speed + 1, 10);
     },
     ArrowLeft_down: (ev) => {
       // console.log(ev);
