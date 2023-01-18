@@ -61,7 +61,9 @@ disc.load = function(){
   this.system.sceneGrapth.add(border1);
   border1.onCollide = function(){
     console.log("wap!", border1.name);
-    soundboard1.play();
+    // soundboard1.play();
+    var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+    ss.play();
   }
   
   
@@ -69,7 +71,9 @@ disc.load = function(){
   this.system.sceneGrapth.add(border2);
   border2.onCollide = function(){
     console.log("wap!", border2.name);
-    soundboard1.play();
+    // soundboard1.play();
+    var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+    ss.play();
   }
   
   var walls = [border1, border2];
@@ -373,16 +377,16 @@ else {
   // var sound = new Audio('./Discs/Soundeffects/mixkit-player-jumping-in-a-video-game-2043.wav');
   // audio.play();
     
-    var soundboard1 = {
-      el : sound,
-      play : function(){
-        sound.play();
-      },
-      stop : function(){
-        sound.pause();
-      }
-    };
-    window.soundboard1 = soundboard1;
+    // var soundboard1 = {
+    //   el : sound,
+    //   play : function(){
+    //     sound.play();
+    //   },
+    //   stop : function(){
+    //     sound.pause();
+    //   }
+    // };
+    // window.soundboard1 = soundboard1;
     // onCollide(){
     //   console.log("wap!", this.name);
     // }
@@ -417,8 +421,12 @@ else {
       that.system.sceneGrapth.add(border1);
       
       border1.onCollide = function(){
-        soundboard1.stop();
-        soundboard1.play();
+        // new Audio()
+        var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+        ss.play();
+
+        // soundboard1.stop();
+        // soundboard1.play();
         // setTimeout(()=> {
         // 
         //      window.soundboard1.stop();
