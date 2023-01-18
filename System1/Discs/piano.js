@@ -11,6 +11,7 @@ import { Game } from "../Core/Game.js";
 
 import { keyboard } from '../Modules/input.js';
 // import { randomBetween } from "../Modules/mathness.js";
+import { Rectangle } from "../Primitives/Rectangle.js";
 
 export let disc = new Game("pianoclassical");
 
@@ -50,7 +51,8 @@ gg.appendChild(pianoimg);
   for (var i = 0; i < alpha.length; i++) {
     lookup[alpha[i]] = { 
       key : alpha[i],
-      path : ""
+      path : "",
+      rect3d : null
     }
   }
   
@@ -91,6 +93,10 @@ gg.appendChild(pianoimg);
       var path = lookup[ev.key].path;
       var ss = new Audio(path);
       ss.play();
+      
+      // if(lookup[ev.key].rect3d){
+      //   lookup[ev.key].rect3d.color = 
+      // }
     }
   }
   
@@ -120,9 +126,23 @@ gg.appendChild(pianoimg);
   //   },
   // }
   
-
-
-
+  {
+    for (var i = 0; i < alpha.length; i++) {
+      
+      var key = new Rectangle("key"+i, (24 * i) + 44, 300, 20, 100, {x:1,y:1,z:1,w:0});
+      this.system.sceneGrapth.add(key);
+      
+      // lookup[alpha[i]].rect3d = key;
+      
+    }
+  
+  // border1.onCollide = function(){
+  //   console.log("wap!", border1.name);
+  //   // soundboard1.play();
+  //   var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+  //   ss.play();
+  // }
+  }
   
 
 

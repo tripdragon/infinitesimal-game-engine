@@ -1,4 +1,19 @@
 
+
+
+/*
+var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
+this.system.sceneGrapth.add(border1);
+border1.onCollide = function(){
+  console.log("wap!", border1.name);
+  // soundboard1.play();
+  var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+  ss.play();
+}
+
+*/
+
+
 import { Quark } from "../Core/Quark.js";
 
 

@@ -12,7 +12,7 @@ import { Game } from "../Core/Game.js";
 import { keyboard } from '../Modules/input.js';
 import { randomBetween } from "../Modules/mathness.js";
 
-export let disc = new Game("bocky");
+export let disc = new Game("superjumpybocky");
 
 disc.load = function(){
 
@@ -20,30 +20,8 @@ disc.load = function(){
   this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
 
+  
 
-
-  // here we pump objects into the Systems scene grapth
-  // Base charactor objects!!
-  // here we have a wordy but very direct example of custom scripting for each object square
-  // in this example the first arg is gl which is not available yet so well set it in the loop
-  //var sq1 = new SquareLike(null, -4, 4, 4, 6);
-  // sq1.playCode = `return { do : function(obj, helpers){
-  //   obj.x = helpers.randomBetween(-4,4);
-  //   obj.color.x = Math.random();
-  //   obj.color.y = Math.random();
-  //   obj.color.z = Math.random();
-  // }}`;
-
-  // constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  var points = [
-    -1,1,
-    -1,-1,
-    1,-1,
-    1,1,
-    // other tri
-    -1,1,
-    1,-1
-  ];
   // the points units -1,1 makes for a width of 2
   //var sq1 = new Polygon(null, points, -2, 4, 2);
   //var sq1 = new Polygon(null, points, 10, 0, 0.5);
@@ -51,7 +29,7 @@ disc.load = function(){
   var x = window.innerWidth / 2;
   var y = window.innerHeight / 2;
   // var player = new Polygon("player", points, x, y, 10);
-  var player = new Rectangle("player", x, 340, 20, 20);
+  var player = new Rectangle("player", 500, 140, 20, 20);
   // var player = new Rectangle("player", x, 340, 120, 120);
   window.player = player;
 
@@ -61,13 +39,13 @@ disc.load = function(){
   
   // render order, this renders next
   // var border1 = new Rectangle("wall", 20, y + 40, 600, 30, {x:0,y:0.5,z:0,w:0});
-  var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
+  var border1 = new Rectangle("wall", 40, 600, 400, 50, {x:0,y:0.5,z:0,w:0});
   this.system.sceneGrapth.add(border1);
   border1.onCollide = function(){
     console.log("wap!", border1.name);
     // soundboard1.play();
-    var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
-    ss.play();
+    // var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+    // ss.play();
   }
   
   
@@ -76,8 +54,8 @@ disc.load = function(){
   border2.onCollide = function(){
     console.log("wap!", border2.name);
     // soundboard1.play();
-    var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
-    ss.play();
+    // var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+    // ss.play();
   }
   
   var walls = [border1, border2];
@@ -151,10 +129,11 @@ disc.load = function(){
     
   } // AABBTest
   
-  
+  var mTime = Date.now();
   this.system.loopHookPoints.beforeDraw = function(){
-    
-    
+    var delta = Date.now() - mTime;
+    player.y += (delta * 0.01 ) + 9.7;
+    mTime = Date.now();
     
     if(arrowsDown.left){
       player.x += -player.speed;
@@ -207,7 +186,7 @@ disc.load = function(){
 
       // for (var i = 0; i < walls.length; i++) {
       for (var i = 0; i < APPPP.colliders.length; i++) {
-        
+        // break;
         var isInMuch = false;
         
         var wall = APPPP.colliders[i];
@@ -236,26 +215,26 @@ disc.load = function(){
             
       } // colliders loop
       
-// 
-// if(isINnnn){
-//   player.x = previousPos.x;
-//   player.y = previousPos.y;
-// }
-// else {
-//   previousPos.x = player.x;
-//   previousPos.y = player.y;
-// }
-// 
+      // 
+      // if(isINnnn){
+      //   player.x = previousPos.x;
+      //   player.y = previousPos.y;
+      // }
+      // else {
+      //   previousPos.x = player.x;
+      //   previousPos.y = player.y;
+      // }
+      // 
 
-if(wasIn){
-  player.x = previousPos.x;
-  player.y = previousPos.y;
-}
-else {
-  previousPos.x = player.x;
-  previousPos.y = player.y;
-}
-      
+      if(wasIn){
+        player.x = previousPos.x;
+        player.y = previousPos.y;
+      }
+      else {
+        previousPos.x = player.x;
+        previousPos.y = player.y;
+      }
+            
 
       
     }
@@ -324,161 +303,69 @@ else {
 
   
 
-
-  //
-  // Editor UI stuff, figure out where else to put
-  //
-  // function addStyle(element, styleString) {
-  //   const style = document.createElement('style');
-  //   style.textContent = styleString;
-  // 
-  // }
-
-  // block for : add button for making squares
-  {
-    var controls = document.createElement('div');
-    controls.id = "controls";
-    controls.style.cssText = `
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 2;
-    /* background: green; */
-    width: 100px;
-    height: 100px;
-    padding: 20px 0 0 20px;
-    `;
-    var button = document.createElement('button');
-    button.classList.add("button");
-    button.classList.add("add");
-    button.innerText = "+";
-    button.style.cssText = `width: 32px;
-    height: 32px;`;
-    controls.appendChild(button);
-    console.log("222222???");
-    // var gg = document.getElementById("bodyInjectionPointMain");
-    var gg = document.getElementById("gamespace");
-    gg.innerHTML = "";
-    // document.body.appendChild(controls);
-    gg.appendChild(controls);
-
-    //
-    // sound effect
-
+  var that = this;
+  var index = 5;
+  function addHipToBeSquare(ev){
+    console.log(ev, "fish");
     
-    var sound = document.createElement("audio");
-    // sound.src = "./Discs/Soundeffects/mixkit-player-jumping-in-a-video-game-2043.wav";
-    sound.src = "./Discs/Soundeffects/bleep-audiomass-output.wav";
-    sound.setAttribute("preload", "auto");
-    sound.setAttribute("controls", "none");
-    sound.style.display = "none";
-    var gg = document.getElementById("gamespace");
-    gg.appendChild(sound);
-  
-  // var sound = new Audio('./Discs/Soundeffects/mixkit-player-jumping-in-a-video-game-2043.wav');
-  // audio.play();
+    index++;
     
-    // var soundboard1 = {
-    //   el : sound,
-    //   play : function(){
-    //     sound.play();
-    //   },
-    //   stop : function(){
-    //     sound.pause();
-    //   }
-    // };
-    // window.soundboard1 = soundboard1;
-    // onCollide(){
-    //   console.log("wap!", this.name);
-    // }
+    const xx = randomBetween(0,window.innerWidth);
+    const xy = randomBetween(0,window.innerHeight);
+    const ww = randomBetween(0.5,400);
+    const wh = randomBetween(1,50);
+    // need a technique to make tall walls
     
-
-
-
-
-
-
+    var border1 = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
     
-    var that = this;
-    var index = 5;
-    function addHipToBeSquare(ev){
-      console.log(ev, "fish");
-      
-      index++;
-      
-      const xx = randomBetween(0,window.innerWidth);
-      const xy = randomBetween(0,window.innerHeight);
-      const ww = randomBetween(0.5,400);
-      const wh = randomBetween(1,50);
-      // need a technique to make tall walls
-      
-      var border1 = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
-      
-      // cant play if the wall test is overlap for now
-      if( AABBTest(player, border1) == true){
-        return;
-      }
-      
-      that.system.sceneGrapth.add(border1);
-      
-      border1.onCollide = function(){
-        // new Audio()
-        var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
-        ss.play();
-
-        // soundboard1.stop();
-        // soundboard1.play();
-        // setTimeout(()=> {
-        // 
-        //      window.soundboard1.stop();
-        // 
-        //  }, 10);
-      }
-      
-      // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
-      // sq1.playCode = `return { do : function(obj, helpers){
-      //   obj.x = helpers.randomBetween(${-xx},${xy});
-      //   obj.color.x = Math.random();
-      //   obj.color.y = Math.random();
-      //   obj.color.z = Math.random();
-      // }}`;
-      
-      // that.system.sceneGrapth.add(border1);
-
-      if(that.system.runtimeState !== "play"){
-        // should have a draw command
-        that.system.loop();
-      }
-      
-      console.log("?¿¿¿?!??!");
-      
+    // cant play if the wall test is overlap for now
+    if( AABBTest(player, border1) == true){
+      return;
     }
     
-    // let controls = document.getElementById('controls');
-    let add = document.querySelector("#controls .add");
-    if(add){
-        add.addEventListener( "click", function(){
-          for (var i = 0; i < 10; i++) {
-            addHipToBeSquare();
-          }
-        }
-          , false );
-    }
-    // for (var i = 0; i < 1000; i++) {
-    //   add.click()
-    // }
+    that.system.sceneGrapth.add(border1);
     
-    
-    // make a ton!!!
-    for (var i = 0; i < 40; i++) {
-      addHipToBeSquare();
+    border1.onCollide = function(){
+      // new Audio()
+      // var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+      // ss.play();
+
+      // soundboard1.stop();
+      // soundboard1.play();
+      // setTimeout(()=> {
+      // 
+      //      window.soundboard1.stop();
+      // 
+      //  }, 10);
     }
     
+    // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+    // sq1.playCode = `return { do : function(obj, helpers){
+    //   obj.x = helpers.randomBetween(${-xx},${xy});
+    //   obj.color.x = Math.random();
+    //   obj.color.y = Math.random();
+    //   obj.color.z = Math.random();
+    // }}`;
     
+    // that.system.sceneGrapth.add(border1);
+
+    if(that.system.runtimeState !== "play"){
+      // should have a draw command
+      that.system.loop();
+    }
+    
+    console.log("?¿¿¿?!??!");
     
   }
 
-
+  
+  
+  // make a ton!!!
+  for (var i = 0; i < 40; i++) {
+    addHipToBeSquare();
+  }
+  
+  
 
 
 
