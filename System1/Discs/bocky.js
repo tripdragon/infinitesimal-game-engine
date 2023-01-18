@@ -16,7 +16,8 @@ export let disc = new Game("bocky");
 disc.load = function(){
 
   // changing the sapce mode for a platformer game
-  this.system.spaceMode = "screen";
+
+  this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
 
   // here we pump objects into the Systems scene grapth
@@ -121,8 +122,14 @@ disc.load = function(){
     // }
     {
       var wasIn = false;
-    for (var i = 0; i < walls.length; i++) {
-      var wall = walls[i];
+    // for (var i = 0; i < walls.length; i++) {
+    for (var i = 0; i < APPPP.colliders.length; i++) {
+      var wall = APPPP.colliders[i];
+      // var wall = walls[i];
+      // cheap for now dont test player collide
+      if(wall === player){
+        continue;
+      }
     
       
       var isINnnn = false;

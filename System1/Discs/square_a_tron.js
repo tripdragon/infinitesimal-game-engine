@@ -1,5 +1,42 @@
 
 
+/*
+<div id="controls">
+  <button class="add button">+</button>
+</div>
+*/
+
+// BLEGH string css
+// const cssblock = `
+// 
+//     <style media="screen">
+//       #controls{
+//         position: absolute;
+//         top: 0px;
+//         left: 0px;
+//         z-index: 2;
+//         /* background: green; */
+//         width: 100px;
+//         height: 100px;
+//         padding: 20px 0 0 20px;
+//       }
+// 
+//       #controls .add{
+//         /* width: 22px; */
+//         /* height: 22px; */
+//       }
+// 
+//       #controls .button{
+//         width: 32px;
+//         height: 32px;
+//       }
+// 
+// 
+//     </style>
+// `;
+
+
+
 // Basic example of a basic buch of things in the view
 
 // hrmmm dont like going UP a folder for games stuff
@@ -8,14 +45,98 @@ import { SquareLike } from "../Primitives/squareLike.js";
 
 import { Game } from "../Core/Game.js";
 
+import { randomBetween } from "../Modules/mathness.js";
 
 
 export let disc = new Game("squaresATron_I");
 
 disc.load = function(){
+
   
-  // Need a scene grapth
+  this.system.screenSpaceMode = this.system.screenModes.main3d;
+  this.system.reboot();
+
+
   
+  //
+  // Editor UI stuff, figure out where else to put
+  //
+  // function addStyle(element, styleString) {
+  //   const style = document.createElement('style');
+  //   style.textContent = styleString;
+  // 
+  // }
+  {
+    var controls = document.createElement('div');
+    controls.id = "controls";
+    controls.style.cssText = `
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    /* background: green; */
+    width: 100px;
+    height: 100px;
+    padding: 20px 0 0 20px;
+    `;
+    var button = document.createElement('button');
+    button.classList.add("button");
+    button.classList.add("add");
+    button.innerText = "+";
+    button.style.cssText = `width: 32px;
+    height: 32px;`;
+    controls.appendChild(button);
+    document.body.appendChild(controls);
+  }
+  
+  
+  
+  
+
+  // block for : add button for making squares
+  {
+    var that = this;
+    
+    function addHipToBeSquare(ev){
+      // console.log(ev, "fish");
+      
+      const xx = randomBetween(-40,40);
+      const xy = randomBetween(-40,40);
+      const ww = randomBetween(2,8);
+      const wh = randomBetween(2,8);
+      
+      var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+      sq1.playCode = `return { do : function(obj, helpers){
+        obj.x = helpers.randomBetween(${-xx},${xy});
+        obj.color.x = Math.random();
+        obj.color.y = Math.random();
+        obj.color.z = Math.random();
+      }}`;
+      
+      that.system.sceneGrapth.add(sq1);
+
+      if(that.system.runtimeState !== "play"){
+        // should have a draw command
+        that.system.loop();
+      }
+      
+    }
+    
+    // let controls = document.getElementById('controls');
+    let add = document.querySelector("#controls .add");
+    if(add){
+        add.addEventListener( "click", addHipToBeSquare, false );
+    }
+    // for (var i = 0; i < 1000; i++) {
+    //   add.click()
+    // }
+    
+  }
+
+
+
+
+
   
   // here we pump objects into the Systems scene grapth
   // Base charactor objects!!

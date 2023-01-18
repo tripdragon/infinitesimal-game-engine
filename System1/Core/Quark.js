@@ -1,4 +1,7 @@
 
+
+import {Layers} from './Layers.js';
+
 // need to import some threejs functions
 
 export class Quark {
@@ -18,6 +21,19 @@ export class Quark {
   origin = {x:0,y:0,z:0};
   
   pointsCount = 0;
+  
+  // NOT USEd d yet, see source
+  // this MUST be an enum
+  // layer = [Layers.Main];
+  // need set layer()
+  // so we can remove it from the list as well
+  
+  // instead well just do a bool check
+  // keeping in mind "art" texture things should not collide
+  canCollide = true;
+  // canTrigger = true;
+  
+  
   
   // when updating
   // need to update matrix stuff

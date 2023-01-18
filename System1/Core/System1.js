@@ -27,12 +27,39 @@ export class Basestation {
   
   cameraDefault = {x:0,y:0, z: -70};
   
-  spaceMode = "3d"; // 3d Euclidean, screen, clip
+  // DONT LIKE THIS
+  // it should be CLEAN enums
+  // and simple === comparisons
+  // spaceMode = {
+  // 	main3d: Symbol("main3d"),
+  // 	screen: Symbol("screen")
+  // }
+  //   this.system.screenSpaceMode = this.system.screenModes.screen;
+  screenModes = {
+    main3d : "main3d",
+    screen : "screen"
+  }
+  _screenSpaceMode;
+  get screenSpaceMode(){
+    return this._screenSpaceMode;
+  }
+  set screenSpaceMode(val){
+    if(val === "main3d"){
+      this._screenSpaceMode = val;
+    }
+    else if(val === "screen"){
+      this._screenSpaceMode = val;
+    }
+  }
+  // spaceMode = "3d"; // 3d Euclidean, screen, clip
+  
   
   gamesCatalog = {};
   
   time = {
+    millisecondsSinceStarted: 0,
     sinceStarted : 0,
+    m_millisecondsSinceStarted: 0,
     sincePaused : 0,
     constantRuntime : 0,
     delta : 0
@@ -45,6 +72,11 @@ export class Basestation {
   pointerXYScalar = 12;
   
   sceneGrapth = new SceneGrapth();
+  // made it a getter cause typing that always is a bit much
+  // but now its a function .... hrmmmm
+  get colliders(){
+    return this.sceneGrapth.layers.colliders;
+  }
   
   // need enum
   runtimeState = "play"; // play pause step?
@@ -86,10 +118,13 @@ export class Basestation {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
     this.bootUp_CM();
+    // this.screenSpaceMode = this.screenModes.screen;
+    // this.colliders = this.sceneGrapth.layers.colliders;
   }
   
   addGameToCatalog(game){
     this.gamesCatalog[game.name] = game;
+    game.system = this; // system has to manage the games system cause order derps
   }
   
   // type of Game
@@ -102,6 +137,7 @@ export class Basestation {
     // or change to a Set()
     this.gamesCatalog[game.name] = game;
     game.start(this);
+    
   }
   
   unloadDisc(){
@@ -124,8 +160,9 @@ export class Basestation {
     
     // this.stopLoop();
     
-    // this.spaceMode = "screen";
-    if(this.spaceMode === "screen"){
+    // default to 3d first
+    this.drawScene = _drawScene;
+    if(this.screenSpaceMode === this.screenModes.screen){
       this.drawScene = _drawSceneScreenspace;
     }
     
@@ -158,7 +195,8 @@ export class Basestation {
     // Initialize a shader program; this is where all the lighting
     // for the vertices and so forth is established.
     var shaderProgram;
-    if(this.spaceMode === "screen"){
+
+    if(this.screenSpaceMode === this.screenModes.screen){
       shaderProgram = initShaderProgram(gl, vScreen, fScreen);
     }
     else {
@@ -179,7 +217,7 @@ export class Basestation {
       },
     };
     
-    if(this.spaceMode === "screen"){
+    if(this.screenSpaceMode === this.screenModes.screen){
       programInfo.uniformLocations.resolution = gl.getUniformLocation(shaderProgram, "u_resolution");
     }
 

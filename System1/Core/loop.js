@@ -2,15 +2,12 @@
 
 
 export let loop = function(){
-// animate() {
-  //requestAnimationFrame( animate.bind(this) );
-  //requestAnimationFrame( animate.bind(this) );
+
   if(this.runtimeState === "play"){
     this.loopID = requestAnimationFrame( this.loop.bind(this) );
   }
   // console.log("popcorn");
-  // cube.rotation.x += 0.01;
-  // cube.rotation.y += 0.01;
+
 
   // renderer.render( scene, camera );
   // console.log(this.pointer);
@@ -23,8 +20,17 @@ export let loop = function(){
   this.fauxPointer.z = -100.0;
   
   this.loopHookPoints.beforeDraw();
-  //drawScene(gl, programInfo, buffers, fauxPointer);
+
   // drawScene(gl, programInfo);
   this.drawScene(this, this.gl, this.programInfo, this.fauxPointer);
   
 };
+
+
+
+var time;
+function updateTimes(system){
+  time = new Date();
+  system.time.millisecondsSinceStarted = time.getMilliseconds();
+  system.time.sinceStarted = Date.now();
+}
