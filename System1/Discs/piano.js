@@ -9,7 +9,7 @@
 
 import { Game } from "../Core/Game.js";
 
-import { keyboard } from '../Modules/input.js';
+import { keyboard } from '../Modules/input/keyboard.js';
 // import { randomBetween } from "../Modules/mathness.js";
 import { Rectangle } from "../Primitives/Rectangle.js";
 

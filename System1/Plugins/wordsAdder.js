@@ -2,7 +2,7 @@
 // each game would have some different form
 // a great place for Composition maybe
 
-import { keyboard } from '../Modules/input.js';
+import { keyboard } from '../Modules/input/keyboard.js';
 import { setStyles } from '../Modules/elUtils.js';
 import { bind } from '../Modules/classUtils.js';
 
