@@ -106,7 +106,8 @@ export class Basestation {
   // drawScene = _drawSceneScreenspace;
   
   
-  
+  // where and how to go
+  // need to add collisions at some place
   loopHookPoints = {
     beforeDraw : function(){},
     after1 : function(){},
