@@ -1,13 +1,17 @@
 
+
+// Main GL render system
+
+
 // needs concept of camera next
 
 
 // https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js
 // import { mat4 } from "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 // import { randomBetween } from "../Modules/mathness.js";
-import { loadSquares } from "../Demos/loadSquares.js";
-import { SquareLike } from "../Primitives/squareLike.js";
-import { randomBetween } from "../Modules/mathness.js";
+// import { loadSquares } from "../Demos/loadSquares.js";
+// import { SquareLike } from "../Primitives/squareLike.js";
+// import { randomBetween } from "../Modules/mathness.js";
 
 // https://github.com/toji/gl-matrix/issues/371
 // https://www.skypack.dev/view/gl-matrix?from=pika
@@ -57,6 +61,7 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
     //[-20.0, 20.0, -76.0]
     // [positionCheap.x, positionCheap.y, positionCheap.z]
     [0,0,positionCheap.z]
+    // [0,0,0]
   ); // amount to translate
 
 
@@ -119,9 +124,7 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
   //   modelViewMatrix
   // );
 
-  const offset2 = 0;
-  const vertexCount = 6;// 3 for tri, 6 for 2 tris making a square
-  var primitiveType = gl.TRIANGLES;
+
   
   // setRectangle(gl, randomBetween(-4,4), 8, 12, 8);
   // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
@@ -187,10 +190,15 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
   
   // NOW the objects are from the scene grapth!!!
   // tyme for plus button!!!
+  const offset2 = 0;
+  const vertexCount = 6;// 3 for tri, 6 for 2 tris making a square
+  var primitiveType = gl.TRIANGLES;
+  
   for (var i = 0; i < app.sceneGrapth.objects.length; i++) {
     var ff = app.sceneGrapth.objects[i];
     ff.gl = gl;
     ff.play(colorUniformLocation);
+    var vertexCount2 = ff.pointsCount;
     gl.drawArrays(primitiveType, offset2, vertexCount);
   }
 }
@@ -209,50 +217,3 @@ export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76
   //   gl.drawArrays(primitiveType, offset, vertexCount);
   // }
 }
-
-// Tell WebGL how to pull out the positions from the position
-// buffer into the vertexPosition attribute.
-// function setPositionAttribute(gl, buffers, programInfo) {
-//   const numComponents = 2; // pull out 2 values per iteration
-//   const type = gl.FLOAT; // the data in the buffer is 32bit floats
-//   const normalize = false; // don't normalize
-//   const stride = 0; // how many bytes to get from one set of values to the next
-//   // 0 = use type and numComponents above
-//   const offset = 0; // how many bytes inside the buffer to start from
-//   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-//   gl.vertexAttribPointer(
-//     programInfo.attribLocations.vertexPosition,
-//     numComponents,
-//     type,
-//     normalize,
-//     stride,
-//     offset
-//   );
-//   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-// }
-
-// 
-// // Fills the buffer with the values that define a rectangle.
-// function setRectangle(gl, x, y, width, height) {
-//   var x1 = x;
-//   var x2 = x + width;
-//   var y1 = y;
-//   var y2 = y + height;
-// 
-//   // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-//   // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-//   // but so far we only have one buffer. If we had more than one
-//   // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
-// 
-//   var positions = [
-//     x1 + 2, y1,
-//     x1, y2 + 2,
-//     x2 + 4, y2,
-//     x2 + 2, y1,
-//     // other tri
-//     x1 + 2, y1,
-//     x2 + 4, y2
-//   ];
-// 
-//   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-// }

@@ -1,4 +1,19 @@
 
+
+
+/*
+var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
+this.system.sceneGrapth.add(border1);
+border1.onCollide = function(){
+  console.log("wap!", border1.name);
+  // soundboard1.play();
+  var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+  ss.play();
+}
+
+*/
+
+
 import { Quark } from "../Core/Quark.js";
 
 
@@ -31,10 +46,29 @@ function sdkjfgndf(){
 
 export class Rectangle extends Quark {
 
+
+  scalar = 1;
+  mHeight;
+  mWidth;
+  setScaletemp(val){
+    this.scalar = val;
+    this.width = this.mWidth * this.scalar;
+    this.height = this.scalar * this.mHeight;
+  }
+  
+  onCollide(){
+    console.log("wap!", this.name);
+  }
+
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(gl, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
     // console.log("color", color);
-    super(gl, x, y, width, height, 0, color);
+    super(name, x, y, width, height, 0, color);
+    
+    // we know this as two tris
+    this.pointsCount = 6;
+    this.mHeight = height;
+    this.mWidth = width;
   }
 
   // draws to the buffer

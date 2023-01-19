@@ -6,12 +6,20 @@
 // it holds the SceneGrapth and Render loopy loop
 
 
-import { initShaderProgram, vsSource, fsSource} from './shaders.js';
-import { initBuffers } from './init-buffers.js';
-import { drawScene } from "./draw-scene.js";
+import { initShaderProgram, vertexBasicShader, fragmentBasicShader} from './shaders.js';
+import { vScreen, fScreen } from '../Shaders/screenSpace.js';
+
+
+// import { initBuffers } from './initbuffers.js';
+import { drawScene as _drawScene } from "./drawscene.js";
+import { drawSceneScreenspace as _drawSceneScreenspace } from "./drawsceneScreenspace.js";
 
 import { loadSquares } from "../Demos/loadSquares.js";
 import { SceneGrapth } from "../Modules/SceneGrapth.js";
+
+import { loop as _loop } from "./loop.js";
+
+
 
 export class Basestation {
   
@@ -19,8 +27,39 @@ export class Basestation {
   
   cameraDefault = {x:0,y:0, z: -70};
   
+  // DONT LIKE THIS
+  // it should be CLEAN enums
+  // and simple === comparisons
+  // spaceMode = {
+  // 	main3d: Symbol("main3d"),
+  // 	screen: Symbol("screen")
+  // }
+  //   this.system.screenSpaceMode = this.system.screenModes.screen;
+  screenModes = {
+    main3d : "main3d",
+    screen : "screen"
+  }
+  _screenSpaceMode;
+  get screenSpaceMode(){
+    return this._screenSpaceMode;
+  }
+  set screenSpaceMode(val){
+    if(val === "main3d"){
+      this._screenSpaceMode = val;
+    }
+    else if(val === "screen"){
+      this._screenSpaceMode = val;
+    }
+  }
+  // spaceMode = "3d"; // 3d Euclidean, screen, clip
+  
+  
+  gamesCatalog = {};
+  
   time = {
+    millisecondsSinceStarted: 0,
     sinceStarted : 0,
+    m_millisecondsSinceStarted: 0,
     sincePaused : 0,
     constantRuntime : 0,
     delta : 0
@@ -33,6 +72,11 @@ export class Basestation {
   pointerXYScalar = 12;
   
   sceneGrapth = new SceneGrapth();
+  // made it a getter cause typing that always is a bit much
+  // but now its a function .... hrmmmm
+  get colliders(){
+    return this.sceneGrapth.layers.colliders;
+  }
   
   // need enum
   runtimeState = "play"; // play pause step?
@@ -48,7 +92,22 @@ export class Basestation {
   
   currentGame = null;
   
+  loop = _loop;
+  loopID = 0;
+  stopLoop(){
+    cancelAnimationFrame(this.loopID);
+  }
+  startLoop(){
+    this.loop.call(this);
+  }
   
+  
+  drawScene = _drawScene;
+  // drawScene = _drawSceneScreenspace;
+  
+  
+  // where and how to go
+  // need to add collisions at some place
   loopHookPoints = {
     beforeDraw : function(){},
     after1 : function(){},
@@ -58,7 +117,15 @@ export class Basestation {
   
   
   constructor(canvasId) {
-    this.bootUp_CM(canvasId);
+    this.canvas = document.getElementById(canvasId);
+    this.bootUp_CM();
+    // this.screenSpaceMode = this.screenModes.screen;
+    // this.colliders = this.sceneGrapth.layers.colliders;
+  }
+  
+  addGameToCatalog(game){
+    this.gamesCatalog[game.name] = game;
+    game.system = this; // system has to manage the games system cause order derps
   }
   
   // type of Game
@@ -68,7 +135,10 @@ export class Basestation {
     }
     this.unloadDisc();
     this.currentGame = game;
+    // or change to a Set()
+    this.gamesCatalog[game.name] = game;
     game.start(this);
+    
   }
   
   unloadDisc(){
@@ -82,9 +152,22 @@ export class Basestation {
     this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
   
+  reboot(){
+    this.stopLoop();
+    this.bootUp_CM();
+  }
   
-  bootUp_CM(canvasId){
-    this.canvas = document.getElementById(canvasId);
+  bootUp_CM(){
+    
+    // this.stopLoop();
+    
+    // default to 3d first
+    this.drawScene = _drawScene;
+    if(this.screenSpaceMode === this.screenModes.screen){
+      this.drawScene = _drawSceneScreenspace;
+    }
+    
+    // this.canvas = document.getElementById(canvasId);
         
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
@@ -112,7 +195,14 @@ export class Basestation {
     
     // Initialize a shader program; this is where all the lighting
     // for the vertices and so forth is established.
-    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+    var shaderProgram;
+
+    if(this.screenSpaceMode === this.screenModes.screen){
+      shaderProgram = initShaderProgram(gl, vScreen, fScreen);
+    }
+    else {
+      shaderProgram = initShaderProgram(gl, vertexBasicShader, fragmentBasicShader);
+    }
 
     // Collect all the info needed to use the shader program.
     // Look up which attribute our shader program is using
@@ -127,7 +217,14 @@ export class Basestation {
         modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
       },
     };
+    
+    if(this.screenSpaceMode === this.screenModes.screen){
+      programInfo.uniformLocations.resolution = gl.getUniformLocation(shaderProgram, "u_resolution");
+    }
+
+    
     this.programInfo = programInfo;
+    
     
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
@@ -137,7 +234,7 @@ export class Basestation {
     // Draw the scene once
     // and later run loop
     //drawScene(gl, programInfo, buffers);
-    drawScene(this, gl, programInfo);
+    this.drawScene(this, gl, programInfo);
 
     console.warn("pointermove, THIS DOES NOT BELONG HERE");
     // THIS DOES NOT BELONG HERE
@@ -205,37 +302,41 @@ export class Basestation {
 		// animate.bind(this);
     // animate(this);
     // animate().bind(this);
-    this.animate.call(this);
+    
+    //this.animate.call(this);
+    // debugger
+    // this.loop.call(this);
+    this.startLoop();
 
 
   }
-  
-  animate() {
-    //requestAnimationFrame( animate.bind(this) );
-    //requestAnimationFrame( animate.bind(this) );
-    if(this.runtimeState === "play"){
-      requestAnimationFrame( this.animate.bind(this) );
-    }
-    // console.log("popcorn");
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
-
-    // renderer.render( scene, camera );
-    // console.log(this.pointer);
-    //console.log("moof");
-    
-    // we need a larger mouse mover
-    this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
-    this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
-    //this.fauxPointer.z = this.pointer.z;
-    this.fauxPointer.z = -100.0;
-    
-    this.loopHookPoints.beforeDraw();
-    //drawScene(gl, programInfo, buffers, fauxPointer);
-    // drawScene(gl, programInfo);
-    drawScene(this, this.gl, this.programInfo, this.fauxPointer);
-    
-  };
-  
+  // 
+  // animate() {
+  //   //requestAnimationFrame( animate.bind(this) );
+  //   //requestAnimationFrame( animate.bind(this) );
+  //   if(this.runtimeState === "play"){
+  //     requestAnimationFrame( this.animate.bind(this) );
+  //   }
+  //   // console.log("popcorn");
+  //   // cube.rotation.x += 0.01;
+  //   // cube.rotation.y += 0.01;
+  // 
+  //   // renderer.render( scene, camera );
+  //   // console.log(this.pointer);
+  //   //console.log("moof");
+  // 
+  //   // we need a larger mouse mover
+  //   this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
+  //   this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
+  //   //this.fauxPointer.z = this.pointer.z;
+  //   this.fauxPointer.z = -100.0;
+  // 
+  //   this.loopHookPoints.beforeDraw();
+  //   //drawScene(gl, programInfo, buffers, fauxPointer);
+  //   // drawScene(gl, programInfo);
+  //   drawScene(this, this.gl, this.programInfo, this.fauxPointer);
+  // 
+  // };
+  // 
 
 }

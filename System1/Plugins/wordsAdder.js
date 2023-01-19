@@ -8,6 +8,9 @@ import { bind } from '../Modules/classUtils.js';
 
 const CURSOR_BLINK = 1000;
 const SPACE = '\u00A0';
+
+// this belongs on the class so user can change it
+// thus its a template only
 const IGNORE_KEYS = {
   Meta: true,
   Shift: true,
@@ -100,6 +103,7 @@ export class WordsAdder {
         console.log("Spaces 222¿¿");
       },
       rest: (evt) => {
+        // console.log("rest???");
         if (!IGNORE_KEYS[evt.key]) {
           _renderWords(_text() + evt.key);
         }

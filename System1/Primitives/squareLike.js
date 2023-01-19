@@ -34,8 +34,12 @@ function sdkjfgndf(){
 export class SquareLike extends Quark {
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(gl, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-    super(gl, x, y, width, height, 0, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+  constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+    super(name, x, y, width, height, 0, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    
+    // we know this as two tris
+    this.pointsCount = 6;
+    
   }
 
   // draws to the buffer

@@ -10,7 +10,11 @@ export class Game {
   
   camera; // hrrrrmmm ???
   
-  constructor(system = null){
+  //constructor(system = null){
+    // this.system = system;
+  // }
+  constructor(name, system = null){
+    this.name = name;
     this.system = system;
   }
   

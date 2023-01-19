@@ -17,21 +17,20 @@
     </style>
 
     <style media="screen">
-      #controls{
+      /* #controls{
         position: absolute;
         top: 0px;
         left: 0px;
         z-index: 2;
-        /* background: green; */
+        
         width: 100px;
         height: 100px;
         padding: 20px 0 0 20px;
       }
 
       #controls .add{
-        /* width: 22px; */
-        /* height: 22px; */
-      }
+        
+      } */
       
       .button{
         width: 32px;
@@ -41,9 +40,8 @@
       #controls222 {
         position: absolute;
         top: 0px;
-        /* left: 0px; */
         z-index: 1;
-        /* background: green; */
+        
         width: 100%;
         height: 100px;
         padding: 20px 0 0 20px;
@@ -64,16 +62,28 @@
         font-size: 20px;
         
       }
+      
+      #ksdjfg{
+        position: absolute;
+        z-index: 12;
+        bottom: 100px;
+        left: 100px;
+        background-color: white;
+        width: 1px;
+        height: 1px;
+      }
+      
 
     </style>
   </head>
 
   <body>
     <canvas id="canvassss" width="400" height="400"></canvas>
+<!-- <div id="ksdjfg"></div> -->
 
-    <div id="controls">
+    <!-- <div id="controls">
       <button class="add button">+</button>
-    </div>
+    </div> -->
     
     <div id="controls222">
       <button class="pause button">ℼ</button>
@@ -82,7 +92,9 @@
     </div>
     
 
-    <div id="bodyInjectionPointMain"></div>
+    <div id="gamespace"></div>
+    <div id="bodyInjectionPointMain">
+    </div>
 
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js" type="text/javascript"></script> -->
 
@@ -102,63 +114,109 @@
       import AppMain from './AppMain.js';
       APPPP = AppMain();
       
-      import { randomBetween } from "./Modules/mathness.js";
-      import { SquareLike } from "./Primitives/squareLike.js";
+      // import { randomBetween } from "./Modules/mathness.js";
+      // import { SquareLike } from "./Primitives/squareLike.js";
       
       
       import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
       import { disc as bocky } from  "./Discs/bocky.js";
+      import { disc as soundboard } from  "./Discs/soundboard.js";
+      import { disc as pianoclassical } from  "./Discs/piano.js";
+      import { disc as superjumpybocky } from  "./Discs/super-jumpy-bocky.js";
+      import { disc as mousetest } from  "./Discs/mousetest.js";
 
       // Should have some stupid function like insertDisc ...
       // moving Game setup into its class
+      
+      APPPP.addGameToCatalog(bocky);
+      APPPP.addGameToCatalog(squaresATron_I);
+      APPPP.addGameToCatalog(soundboard);
+      APPPP.addGameToCatalog(pianoclassical);
+      APPPP.addGameToCatalog(superjumpybocky);
+      APPPP.addGameToCatalog(mousetest);
+      
       // APPPP.insertDisc(squaresATron_I);
-      APPPP.insertDisc(bocky);
+      // APPPP.insertDisc(soundboard);
+      // APPPP.insertDisc(bocky);
+      APPPP.insertDisc(superjumpybocky);
       
       
-      
-      
-      //
-      // Editor UI stuff, figure out where else to put
-      //
-      
-      // block for : add button for making squares
+      // block for games loadering
+      // http://localhost:8001/System1/index.html?game=squaresATron_I
+      // http://localhost:8001/System1/index.html?game=bocky
+      // http://localhost:8001/System1/index.html?game=soundboard
       {
-        function addHipToBeSquare(ev){
-          // console.log(ev, "fish");
-          
-          const xx = randomBetween(-40,40);
-          const xy = randomBetween(-40,40);
-          const ww = randomBetween(2,8);
-          const wh = randomBetween(2,8);
-          
-          var sq1 = new SquareLike(null, -xx, xy, ww, wh);
-          sq1.playCode = `return { do : function(obj, helpers){
-            obj.x = helpers.randomBetween(${-xx},${xy});
-            obj.color.x = Math.random();
-            obj.color.y = Math.random();
-            obj.color.z = Math.random();
-          }}`;
-          
-          APPPP.sceneGrapth.add(sq1);
+        // const paramsString = 'q=URLUtils.searchParams&topic=api';
+        // const searchParams = new URLSearchParams(paramsString);
+        var params = {};
+        if (location.search) {
+            var parts = location.search.substring(1).split('&');
+            for (var i = 0; i < parts.length; i++) {
+                var nv = parts[i].split('=');
+                if (!nv[0]) continue;
+                params[nv[0]] = nv[1] || true;
+            }
+        }
 
-          if(APPPP.runtimeState !== "play"){
-            // should have a draw command
-            APPPP.animate();
+        if(params.hasOwnProperty("game")){
+          var gg = APPPP.gamesCatalog[params.game];
+          console.log("gaaame", gg);
+          if(gg){
+            // var gg = document.getElementById("bodyInjectionPointMain");
+            
+            console.log("??¿¿¿");
+            // APPPP.reboot();
+            APPPP.insertDisc(gg);
           }
-          
         }
-        
-        // let controls = document.getElementById('controls');
-        let add = document.querySelector("#controls .add");
-        if(add){
-            add.addEventListener( "click", addHipToBeSquare, false );
-        }
-        // for (var i = 0; i < 1000; i++) {
-        //   add.click()
-        // }
-        
+
       }
       
+      
+      
+      // 
+      // //
+      // // Editor UI stuff, figure out where else to put
+      // //
+      // 
+      // // block for : add button for making squares
+      // {
+      //   function addHipToBeSquare(ev){
+      //     // console.log(ev, "fish");
+      // 
+      //     const xx = randomBetween(-40,40);
+      //     const xy = randomBetween(-40,40);
+      //     const ww = randomBetween(2,8);
+      //     const wh = randomBetween(2,8);
+      // 
+      //     var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+      //     sq1.playCode = `return { do : function(obj, helpers){
+      //       obj.x = helpers.randomBetween(${-xx},${xy});
+      //       obj.color.x = Math.random();
+      //       obj.color.y = Math.random();
+      //       obj.color.z = Math.random();
+      //     }}`;
+      // 
+      //     APPPP.sceneGrapth.add(sq1);
+      // 
+      //     if(APPPP.runtimeState !== "play"){
+      //       // should have a draw command
+      //       APPPP.loop();
+      //     }
+      // 
+      //   }
+      // 
+      //   // let controls = document.getElementById('controls');
+      //   let add = document.querySelector("#controls .add");
+      //   if(add){
+      //       add.addEventListener( "click", addHipToBeSquare, false );
+      //   }
+      //   // for (var i = 0; i < 1000; i++) {
+      //   //   add.click()
+      //   // }
+      // 
+      // }
+      // 
       
       // block for pause play buttons
       {
@@ -173,7 +231,7 @@
         if(play){
             play.addEventListener( "click", function(){
               APPPP.runtimeState = "play";
-              APPPP.animate();
+              APPPP.loop();
             }, false );
         }
         
@@ -181,7 +239,7 @@
         if(step){
             step.addEventListener( "click", function(){
               APPPP.runtimeState = "step";
-              APPPP.animate();
+              APPPP.loop();
             }, false );
         }
         

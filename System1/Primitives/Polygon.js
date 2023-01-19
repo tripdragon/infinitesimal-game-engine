@@ -37,15 +37,20 @@ export class Polygon extends Quark {
   points = [];
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  //constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
     
     // need to compute width and height
     var hh = 0;
     var ww = 0;
-    super(gl, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    super(name, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
     
     this.points = points;
     this.scalar = scalar;
+    
+    // we know this as two tris
+    // DONT KNOW count yet
+    // this.pointsCount = 6;
     
   }
 
@@ -55,7 +60,9 @@ export class Polygon extends Quark {
     this.gl.uniform4f(colorUniformLocation, this.color.x, this.color.y, this.color.z, 1);
     // setSquareLike(this.gl, this.x, this.y, this.width, this.height);
     // console.log(this.x);
-    setPolygon(this.gl, this.x, this.y, this.scalar, this.points);
+    // setPolygon(this.gl, this.x, this.y, this.scalar, this.points);
+    this.setPolygon();
+    
   }
 
   /*
@@ -95,6 +102,61 @@ gg().ff(a)
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
     this.draw(colorUniformLocation);
   }
+  
+  
+  
+  
+  positions = [];
+
+  setPolygon() {
+    var points = this.points;
+    
+    // console.log("x", x);
+    // var x1 = x;
+    // var x2 = x + width;
+    // var y1 = y;
+    // var y2 = y + height;
+    
+    // this does not account for the center yet
+    // every other od even x y
+    // num % 2; 
+    // need some matrix magic here for scaling
+    this.positions = [];
+    // for now its scaling the points from the center????
+    // would want to move that to the matrix and origin
+    for (var i = 0; i < this.points.length; i++) {
+      var og = this.points[i] * this.scalar;
+      // var og = points[i];
+      if (i % 2) {
+        og += this.y;
+      }
+      else {
+        // console.log(x);
+        og += this.x;
+        // console.log("og", og);
+      }
+      // og *= scalar;
+      this.positions.push(og);
+    }
+    
+    // estimated guess!!!!!
+    // need an actual box3 function
+    // console.log("this.positions[0]", this.positions[0], this.x);
+    // console.log("this.positions[4]", this.positions[4], this.x);
+    // this.width = (this.positions[0] - this.x) + (this.positions[4] - this.x);
+    // this.height = (this.positions[1] - this.y) + (this.positions[5] - this.y);
+    
+    
+
+    // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+    // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+    // but so far we only have one buffer. If we had more than one
+    // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+
+
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+  }
+  
 }
 
 // function demo(gl){
@@ -103,41 +165,3 @@ gg().ff(a)
 //     new SquareLike(gl, )
 //   ];
 // }
-
-var positions = [];
-
-function setPolygon(gl, x, y, scalar, points) {
-  // console.log("x", x);
-  // var x1 = x;
-  // var x2 = x + width;
-  // var y1 = y;
-  // var y2 = y + height;
-  
-  // this does not account for the center yet
-  // every other od even x y
-  // num % 2; 
-  // need some matrix magic here for scaling
-  positions = [];
-  for (var i = 0; i < points.length; i++) {
-    var og = points[i] * scalar;
-    // var og = points[i];
-    if (i % 2) {
-      og += y;
-    }
-    else {
-      // console.log(x);
-      og += x;
-      // console.log("og", og);
-    }
-    // og *= scalar;
-    positions.push(og);
-  }
-
-  // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-  // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-  // but so far we only have one buffer. If we had more than one
-  // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
-
-
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-}
