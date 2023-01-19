@@ -11,6 +11,16 @@ local
 python3 -m http.server 8001
 ```
 
+## not fully games
+controls are either mouse select, or walk with arrow keys, might have sound, click screen and turn on speakers
+plus button might do something. top 3 buttons pause game play and step though each frame
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=mousetest
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=superjumpybocky
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=bocky
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=pianoclassical
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=squaresATron_I
+
+
 ## Things to do like
 
 * ~~webgl view~~
