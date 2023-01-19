@@ -48,6 +48,7 @@ export function AABBTest(object1, object2){
 
 
 // 
+// in world space for now
 export function pointInRect(point, rect){
   var wasin = false;
   if(point.x > rect.x && point.y > rect.y && point.x < rect.width + rect.x && point.y < rect.height + rect.y){

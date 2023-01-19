@@ -22,6 +22,91 @@ disc.load = function(){
   this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
 
+  
+  var modes = {
+    mousing : "mousing",
+    canDrag : "canDrag",
+    canDraw : "canDraw"
+  }
+  
+  var mode = modes.mousing;
+  
+  
+
+
+  // add draw button
+  
+  // block for : add button for making squares
+  {
+    var controls = document.createElement('div');
+    controls.id = "controls";
+    controls.style.cssText = `
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    /* background: green; */
+    width: 100px;
+    height: 100px;
+    padding: 20px 0 0 20px;
+    `;
+    var button = document.createElement('button');
+    button.classList.add("button");
+    button.classList.add("add");
+    button.innerText = "+";
+    button.style.cssText = `width: 32px;
+    height: 32px;`;
+    controls.appendChild(button);
+    // var gg = document.getElementById("bodyInjectionPointMain");
+    var gg = document.getElementById("gamespace");
+    gg.innerHTML = "";
+    // document.body.appendChild(controls);
+    // gg.appendChild(controls);
+
+// stuck at im[plementing draw]
+    var mDrawingRectPointer = {x:0,y:0};
+    
+    var that = this;
+  
+    function startDrawMode(ev){
+      
+      // remove event is Maaaybe the right way
+      // but its also so strict
+      if(mode !== modes.canDraw){
+        console.log("canDraw");
+        mode = modes.canDraw;
+        console.log("mode", mode);
+        window.removeEventListener( 'pointerdown', mouseSelectDown );
+        window.removeEventListener( 'pointerup', mouseSelectOnPointerUp );
+      }
+      else if(mode === modes.canDraw){
+        console.log("canDraw exit");
+        window.addEventListener( 'pointerdown', mouseSelectDown );
+        window.addEventListener( 'pointerup', mouseSelectOnPointerUp );
+        mode = modes.mousing;
+      }
+      
+    }
+  
+    let add = document.querySelector("#controls .add");
+    if(add){
+        add.addEventListener( "click", startDrawMode, false );
+    }
+    
+    
+    function mouseDrawRect(ev){
+      
+    }
+
+    
+  }
+
+
+
+
+
+
+
 
   // Since its screen space 0,0 top left
   // mouse testing SHOULD be pretty forward
@@ -43,20 +128,12 @@ disc.load = function(){
   }
   
   window.addEventListener( 'pointermove', onPointerMove );
+
   
-  // in world space for now
-  // function pointInRect(point, rect){
-  //   var wasin = false;
-  //   if(point.x > rect.x && point.y > rect.y && point.x < rect.width + rect.x && point.y < rect.height + rect.y){
-  //     return true;
-  //   }
-  //   return wasin;
-  // }
+  
+  
   
   // Player, and its collision needs to be ratified to clear out some of this copy code
-  
-  
-
   
   var x = window.innerWidth / 2;
   var y = window.innerHeight / 2;
@@ -83,7 +160,7 @@ disc.load = function(){
   var selectedObject = null;
   var wasEverIN = false;
   
-  function onPointerDown(ev){
+  function mouseSelectDown(ev){
     
     if(selectedObject !== null && pointInRect(pointer, selectedObject)){
       mode = modes.canDrag;
@@ -91,27 +168,20 @@ disc.load = function(){
       mPointerPos.y = pointer.y;
       mSelectedPos.x = selectedObject.x;
       mSelectedPos.y = selectedObject.y;
+      selectedObject.color = {x:0,y:0,z:1,w:0};      
     }
     isMouseDown = true;
   }
   
-  function onPointerUp(ev){
+  function mouseSelectOnPointerUp(ev){
     mode = modes.mousing;
     isMouseDown = false;
   }
   
-  window.addEventListener( 'pointerdown', onPointerDown );
-  window.addEventListener( 'pointerup', onPointerUp );
+  window.addEventListener( 'pointerdown', mouseSelectDown );
+  window.addEventListener( 'pointerup', mouseSelectOnPointerUp );
   
-  
-  var modes = {
-    mousing : "mousing",
-    canDrag : "canDrag",
-  }
-  
-  var mode = modes.mousing;
-  
-  
+
   
   
   var mTime = Date.now();
