@@ -5,6 +5,43 @@ import { addListener } from './listeners.js';
 /*
 docs:
 
+// keyboard @arg takes an object{}
+// can supply object outside of function call
+
+var gg = {}
+
+keyboard(gg)
+
+// typical fun use
+
+keyboard({
+  // space
+  " _down" : (ev) => {
+    // make a ton!!!
+    for (var i = 0; i < 20; i++) {
+      addHipToBeSquare();
+    }
+  },
+  // even numbers!!
+  1 : (ev) => {
+    player.setScaletemp(0.1);
+  },
+  
+  // you can have all 3 events, plain _up and _down
+  ArrowDown_down: (ev) => {
+    arrowsDown.down = true;
+  },
+  ArrowDown_up: (ev) => {
+    arrowsDown.down = true;
+  },
+  ArrowDown: (ev) => {
+    arrowsDown.down = true;
+  },
+
+});
+
+
+
 */
 
 
