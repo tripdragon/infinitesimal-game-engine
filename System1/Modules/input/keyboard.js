@@ -1,6 +1,7 @@
 import { addListener } from './listeners.js';
 
-// TODO add gameController
+// TODO 
+// add debug arg
 
 /*
 docs:
