@@ -4,7 +4,7 @@ import { addListener } from './listeners.js';
 
 // NEEDS: is keydown
 export function keyboard(config) {
-  addListener({ event: 'keydown', func: function(evt) {
+  const removeDownListener = addListener({ event: 'keydown', func: function(evt) {
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
     } else if (typeof config[`${evt.key}_down`] === 'function') {
@@ -18,7 +18,7 @@ export function keyboard(config) {
     }
   }});
 
-  addListener({ event: 'keyup', func: function(evt) {
+  const removeUpListener = addListener({ event: 'keyup', func: function(evt) {
     // console.log(evt.key);
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
@@ -32,4 +32,9 @@ export function keyboard(config) {
       config.any(evt);
     }
   }});
+
+  return () => {
+    removeDownListener();
+    removeUpListener();
+  }
 }
