@@ -20,7 +20,6 @@ export function keyboard(config) {
   }});
 
   const removeUpListener = addListener({ event: 'keyup', func: function(evt) {
-    // console.log(evt.key);
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
     } else if (typeof config[`${evt.key}_up`] === 'function') {
