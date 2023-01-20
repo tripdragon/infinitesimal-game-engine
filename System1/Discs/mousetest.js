@@ -9,10 +9,13 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 
 import { Game } from "../Core/Game.js";
 
-import { keyboard } from '../Modules/input.js';
+import { keyboard } from '../Modules/input/keyboard.js';
 import { randomBetween } from "../Modules/mathness.js";
 
 import { AABBTest, pointInRect } from "../Modules/collisions.js";
+
+
+import { Actor } from "../Primitives/Actor.js";
 
 export let disc = new Game("mousetest");
 
@@ -22,6 +25,10 @@ disc.load = function(){
   this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
 
+  var _this = this;
+  
+  
+  this.system.gravity = 9.7;
   
   var modes = {
     mousing : "mousing",
@@ -63,10 +70,11 @@ disc.load = function(){
     // document.body.appendChild(controls);
     // gg.appendChild(controls);
 
+// <<<<<<
 // stuck at im[plementing draw]
     var mDrawingRectPointer = {x:0,y:0};
     
-    var that = this;
+    
   
     function startDrawMode(ev){
       
@@ -102,12 +110,6 @@ disc.load = function(){
   }
 
 
-
-
-
-
-
-
   // Since its screen space 0,0 top left
   // mouse testing SHOULD be pretty forward
 
@@ -117,7 +119,8 @@ disc.load = function(){
 
   	// calculate pointer position in normalized device coordinates
   	// (-1 to +1) for both components
-
+    
+    // need for when camera is in 3d
   	// pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   	// pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     // pointer.x = ( event.clientX / window.innerWidth );
@@ -130,25 +133,16 @@ disc.load = function(){
   window.addEventListener( 'pointermove', onPointerMove );
 
   
-  
-  
-  
-  // Player, and its collision needs to be ratified to clear out some of this copy code
-  
-  var x = window.innerWidth / 2;
-  var y = window.innerHeight / 2;
-  // var player = new Polygon("player", points, x, y, 10);
-  var player = new Rectangle("player", 500, 140, 20, 20);
-  // var player = new Rectangle("player", x, 340, 120, 120);
+  // build player
+  var player = new Actor("player", 500, 140, 20, 20);
+  player.system = this.system;
   window.player = player;
-  //speed
-  player.speed = 19.5;
-
-  
   this.system.sceneGrapth.add(player);
+  
+  
+  
   // 
   // 
-  // console.log(border1.origin.x);
   // here we can see that origin is not correct yet
   // console.log(border1.origin.x, border1.origin.y);
   // var centerOfBorder = new Rectangle("wall 2", border1.origin.x + border1.x, border1.origin.y + border1.y, 1, 1, {x:1.0,y:0.4,z:1.0,w:0});
@@ -191,15 +185,11 @@ disc.load = function(){
   
     delta = Date.now() - mTime;
   
-    
-    
-    
-
     // this handles all tests so we can cache its position
     
     
     mouseSelecting();
-    playerWalking();
+    playerWalking(delta, _this.system.gravity);
     
     mTime = Date.now();
 
@@ -221,75 +211,68 @@ disc.load = function(){
       selectedObject = null;
       {
 
-      // for (var i = 0; i < walls.length; i++) {
-      for (var i = 0; i < APPPP.colliders.length; i++) {
-        // break;
-        var isInMuch = false;
-        
-        var wall = APPPP.colliders[i];
-        // var wall = walls[i];
-        // cheap for now dont test player collide
-        if(wall === player){
-          continue;
-        }
-        
-        wall.color = {x:0,y:0.5,z:0,w:0};
-        var wasin = pointInRect(pointer, wall);
-        // console.log(wall.width, wall.height);
-        // console.log(pointer);
-        if(wasin){
-            wall.color = {x:0,y:0,z:1,w:0};
-            if(wasEverIN == false){
-              wasEverIN = true;
-              selectedObject = wall;
-            }
-            break;
-        }
-        
-        // // do a moving and generative effect
-        // if(wall.shiftLeft){
-        //   wall.x += wall.shiftLeft * 0.05;
-        //   if (wall.x > window.innerWidth){
-        //     wall.x = -wall.width;
-        //         wall.shiftLeft = randomBetween(1,100);
-        //   }
-        // }
-        // 
-        // isInMuch = AABBTest(player, wall);
-        // 
-        // if(isInMuch){
-        //   // console.log("innnn?");
-        //   wall.color = {x:0,y:0,z:1,w:0};
-        //   wall.onCollide();
-        // }
-        // else {
-        //   // console.log("ouuuut???");
-        //   wall.color = {x:0,y:0.5,z:0,w:0};
-        // }
-        // 
-        // 
-        // if(wasIn == false && isInMuch == true){
-        //   wasIn = true;
-        // }
-            
-      } // colliders loop
-      
-      
+        // for (var i = 0; i < walls.length; i++) {
+        for (var i = 0; i < APPPP.colliders.length; i++) {
+          // break;
+          var isInMuch = false;
+          
+          var wall = APPPP.colliders[i];
+          // var wall = walls[i];
+          // cheap for now dont test player collide
+          if(wall === player){
+            continue;
+          }
+          
+          wall.color = {x:0,y:0.5,z:0,w:0};
+          var wasin = pointInRect(pointer, wall);
+          // console.log(wall.width, wall.height);
+          // console.log(pointer);
+          if(wasin){
+              wall.color = {x:0,y:0,z:1,w:0};
+              if(wasEverIN == false){
+                wasEverIN = true;
+                selectedObject = wall;
+              }
+              break;
+          }
+          
+          // // do a moving and generative effect
+          // if(wall.shiftLeft){
+          //   wall.x += wall.shiftLeft * 0.05;
+          //   if (wall.x > window.innerWidth){
+          //     wall.x = -wall.width;
+          //         wall.shiftLeft = randomBetween(1,100);
+          //   }
+          // }
+          // 
+          // isInMuch = AABBTest(player, wall);
+          // 
+          // if(isInMuch){
+          //   // console.log("innnn?");
+          //   wall.color = {x:0,y:0,z:1,w:0};
+          //   wall.onCollide();
+          // }
+          // else {
+          //   // console.log("ouuuut???");
+          //   wall.color = {x:0,y:0.5,z:0,w:0};
+          // }
+          // 
+          // 
+          // if(wasIn == false && isInMuch == true){
+          //   wasIn = true;
+          // }
+              
+        } // colliders loop
 
+      } // empty block
       
-    }
     }
     
     else if(mode === modes.canDrag){
       // need to know if the pointer is down on the object
       if(selectedObject !== null){
-        // selectedObject.x = pointer.x + mPointerPos.x;
-        // selectedObject.y = pointer.y + mPointerPos.y;
-        // selectedObject.x = pointer.x + -20;
-        // selectedObject.y = pointer.y;
         selectedObject.x = pointer.x + (mSelectedPos.x - mPointerPos.x);
         selectedObject.y = pointer.y + (mSelectedPos.y - mPointerPos.y);
-        // selectedObject.y = mSelectedPos.y + pointer.y;
       }
     }
     
@@ -298,68 +281,27 @@ disc.load = function(){
   
   
   
-  var playerPreviousPos = {x:0,y:0};
+  function playerWalking(deltaTime, gravity){
+    
+    player.updateWalking(deltaTime, gravity);
+    
   
-  function playerWalking(){
-    
-    player.y += (delta * 0.01 ) + 9.7;
-    
-    if(arrowsDown.left){
-      player.x += -player.speed;
-    }
-    if(arrowsDown.right){
-      player.x += player.speed;
-    }
-    // in screen space we need to flip y
-    if(arrowsDown.down){
-      player.y += -player.speed * -1;
-    }
-    if(arrowsDown.up){
-      player.y += player.speed * -1;
-    }
-    
-    // ASTROIDS!!!! like
-    if(player.x > window.innerWidth){
-      player.x = 0;
-    }
-    else if(player.x < 0){
-      player.x = window.innerWidth;
-    }
-    if(player.y > window.innerHeight){
-      player.y = 0;
-    }
-    else if(player.y < 0){
-      player.y = window.innerHeight;
-    }
-    
-    
     //
     // AABB hit testing
     //
-    // the objects dont yet have self updating world position bounding boxes
-    // so well just calculate them here
-    // x = -40 width = 100
-    // -40 + 100 = 60 ?
-    // 
-    // aa = {
-    //   x: -20, y: -40, width: 200, height : 20,
-    //   origin : {x: 200 / 2, height : 20 /2 }
-    // }
+
     
     // this handles all tests so we can cache its position
     var wasIn = false;
     
-    
+    player.useGravity = true;
     
     {
 
-      // for (var i = 0; i < walls.length; i++) {
       for (var i = 0; i < APPPP.colliders.length; i++) {
-        // break;
         var isInMuch = false;
         
         var wall = APPPP.colliders[i];
-        // var wall = walls[i];
         // cheap for now dont test player collide
         if(wall === player){
           continue;
@@ -389,6 +331,7 @@ disc.load = function(){
 
         if(wasIn == false && isInMuch == true){
           wasIn = true;
+          player.useGravity = false;
         }
             
       } // colliders loop
@@ -405,12 +348,12 @@ disc.load = function(){
       // 
 
       if(wasIn){
-        player.x = playerPreviousPos.x;
-        player.y = playerPreviousPos.y;
+        player.x = player.mPos.x;
+        player.y = player.mPos.y;
       }
       else {
-        playerPreviousPos.x = player.x;
-        playerPreviousPos.y = player.y;
+        player.mPos.x = player.x;
+        player.mPos.y = player.y;
       }
             
 
@@ -419,12 +362,18 @@ disc.load = function(){
   } // playerWalking
   
   
-  var arrowsDown = {
-    up: false, down: false, left: false, right: false
-  }
+  // var arrowsDown = {
+  //   up: false, down: false, left: false, right: false
+  // }
   
-  // set up walking player
+  // set up aditional event types fro keys
   keyboard({
+    " _down" : (ev) => {
+      // make a ton!!!
+      for (var i = 0; i < 20; i++) {
+        addHipToBeSquare();
+      }
+    },
     1 : (ev) => {
       player.setScaletemp(0.1);
     },
@@ -435,60 +384,23 @@ disc.load = function(){
       player.setScaletemp(2);
     },
     q : (ev) => {
-      player.speed = Math.max(player.speed - 1, 1);
+      player.walkSpeed = Math.max(player.walkSpeed - 1, 1);
     },
     w : (ev) => {
-      player.speed = Math.max(player.speed + 1, 10);
+      player.walkSpeed = Math.max(player.walkSpeed + 1, 10);
     },
-    ArrowLeft_down: (ev) => {
-      // console.log(ev);
-      // console.log(player);
-      // sq1.x += -1;
-      // isArrowLeftDown = true;
-      // console.log(ev);
-      // console.log("down!");
-      arrowsDown.left = true;
-    },
-    ArrowLeft_up: (ev) => {
-      // console.log(ev);
-      // console.log(sq1);
-      // sq1.x += -1;
-      // isArrowLeftDown = true;
-      // console.log(ev);
-      // console.log("up!");
-      arrowsDown.left = false;
-    },
-    ArrowRight_up: (ev) => {
-      // console.log("up!");
-      arrowsDown.right = false;
-    },
-    ArrowRight_down: (ev) => {
-      // console.log("down!");
-      arrowsDown.right = true;
-    },
-    ArrowUp_up: (ev) => {
-      arrowsDown.up = false;
-    },
-    ArrowUp_down: (ev) => {
-      arrowsDown.up = true;
-    },
-    ArrowDown_up: (ev) => {
-      arrowsDown.down = false;
-    },
-    ArrowDown_down: (ev) => {
-      arrowsDown.down = true;
-    },
+    // replacing arrow keys for system.keysDown
   
   });
   
 
 
   
-
-  var that = this;
+  // platforms builder for multiness
+  
   var index = 5;
   function addHipToBeSquare(ev){
-    console.log(ev, "fish");
+    // console.log(ev, "fish");
     
     index++;
     
@@ -507,7 +419,9 @@ disc.load = function(){
       return;
     }
     
-    that.system.sceneGrapth.add(border1);
+    _this.system.sceneGrapth.add(border1);
+    
+    // collide events
     
     // border1.onCollide = function(){
       // new Audio()
@@ -533,9 +447,9 @@ disc.load = function(){
     
     // that.system.sceneGrapth.add(border1);
 
-    if(that.system.runtimeState !== "play"){
+    if(_this.system.runtimeState !== "play"){
       // should have a draw command
-      that.system.loop();
+      _this.system.loop();
     }
     
     console.log("?¿¿¿?!??!");
@@ -555,4 +469,3 @@ disc.load = function(){
 
 
 };
-// stop  loop??

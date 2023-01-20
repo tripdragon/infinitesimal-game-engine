@@ -15,7 +15,7 @@ import { drawScene as _drawScene } from "./drawscene.js";
 import { drawSceneScreenspace as _drawSceneScreenspace } from "./drawsceneScreenspace.js";
 
 import { loadSquares } from "../Demos/loadSquares.js";
-import { SceneGrapth } from "../Modules/SceneGrapth.js";
+import { SceneGrapth } from "./SceneGrapth.js";
 
 import { loop as _loop } from "./loop.js";
 
@@ -26,6 +26,40 @@ export class Basestation {
   canvas = null;
   
   cameraDefault = {x:0,y:0, z: -70};
+  
+  // not proper yet
+  gravity = 9.72873473;
+  
+  // player.x = system.input.keyboard.isArrowLeftDown
+  // player.x = system.getArrowLeftDown()
+  // player Keyboard.isArrowLeftDown
+  // var pressedKeys = {};
+  // window.onkeyup = function(e) { pressedKeys[e.key] = false; }
+  // window.onkeydown = function(e) { pressedKeys[e.key] = true; }
+  // 
+  
+  // APPPP.keysDown, these CAN get stuck!!!
+  // if it loses focus absolutely
+  keysDown = {};
+  keysUp = {};
+  
+  // dont use this, they are just to assign with, see constructor()
+  getKeyDown = function(ev) {
+    this.keysDown[ev.key] = true;
+    this.keysUp[ev.key] = false;
+  }
+  getKeyUp = function(ev) {
+    this.keysDown[ev.key] = false;
+    this.keysUp[ev.key] = true;
+  }
+  // input = {
+  //   keyboard : {},
+  //   keysDown : {},
+  //   keysUp : {},
+  //   device : {}
+  // };
+  
+  
   
   // DONT LIKE THIS
   // it should be CLEAN enums
@@ -121,6 +155,15 @@ export class Basestation {
     this.bootUp_CM();
     // this.screenSpaceMode = this.screenModes.screen;
     // this.colliders = this.sceneGrapth.layers.colliders;
+    
+    // need global keys input
+    window.onkeyup = (ev) => { 
+      this.getKeyUp(ev); 
+    }
+    window.onkeydown = (ev) => { 
+      this.getKeyDown(ev); 
+    }
+    
   }
   
   addGameToCatalog(game){
