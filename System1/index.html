@@ -126,6 +126,8 @@
       import { disc as pianoclassical } from  "./Discs/piano.js";
       import { disc as superjumpybocky } from  "./Discs/super-jumpy-bocky.js";
       import { disc as mousetest } from  "./Discs/mousetest.js";
+      import { disc as bots1 } from  "./Discs/bots1.js";
+      import { disc as starter } from  "./Discs/starter.js";
 
       // Should have some stupid function like insertDisc ...
       // moving Game setup into its class
@@ -136,13 +138,19 @@
       APPPP.addGameToCatalog(pianoclassical);
       APPPP.addGameToCatalog(superjumpybocky);
       APPPP.addGameToCatalog(mousetest);
+      APPPP.addGameToCatalog(bots1);
       
       // APPPP.insertDisc(squaresATron_I);
       // APPPP.insertDisc(soundboard);
       // APPPP.insertDisc(bocky);
       // APPPP.insertDisc(superjumpybocky);
-      APPPP.insertDisc(mousetest);
+      // APPPP.insertDisc(mousetest);
+      // 
+      // APPPP.insertDisc(bots1);
       
+      // for now we need a starter empty game cause swaping discs 
+      // via url is not fully clearing the starting game
+      APPPP.insertDisc(starter);
       
       // block for games loadering
       // http://localhost:8001/System1/index.html?game=squaresATron_I
@@ -169,6 +177,7 @@
             
             console.log("??¿¿¿");
             // APPPP.reboot();
+            
             APPPP.insertDisc(gg);
           }
         }

@@ -17,7 +17,7 @@ import { AABBTest, pointInRect } from "../Modules/collisions.js";
 
 import { Actor } from "../Primitives/Actor.js";
 
-export let disc = new Game("mousetest");
+export let disc = new Game("bots1");
 
 disc.load = function(){
 
@@ -27,7 +27,7 @@ disc.load = function(){
 
   var _this = this;
   
-  console.log("in???");
+  
   this.system.gravity = 9.7;
   
   var modes = {
@@ -41,7 +41,8 @@ disc.load = function(){
   
   var pointer = {x:0,y:0};
   
-  
+  // holds bots and 
+  var robots = [];
     
 
 
@@ -138,7 +139,7 @@ disc.load = function(){
   // build player
   var player = new Actor("player", 500, 140, 20, 20);
   player.system = this.system;
-  // player.directionVector.x = -1;
+  player.directionVector.x = -1;
   // player.directionVector.y = -1;
   // when in bot mode
   // player.mode = player.mode = "bot";
@@ -147,6 +148,43 @@ disc.load = function(){
   this.system.sceneGrapth.add(player);
   
   
+  
+  var botty = new Actor("botty", 200, 240, 20, 20);
+  botty.system = this.system;
+  botty.mode = botty.modes.bot;
+  botty.directionVector.x = -1;
+  botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+  // botty.directionVector.y = -1;
+  // when in bot mode
+  botty.walkSpeed = 6;
+  window.botty = botty;
+  this.system.sceneGrapth.add(botty);
+  
+  robots.push(botty);
+  
+  
+  for (var i = 0; i < 40; i++) {
+    const xx = randomBetween(0,window.innerWidth);
+    const yy = randomBetween(0,window.innerHeight);
+    
+    
+    var botty = new Actor("botty" + i, xx, yy, 20, 20);
+    botty.system = this.system;
+    botty.mode = botty.modes.bot;
+    botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+    
+    // botty.directionVector.x = randomBetween(-1,1);
+    // botty.directionVector.y = randomBetween(-1,1);
+    botty.directionVector.x = random1orNeg();
+    // botty.directionVector.y = random1orNeg();
+    
+    // botty.directionVector.y = -1;
+    // when in bot mode
+    botty.walkSpeed = 6;
+    window.botty = botty;
+    this.system.sceneGrapth.add(botty);
+    robots.push(botty);
+  }
   
   
   // 
@@ -199,7 +237,18 @@ disc.load = function(){
     
     mouseSelecting();
     playerWalking(player, deltaTime, _this.system.gravity);
-
+    // playerWalking(botty, delta, _this.system.gravity);
+    for (var i = 0; i < robots.length; i++) {
+      playerWalking(robots[i], deltaTime, _this.system.gravity);
+      // change robots walk over noise time
+      
+      // var noise = simpleNoise((time + (i * 100)) * 0.0005);
+      var noise = simpleNoise((time + (i * 100)) * 0.0005) * random1orNeg();
+      robots[i].directionVector.x = remapNegPositiveOne(0, 1, noise );
+      robots[i].directionVector.y = remapNegPositiveOne(0, 1, noise );
+    }
+    // console.log(robots[0].directionVector.x);
+    
     mTime = time;
 
   } // loop
@@ -441,7 +490,11 @@ disc.load = function(){
       return;
     }
     
-
+    for (var i = 0; i < robots.length; i++) {
+      if( AABBTest(robots[i], platform) == true){
+        return;
+      }
+    }
     
     _this.system.sceneGrapth.add(platform);
     
@@ -483,7 +536,7 @@ disc.load = function(){
   
   
   // make a ton!!!
-  for (var i = 0; i < 20; i++) {
+  for (var i = 0; i < 80; i++) {
   // for (var i = 0; i < 1; i++) {
     addHipToBeSquare();
   }

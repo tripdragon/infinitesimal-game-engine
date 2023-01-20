@@ -20,7 +20,7 @@ export class Game {
   
   
   load(){
-    
+    console.log("load???");
   }
   
   unload(){
