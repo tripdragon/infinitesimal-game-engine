@@ -11,6 +11,10 @@ local
 python3 -m http.server 8001
 ```
 
+## mainness
+A melange on editor and play mode game engine esc tinker sandbox builder
+
+
 ## not fully games
 controls are either mouse select, or walk with arrow keys, might have sound, click screen and turn on speakers
 plus button might do something. top 3 buttons pause game play and step though each frame
@@ -47,6 +51,8 @@ https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=s
 * loop system, for animations and collisions
 * live game swapping without reloading
 * direct url game loading
+
+
 
 
 

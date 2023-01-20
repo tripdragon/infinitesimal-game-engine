@@ -45,9 +45,17 @@ keyboard({
 
 */
 
+// function Container(){
+//   var canUpdate = true;
+//   var keyboard = 
+// }
+
 
 // NEEDS: debug for turning on console logs
 export function keyboard(config, debug) {
+  
+  
+  
   addListener({ event: 'keydown', func: function(evt) {
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);

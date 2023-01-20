@@ -22,6 +22,9 @@ export class Quark {
   
   pointsCount = 0;
   
+  
+  useInEditMode = true;
+  
   // NOT USEd d yet, see source
   // this MUST be an enum
   // layer = [Layers.Main];

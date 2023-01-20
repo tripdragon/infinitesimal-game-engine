@@ -44,6 +44,7 @@ function sdkjfgndf(){
 
 }
 
+// its 2D!!!! NOT 3D!!!
 export class Rectangle extends Quark {
 
 
