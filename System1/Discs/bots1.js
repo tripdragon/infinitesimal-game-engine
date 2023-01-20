@@ -243,9 +243,10 @@ disc.load = function(){
       // change robots walk over noise time
       
       // var noise = simpleNoise((time + (i * 100)) * 0.0005);
-      var noise = simpleNoise((time + (i * 100)) * 0.0005) * random1orNeg();
+      // var noise = simpleNoise((time + (i * 100)) * 0.0005) * random1orNeg();
+      var noise = simpleNoise((time + (i * 100)) * 0.0005);
       robots[i].directionVector.x = remapNegPositiveOne(0, 1, noise );
-      robots[i].directionVector.y = remapNegPositiveOne(0, 1, noise );
+      // robots[i].directionVector.y = remapNegPositiveOne(0, 1, noise );
     }
     // console.log(robots[0].directionVector.x);
     
