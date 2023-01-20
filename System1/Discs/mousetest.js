@@ -10,7 +10,7 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Game } from "../Core/Game.js";
 
 import { keyboard } from '../Modules/input/keyboard.js';
-import { randomBetween } from "../Modules/mathness.js";
+import { randomBetween, random1orNeg, simpleNoise, remapNegPositiveOne } from "../Modules/mathness.js";
 
 import { AABBTest, pointInRect } from "../Modules/collisions.js";
 
@@ -39,6 +39,11 @@ disc.load = function(){
   var mode = modes.mousing;
   
   
+  var pointer = {x:0,y:0};
+  
+  // holds bots and 
+  var robots = [];
+    
 
 
   // add draw button
@@ -113,8 +118,6 @@ disc.load = function(){
   // Since its screen space 0,0 top left
   // mouse testing SHOULD be pretty forward
 
-  var pointer = {x:0,y:0};
-  
   function onPointerMove( event ) {
 
   	// calculate pointer position in normalized device coordinates
@@ -136,9 +139,52 @@ disc.load = function(){
   // build player
   var player = new Actor("player", 500, 140, 20, 20);
   player.system = this.system;
+  player.directionVector.x = -1;
+  // player.directionVector.y = -1;
+  // when in bot mode
+  // player.mode = player.mode = "bot";
+  // player.walkSpeed = 6;
   window.player = player;
   this.system.sceneGrapth.add(player);
   
+  
+  
+  var botty = new Actor("botty", 200, 240, 20, 20);
+  botty.system = this.system;
+  botty.mode = botty.modes.bot;
+  botty.directionVector.x = -1;
+  botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+  // botty.directionVector.y = -1;
+  // when in bot mode
+  botty.walkSpeed = 6;
+  window.botty = botty;
+  this.system.sceneGrapth.add(botty);
+  
+  robots.push(botty);
+  
+  
+  for (var i = 0; i < 40; i++) {
+    const xx = randomBetween(0,window.innerWidth);
+    const yy = randomBetween(0,window.innerHeight);
+    
+    
+    var botty = new Actor("botty" + i, xx, yy, 20, 20);
+    botty.system = this.system;
+    botty.mode = botty.modes.bot;
+    botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+    
+    // botty.directionVector.x = randomBetween(-1,1);
+    // botty.directionVector.y = randomBetween(-1,1);
+    botty.directionVector.x = random1orNeg();
+    // botty.directionVector.y = random1orNeg();
+    
+    // botty.directionVector.y = -1;
+    // when in bot mode
+    botty.walkSpeed = 6;
+    window.botty = botty;
+    this.system.sceneGrapth.add(botty);
+    robots.push(botty);
+  }
   
   
   // 
@@ -179,19 +225,30 @@ disc.load = function(){
   
   
   var mTime = Date.now();
-  var delta;
+  var deltaTime;
   
   this.system.loopHookPoints.beforeDraw = function(){
-  
-    delta = Date.now() - mTime;
+    
+    var time = Date.now();
+    deltaTime = time - mTime;
   
     // this handles all tests so we can cache its position
     
     
     mouseSelecting();
-    playerWalking(delta, _this.system.gravity);
+    playerWalking(player, deltaTime, _this.system.gravity);
+    // playerWalking(botty, delta, _this.system.gravity);
+    for (var i = 0; i < robots.length; i++) {
+      playerWalking(robots[i], deltaTime, _this.system.gravity);
+      // change robots walk over noise time
+      
+      var noise = simpleNoise((time + (i * 100)) * 0.0005);
+      robots[i].directionVector.x = remapNegPositiveOne(0, 1, noise );
+      robots[i].directionVector.y = remapNegPositiveOne(0, 1, noise );
+    }
+    // console.log(robots[0].directionVector.x);
     
-    mTime = Date.now();
+    mTime = time;
 
   } // loop
   
@@ -223,7 +280,9 @@ disc.load = function(){
             continue;
           }
           
-          wall.color = {x:0,y:0.5,z:0,w:0};
+          if(wall.subType !== "actor"){
+            wall.color = {x:0,y:0.5,z:0,w:0};
+          }
           var wasin = pointInRect(pointer, wall);
           // console.log(wall.width, wall.height);
           // console.log(pointer);
@@ -281,9 +340,9 @@ disc.load = function(){
   
   
   
-  function playerWalking(deltaTime, gravity){
+  function playerWalking(actor, deltaTime, gravity){
     
-    player.updateWalking(deltaTime, gravity);
+    actor.updateWalking(deltaTime, gravity);
     
   
     //
@@ -294,16 +353,20 @@ disc.load = function(){
     // this handles all tests so we can cache its position
     var wasIn = false;
     
-    player.useGravity = true;
+    actor.useGravity = true;
     
     {
 
       for (var i = 0; i < APPPP.colliders.length; i++) {
         var isInMuch = false;
         
-        var wall = APPPP.colliders[i];
+        var pick = APPPP.colliders[i];
         // cheap for now dont test player collide
-        if(wall === player){
+        // if(wall === actor){
+        //   continue;
+        // }
+        // exit loop if its a player or robot
+        if(pick.subType === "actor"){
           continue;
         }
         
@@ -316,44 +379,51 @@ disc.load = function(){
         //   }
         // }
       
-        isInMuch = AABBTest(player, wall);
+        isInMuch = AABBTest(actor, pick);
         
         if(isInMuch){
           // console.log("innnn?");
-          wall.color = {x:0,y:0,z:1,w:0};
-          wall.onCollide();
+          if(pick.subType !== "actor"){
+            
+            pick.color = {x:0,y:0,z:1,w:0};
+          }
+          pick.onCollide();
         }
         else {
+          if(pick.subType !== "actor"){
+            
+            pick.color = {x:0,y:0.5,z:0,w:0};
+            
+          }
           // console.log("ouuuut???");
-          wall.color = {x:0,y:0.5,z:0,w:0};
         }
       
 
         if(wasIn == false && isInMuch == true){
           wasIn = true;
-          player.useGravity = false;
+          actor.useGravity = false;
         }
             
       } // colliders loop
       
       // 
       // if(isINnnn){
-      //   player.x = previousPos.x;
-      //   player.y = previousPos.y;
+      //   actor.x = previousPos.x;
+      //   actor.y = previousPos.y;
       // }
       // else {
-      //   previousPos.x = player.x;
-      //   previousPos.y = player.y;
+      //   previousPos.x = actor.x;
+      //   previousPos.y = actor.y;
       // }
       // 
 
       if(wasIn){
-        player.x = player.mPos.x;
-        player.y = player.mPos.y;
+        actor.x = actor.mPos.x;
+        actor.y = actor.mPos.y;
       }
       else {
-        player.mPos.x = player.x;
-        player.mPos.y = player.y;
+        actor.mPos.x = actor.x;
+        actor.mPos.y = actor.y;
       }
             
 
@@ -410,16 +480,22 @@ disc.load = function(){
     const wh = randomBetween(1,100);
     // need a technique to make tall walls
     
-    var border1 = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
+    var platform = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
     
-    border1.shiftLeft = randomBetween(1,100);
+    platform.shiftLeft = randomBetween(1,100);
     
     // cant play if the wall test is overlap for now
-    if( AABBTest(player, border1) == true){
+    if( AABBTest(player, platform) == true){
       return;
     }
     
-    _this.system.sceneGrapth.add(border1);
+    for (var i = 0; i < robots.length; i++) {
+      if( AABBTest(robots[i], platform) == true){
+        return;
+      }
+    }
+    
+    _this.system.sceneGrapth.add(platform);
     
     // collide events
     
@@ -459,7 +535,8 @@ disc.load = function(){
   
   
   // make a ton!!!
-  for (var i = 0; i < 20; i++) {
+  for (var i = 0; i < 80; i++) {
+  // for (var i = 0; i < 1; i++) {
     addHipToBeSquare();
   }
   

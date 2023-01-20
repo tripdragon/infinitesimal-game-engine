@@ -9,6 +9,7 @@ export class Quark {
   lv = 0;
   
   isType = "Quark";
+  subType = "anything";
   
   gl;
   

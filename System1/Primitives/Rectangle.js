@@ -58,7 +58,7 @@ export class Rectangle extends Quark {
   }
   
   onCollide(){
-    console.log("wap!", this.name);
+    // console.log("wap!", this.name);
   }
 
   // this could use some of that fancy {deconstructor} or ... new stuff

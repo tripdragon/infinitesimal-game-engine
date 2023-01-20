@@ -25,10 +25,53 @@ import { Rectangle } from '../Primitives/Rectangle.js';
 // is SUCH A PAIN to keep code syncing when building
 // or you have to write get setters for EVERYTHING over again
 export class Actor extends Rectangle {
-
+  
+  // temp untill we fix .type
+  subType = "actor";
+  
   walkSpeed = 19.5; // needs xy
   
   mPos = {x:0,y:0,z:0};
+  
+  // type???
+  
+  // this shoudl be static but then its Player.modes.lksjdfo
+  // enums suck in js
+  modes = {
+    player : "player",
+    bot : "bot"
+  };
+  _mode = this.modes.player;
+  get mode(){
+    return this._mode;
+  }
+  set mode(val){
+    if(val === "player"){
+      this._mode = this.modes.player;
+    }
+    else if(val === "bot"){
+      this._mode = this.modes.bot;
+    }
+  }
+  
+  
+  // for mode.bot remote mote
+  // can be handled by a vector2
+  // but would still take impluses in
+  directionVector = {x:0, y:0, z:0};
+  // directions = {
+  //   idle : "idle",
+  //   up : "up",
+  //   down : "down",
+  //   left : "left",
+  //   right : "right",
+  //   upLeft : "upLeft",
+  //   downLeft : "downLeft",
+  //   downRight : "downRight",
+  //   upRight : "upRight"
+  // };
+  // direction = this.directions.idle;
+  
   
   // you can change this func for the funs
   mGravity = function(){};
@@ -46,6 +89,8 @@ export class Actor extends Rectangle {
     
     super(name, x, y, width, height, color);
     
+    this._mode = this.modes.player;
+    // this.direction = this.directions.idle;
     
   }
     
@@ -70,21 +115,50 @@ export class Actor extends Rectangle {
       this.gravityForce(deltaTime, externalGravity);
     }
     
-    //if(arrowsDown.left){
-    if(keysDown.ArrowLeft){
-      this.x += -this.walkSpeed;
+    if(this._mode === this.modes.player){
+      // console.log("¿¿¿¿¿");
+      //if(arrowsDown.left){
+      if(keysDown.ArrowLeft){
+        this.x += -this.walkSpeed;
+      }
+      if(keysDown.ArrowRight){
+        this.x += this.walkSpeed;
+      }
+      // in screen space we need to flip y
+      if(keysDown.ArrowDown){
+        this.y += -this.walkSpeed * -1;
+      }
+      if(keysDown.ArrowUp){
+        this.y += this.walkSpeed * -1;
+      }
+      
     }
-    if(keysDown.ArrowRight){
-      this.x += this.walkSpeed;
+    else if(this._mode === this.modes.bot){
+      
+      // this.useGravity = false;
+      // this could be handled by a simple vector2/3
+      // but would still take impulses in
+      this.x += this.walkSpeed * this.directionVector.x;
+      this.y += this.walkSpeed * this.directionVector.y * -1;
+      // console.log("this.x", this.x);
+      // this.y += this.walkSpeed * -1;
+      // this.y += (this.y + this.walkSpeed) * this.directionVector.y * -1;
+      // if(direction === directions.left){
+      //   this.x += -this.walkSpeed;
+      // }
+      // else if(direction === directions.right){
+      //   this.x += this.walkSpeed;
+      // }
+      // // in screen space we need to flip y
+      // else if(direction === directions.down){
+      //   this.y += -this.walkSpeed * -1;
+      // }
+      // else if(direction === directions.up){
+      //   this.y += this.walkSpeed * -1;
+      // }
+      
+      
     }
-    // in screen space we need to flip y
-    if(keysDown.ArrowDown){
-      this.y += -this.walkSpeed * -1;
-    }
-    if(keysDown.ArrowUp){
-      this.y += this.walkSpeed * -1;
-    }
-    
     
     // needs an IF
     // ASTROIDS!!!! like
