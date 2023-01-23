@@ -125,7 +125,9 @@ export class Basestation {
     m_millisecondsSinceStarted: 0,
     sincePaused : 0,
     constantRuntime : 0,
-    delta : 0
+    delta : 0,
+    mTime : 0,
+    now : 0,
   };
   // time since game start, this is paused when game is paused
   gameTime = 0;

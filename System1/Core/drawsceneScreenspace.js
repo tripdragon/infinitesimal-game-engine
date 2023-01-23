@@ -199,6 +199,7 @@ export function drawSceneScreenspace(app, gl, programInfo, positionCheap = {x:0,
   for (var i = 0; i < app.sceneGrapth.objects.length; i++) {
     var ff = app.sceneGrapth.objects[i];
     ff.gl = gl;
+    ff.update();
     ff.play(colorUniformLocation);
     var vertexCount2 = ff.pointsCount;
     gl.drawArrays(primitiveType, offset2, vertexCount);

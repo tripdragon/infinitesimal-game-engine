@@ -16,6 +16,7 @@ rr instanceof Quark
   */
 export class Quark {
 
+  system;
   
   name = "";
   
@@ -63,6 +64,7 @@ export class Quark {
   // this.gl = 
   // }
   copyTo(thing){
+    thing.system = this.system;
     thing.gl = this.gl;
     thing.x = this.x;
     thing.y = this.y;
@@ -78,9 +80,12 @@ export class Quark {
     thing.useInEditMode = this.useInEditMode;
     thing.canCollide = this.canCollide;
     thing.name = this.name;
+    // not sure about these yet
     thing.playCode = this.playCode;
     thing.playCodeDecompressed = this.playCodeDecompressed;
-    
+    thing.playHelpers = this.playHelpers;
+    thing.update = this.update;
+    thing.play = this.play;
   }
   
   update(){
@@ -107,6 +112,10 @@ export class Quark {
   }
 
   // maybe rename to script
+  // main part 
+  // var helper = {randomBetween : randomBetween}
+  // this.playCodeDecompressed().do(this, helper);
+
   playCode = `return {
     x: this.x,
     y: this.y,
@@ -114,6 +123,34 @@ export class Quark {
     height: this.height
   }`;
   playCodeDecompressed = null;
+  playHelpers = {};
+  /*
+  
+  // sq1.playCode = `return { do : function(obj, helpers){
+  //   obj.x = helpers.randomBetween(${-xx},${xy});
+  //   obj.color.x = Math.random();
+  //   obj.color.y = Math.random();
+  //   obj.color.z = Math.random();
+  // }}`;
+  
+  
+    play(colorUniformLocation){
+
+      if(this.playCodeDecompressed === null){
+
+        this.playCodeDecompressed = new Function(this.playCode);
+        
+      }
+      
+      if( this.playCodeDecompressed().hasOwnProperty("do") ){
+        // 2nd arg is helper {} , temp solution to get mth functions into sandbox
+        this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
+      }
+      // var gg = this.playCodeDecompressed;
+      //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
+      this.draw(colorUniformLocation);
+    }
+    */
   
   // we never have the gl available yet on start of game....
   // maaaaybe we should, but for now just make it name

@@ -89,7 +89,8 @@ export class Rectangle extends Quark {
     
     if( this.playCodeDecompressed().hasOwnProperty("do") ){
       // 2nd arg is helper {} , temp solution to get mth functions into sandbox
-      this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
+      this.playCodeDecompressed().do(this, this.playHelpers);
+      // this.playCodeDecompressed().do(this, {randomBetween : randomBetween});
     }
     // var gg = this.playCodeDecompressed;
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);

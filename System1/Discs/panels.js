@@ -15,6 +15,7 @@ disc.load = function(){
 
   var _this = this;
 
+
   // changing the screen space mode for a platformer game
   this.system.screenSpaceMode = this.system.screenModes.screen;
   this.system.reboot();
@@ -264,6 +265,42 @@ disc.load = function(){
   wobjetStamper_tool.editorModeActions = _EditorModeActions;
   wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
   wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
+  wobjetStamper_tool.stampingObject.system = _this.system;
+  
+  wobjetStamper_tool.stampingObject.update = function(){
+    // console.log("????");
+    // debugger
+    // console.log(this.system.time.delta);
+    // console.log(this.x);
+    // console.log(this.system.time.delta);
+      this.x += this.system.time.delta * 0.01;
+      if(this.x > window.innerWidth){
+        this.x = 0 - this.width;
+      }
+      // this.x += 0.1;
+  }
+  
+  // wobjetStamper_tool.stampingObject.play = function(){
+  //   // console.log("????");
+  //   // debugger
+  //   // console.log(this.system.time.delta);
+  //     // this.x += this.system.time.delta * 10.2;
+  // }
+  
+  // animation to tricky for now
+  // var mTime = Date.now();
+  // wobjetStamper_tool.stampingObject.update = function(){
+  //   console.log("¿¿¿");
+  //   this.stampingObject.playHelpers.mTime = this.system.time.now;
+  // }
+  // wobjetStamper_tool.stampingObject.playHelpers = {
+  //   mTime : 0
+  // };
+  // // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+  // wobjetStamper_tool.stampingObject.playCode = `return { do : function(obj, helpers){
+  //   console.log("¿??///¿/");
+  //   console.log(helpers.mTime);
+  // }}`;
 
   ToolsSystem.addTool(wobjetStamper_tool);
 
@@ -280,6 +317,21 @@ disc.load = function(){
 
   ToolsSystem.addTool(wobjetStamper_tool222);
 
+  wobjetStamper_tool222.stampingObject.system = _this.system;
+  
+  wobjetStamper_tool222.stampingObject.update = function(){
+    // console.log("????");
+    // debugger
+    // console.log(this.system.time.delta);
+    // console.log(this.x);
+    // console.log(this.system.time.delta);
+      this.y -= this.system.time.delta * 0.01;
+      if(this.y < 0){
+        this.y = window.innerHeight + this.height;
+      }
+      // this.x += 0.1;
+  }
+  
   
   
   // var pointer = {x:0,y:0};
