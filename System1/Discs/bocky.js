@@ -36,7 +36,7 @@ disc.load = function(){
   //   obj.color.z = Math.random();
   // }}`;
 
-  // constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  // constructor(gl, points = [], x, y, scalar, color = {r:1.0, y:1.0, z:1.0, w:1.0}) {
   var points = [
     -1,1,
     -1,-1,
@@ -223,12 +223,12 @@ disc.load = function(){
         
         if(isInMuch){
           // console.log("innnn?");
-          wall.color = {x:0,y:0,z:1,w:0};
+          wall.color = {r:0,g:0,b:1,a:1};
           wall.onCollide();
         }
         else {
           // console.log("ouuuut???");
-          wall.color = {x:0,y:0.5,z:0,w:0};
+          wall.color = {r:0,g:0.5,b:0,a:1};
         }
       
 

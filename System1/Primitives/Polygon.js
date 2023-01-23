@@ -38,12 +38,12 @@ export class Polygon extends Quark {
 
   // this could use some of that fancy {deconstructor} or ... new stuff
   //constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, points = [], x, y, scalar, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
     
     // need to compute width and height
     var hh = 0;
     var ww = 0;
-    super(name, x, y, ww, hh, color = {x:1.0, y:1.0, z:1.0, w:1.0});
+    super(name, x, y, ww, hh, color = {r:1.0, g:1.0, b:1.0, a:1.0});
     
     this.points = points;
     this.scalar = scalar;
@@ -57,7 +57,7 @@ export class Polygon extends Quark {
   // draws to the buffer
   draw(colorUniformLocation){
     // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
-    this.gl.uniform4f(colorUniformLocation, this.color.x, this.color.y, this.color.z, 1);
+    this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
     // setSquareLike(this.gl, this.x, this.y, this.width, this.height);
     // console.log(this.x);
     // setPolygon(this.gl, this.x, this.y, this.scalar, this.points);

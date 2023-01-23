@@ -62,7 +62,7 @@ export class Rectangle extends Quark {
   }
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
     // console.log("color", color);
     super(name, x, y, width, height, 0, color);
     
@@ -75,7 +75,7 @@ export class Rectangle extends Quark {
   // draws to the buffer
   draw(colorUniformLocation){
     // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
-    this.gl.uniform4f(colorUniformLocation, this.color.x, this.color.y, this.color.z, 1);
+    this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
     setRectangle(this.gl, this.x, this.y, this.width, this.height);
   }
 
@@ -95,6 +95,24 @@ export class Rectangle extends Quark {
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
     this.draw(colorUniformLocation);
   }
+  
+  clone(){
+
+    var rr = new Rectangle(this.name, this.x, this.y, this.width, this.height, this.color);
+    // these belong in a super() but how?
+    // this.tacos = "narfs";
+    // super.clone();
+    this.copyTo(rr);
+    rr.scalar = this.scalar;
+    rr.mHeight = this.mHeight;
+    rr.mWidth = this.mWidth;
+  
+
+    console.log("clone needs more for Rectangle");
+    return rr;
+  }
+  
+  
 }
 
 // function demo(gl){

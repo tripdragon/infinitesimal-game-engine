@@ -1,4 +1,5 @@
 
+import {Quark} from './Quark.js';
 
 // BAAAASIC for now
 
@@ -19,11 +20,27 @@ export class SceneGrapth{
   
   // need to add compare istype etc
   add(thingy){
-    if(thingy.isType === "Quark"){
+    if(thingy instanceof Quark){
       this.objects.push(thingy);
       if(thingy.canCollide){
         this.layers.colliders.push(thingy);
       }
+    }
+  }
+  
+  remove(thingy){
+    if(thingy instanceof Quark){
+      
+      var index = this.objects.indexOf(thingy);
+      if (index > -1) {
+        this.objects.splice(index,1);
+      }
+      // colliders
+      index = this.layers.colliders.indexOf(thingy);
+      if (index > -1) {
+        this.layers.colliders.splice(index,1);
+      }
+      
     }
   }
   

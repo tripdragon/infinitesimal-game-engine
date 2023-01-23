@@ -3,7 +3,13 @@
 import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
 
 export function drawSceneScreenspace(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
-  gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
+  
+  var color = app.backgroundColor;
+  // var color = {r:0.0, g:0.0, b:0.7, a:1};
+  // console.log("color",color);
+  gl.clearColor(color.r, color.g, color.b, color.a); // Clear to black, fully opaque
+  // gl.clearColor(0, 0, 1, 1); // Clear to black, fully opaque
+  
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
   gl.depthFunc(gl.LEQUAL); // Near things obscure far things

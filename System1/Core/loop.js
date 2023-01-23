@@ -19,8 +19,11 @@ export let loop = function(){
   //this.fauxPointer.z = this.pointer.z;
   this.fauxPointer.z = -100.0;
   
+  
+  this.loopHookPoints.editorBeforeDraw();
+  
   this.loopHookPoints.beforeDraw();
-
+  
   // drawScene(gl, programInfo);
   this.drawScene(this, this.gl, this.programInfo, this.fauxPointer);
   

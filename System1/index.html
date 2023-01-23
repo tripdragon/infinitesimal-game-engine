@@ -16,6 +16,12 @@
         body{
           overflow: hidden;
         }
+        
+        /* ideally canvas gl is the bottom of the stack */
+        #canvassss {
+          z-index: -1;
+          position: absolute;
+        }
     </style>
 
     <style media="screen">
@@ -45,7 +51,7 @@
         z-index: 1;
         
         width: 100%;
-        height: 100px;
+        height: 35px;
         padding: 20px 0 0 20px;
         
         display: flex;
@@ -77,6 +83,14 @@
       
 
     </style>
+    
+    <!-- idea is to inject here and clear when switching games -->
+    <style id="gamestyles" media="screen">
+      .fish {
+        color: "pwgjpodg";
+      }
+    </style>
+    
   </head>
 
   <body>
@@ -128,6 +142,7 @@
       import { disc as mousetest } from  "./Discs/mousetest.js";
       import { disc as bots1 } from  "./Discs/bots1.js";
       import { disc as starter } from  "./Discs/starter.js";
+      import { disc as panels } from  "./Discs/panels.js";
 
       // Should have some stupid function like insertDisc ...
       // moving Game setup into its class
@@ -139,6 +154,7 @@
       APPPP.addGameToCatalog(superjumpybocky);
       APPPP.addGameToCatalog(mousetest);
       APPPP.addGameToCatalog(bots1);
+      APPPP.addGameToCatalog(panels);
       
       // APPPP.insertDisc(squaresATron_I);
       // APPPP.insertDisc(soundboard);

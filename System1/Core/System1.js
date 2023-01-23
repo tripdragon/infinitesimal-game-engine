@@ -27,8 +27,37 @@ export class Basestation {
   
   cameraDefault = {x:0,y:0, z: -70};
   
-  // not proper yet
+  // not proper yet 9.82?
   gravity = 9.72873473;
+  
+  backgroundColor = {r:0,g:0,b:0,a:1};
+  
+  // need a default far z
+  pointer = { x: 0, y: 0, z:0};
+  pointerXYScalar = 12;
+  pointerGrid = 1; // ideally there are multiple grids, so its more a function, object dimentions matter
+  // pointer = {x:0,y:0};
+  /*
+  function onPointerMove( event ) {
+
+    // calculate pointer position in normalized device coordinates
+    // (-1 to +1) for both components
+    
+    // need for when camera is in 3d
+    // pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    // pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    // pointer.x = ( event.clientX / window.innerWidth );
+    // pointer.y = - ( event.clientY / window.innerHeight ) * -1;
+    pointer.x = event.clientX ;
+    pointer.y = event.clientY;
+    // console.log(pointer);
+  }
+  
+  window.addEventListener( 'pointermove', onPointerMove );
+  */
+  
+  
+  
   
   // player.x = system.input.keyboard.isArrowLeftDown
   // player.x = system.getArrowLeftDown()
@@ -101,9 +130,7 @@ export class Basestation {
   // time since game start, this is paused when game is paused
   gameTime = 0;
   
-  // need a default far z
-  pointer = { x: 0, y: 0, z:-76.0};
-  pointerXYScalar = 12;
+  
   
   sceneGrapth = new SceneGrapth();
   // made it a getter cause typing that always is a bit much
@@ -142,10 +169,11 @@ export class Basestation {
   
   // where and how to go
   // need to add collisions at some place
+  // this.system.loopHookPoints.beforeDraw = f()
   loopHookPoints = {
     beforeDraw : function(){},
     after1 : function(){},
-    
+    editorBeforeDraw : function(){},
   }
   
   
@@ -189,7 +217,7 @@ export class Basestation {
     this.sceneGrapth = new SceneGrapth();
   }
   
-  
+  // this is for 3d coords
   onPointerMove( event ) {
     this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -282,7 +310,7 @@ export class Basestation {
     console.warn("pointermove, THIS DOES NOT BELONG HERE");
     // THIS DOES NOT BELONG HERE
     // window.addEventListener( 'resize', onWindowResize );
-    document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
+    // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
     
     // 
     // loop loop loop loop loop loop loop

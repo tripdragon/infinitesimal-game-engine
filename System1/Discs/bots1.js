@@ -153,7 +153,7 @@ disc.load = function(){
   botty.system = this.system;
   botty.mode = botty.modes.bot;
   botty.directionVector.x = -1;
-  botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+  botty.color = {r:0.7,g:0.7,b:0.9,a:1};
   // botty.directionVector.y = -1;
   // when in bot mode
   botty.walkSpeed = 6;
@@ -171,7 +171,7 @@ disc.load = function(){
     var botty = new Actor("botty" + i, xx, yy, 20, 20);
     botty.system = this.system;
     botty.mode = botty.modes.bot;
-    botty.color = {x:0.7,y:0.7,z:0.9,w:1};
+    botty.color = {r:0.7,g:0.7,b:0.9,a:1};
     
     // botty.directionVector.x = randomBetween(-1,1);
     // botty.directionVector.y = randomBetween(-1,1);
@@ -208,7 +208,7 @@ disc.load = function(){
       mPointerPos.y = pointer.y;
       mSelectedPos.x = selectedObject.x;
       mSelectedPos.y = selectedObject.y;
-      selectedObject.color = {x:0,y:0,z:1,w:0};      
+      selectedObject.color = {r:0,g:0,b:1,a:0};      
     }
     isMouseDown = true;
   }
@@ -283,13 +283,13 @@ disc.load = function(){
           }
           
           if(wall.subType !== "actor"){
-            wall.color = {x:0,y:0.5,z:0,w:0};
+            wall.color = {r:0,g:0.5,b:0,a:1};
           }
           var wasin = pointInRect(pointer, wall);
           // console.log(wall.width, wall.height);
           // console.log(pointer);
           if(wasin){
-              wall.color = {x:0,y:0,z:1,w:0};
+              wall.color = {r:0,g:0,b:1,a:1};
               if(wasEverIN == false){
                 wasEverIN = true;
                 selectedObject = wall;
@@ -310,12 +310,12 @@ disc.load = function(){
           // 
           // if(isInMuch){
           //   // console.log("innnn?");
-          //   wall.color = {x:0,y:0,z:1,w:0};
+          //   wall.color = {r:0,y:0,z:1,w:0};
           //   wall.onCollide();
           // }
           // else {
           //   // console.log("ouuuut???");
-          //   wall.color = {x:0,y:0.5,z:0,w:0};
+          //   wall.color = {r:0,y:0.5,z:0,w:0};
           // }
           // 
           // 
@@ -387,14 +387,14 @@ disc.load = function(){
           // console.log("innnn?");
           if(pick.subType !== "actor"){
             
-            pick.color = {x:0,y:0,z:1,w:0};
+            pick.color = {r:0,g:0,b:1,a:1};
           }
           pick.onCollide();
         }
         else {
           if(pick.subType !== "actor"){
             
-            pick.color = {x:0,y:0.5,z:0,w:0};
+            pick.color = {r:0,g:0.5,b:0,a:1};
             
           }
           // console.log("ouuuut???");
@@ -482,7 +482,7 @@ disc.load = function(){
     const wh = randomBetween(1,100);
     // need a technique to make tall walls
     
-    var platform = new Rectangle("wall" + index, xx, xy, ww, wh, {x:0,y:0.5,z:0,w:0});
+    var platform = new Rectangle("wall" + index, xx, xy, ww, wh, {r:0,g:0.5,b:0,a:1});
     
     platform.shiftLeft = randomBetween(1,100);
     

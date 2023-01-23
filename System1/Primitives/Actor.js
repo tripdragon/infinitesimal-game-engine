@@ -85,7 +85,7 @@ export class Actor extends Rectangle {
   canUpdateFromInputs = true;
 
   // constructor(name, x=0, y=0, width=10, height=10, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, x, y, width, height, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
     
     super(name, x, y, width, height, color);
     
@@ -95,6 +95,10 @@ export class Actor extends Rectangle {
   }
     
   update(){
+    if( !this.canUpdate ){
+      return;
+    }
+    super.update();
     if(canUpdateFromInputs){
       // need some access to the keyboard or input device joystick
     }
