@@ -327,7 +327,7 @@ disc.load = function(){
     // console.log(this.system.time.delta);
       this.y -= this.system.time.delta * 0.01;
       if( (this.y + this.height) < 0){
-        this.y = window.innerHeight + this.height;
+        this.y = window.innerHeight;
       }
       // this.x += 0.1;
   }
