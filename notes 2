@@ -1,0 +1,171 @@
+2:50 PM
+joined #visualscriptchat.
+  2:50 PM
+set the channel description: game engine visual scripting
+  2:50 PM
+was added to #visualscriptchat by
+.
+  2:50 PM
+ok
+2:51
+So like in scripting we need a BASIS of api words and function naming
+2:52
+in this example its
+Meander( wobject )
+with the script thats open on the object so this is automatically default
+other names, pace, roam, walk, guard floor (edited) 
+2:53
+comment:
+
+Walk back and forth over platform
+
+(edited)
+2:57
+interior code roughly:
+
+object move robotDirection.x within platforms width in local space
+if x == edge send event atEdge()
+atEdge() => robotDirection.x *= -1
+return to loop
+
+  3:04 PM
+in possible code words : <>
+
+pace platform
+
+walk platform until edge : 
+
+The term "walk platform" in function space would effectively just be a one walk routine, meaning it would walk then stophere flip could also be :
+reverse, reverse direction, turn around, walk platform..., walk
+go backwards would be the opposite, the sprite would not flip but it would walk backwards
+then there's : run, jog, sprint, hop ...also here atEdge is function or event or bool ??!?!?!?¿¿¿
+
+event:
+when atEdge
+flip
+walk platform
+repeat
+
+Alternative action:
+
+Walk platform
+when atEdge
+jump forwards 20 power
+when landed, wait 2 seconds
+walk platform
+repeat
+
+(edited)
+  3:19 PM
+using console in slack
+
+Content Security Policy: The page's settings blocked the loading of a resource at eval ("script-src").
+
+  3:28 PM
+lets just take apart
+
+walk platform
+
+Without a camel case
+
+walkPlatform
+
+we need to parse the two words
+OR they are two functions
+3:29
+
+walk, platform
+or
+walk(platform)
+
+3:33
+with walk() being
+
+wobject.x += direction.x
+
+and platform being
+
+wobject.currentPlatform get width
+
+and the two walk(platform) being an overloaded function
+
+walk( flatObject )
+wobject.x += direction.x
+if wobject.x >= <= flatObject.width in local space
+
+3:33
+point being the script parser has to handle spaces HARD MODE (edited) 
+  3:45 PM
+starting to tinker
+
+aa = `
+direction is left and speed is 2
+walkPlatform until atEdge
+`;
+
+bb = aa.split(" ")
+
+
+//example.replace( /\n/g, " " ).split( " " )
+
+aa.replace( /\n/g, " " ).split( " " )
+
+  4:23 PM
+aa = `
+direction is left and speed is 2
+walkPlatform until atEdge
+flip
+walk platform
+repeat
+`;// bb = aa.split(" ")//example.replace( /\n/g, " " ).split( " " )bb = aa.replace( /\n/g, " " ).split( " " )[
+  "", "direction", "is", "left", "and", "speed", "is", "2", "walkPlatform",
+  "until", "atEdge", "flip", "walk", "platform", "repeat", ""
+]// functions and evals// platform is already assigned
+// otherwise feed functions with ifs
+wobject = {
+  x:1, y: 0,
+  direction : { x: 0, y: 0 },
+  platform : object,
+  walkRoutine : function(){},  // this seems to be like such a common task
+  // that it should be ratifed into the player object here
+  // event
+  atEdge : function(){},
+  isAtEdge : false,  update: function(){
+    walkRoutine()
+    atEdge()
+  }
+}// ?!??¿¿⁄÷“…¬¬Ωø”
+fucntion is(thing, func, val){
+  func(thing, val)
+}function direction(thing, val){
+  if(val === "left"){
+    thing.direction.x = -1;
+  }
+}function speed(thingy, val){
+  thingy.speed = val
+}// OR skip is and imply the next is an equal
+direction(wobject, "left")// skip and, its a conjection word for now
+// but could be a joiner func (thing1, thing2)speed(wobject, 2)// walkPlatform is a function on onject and is called in the update loo
+// so here we are just assigning the hook function
+// also we just imply its in x direction for now
+walkPlatform(thing){
+  thing.walkRoutine = function(){
+    this.x += this.speed * this.direction.x;
+  }
+}// hrmmmm
+// this is like a modifer to the object.walkRoutine
+function until(thing){
+  OR
+var ww = walkPlatform(...){}function until(func){
+...
+}// atEdge
+// this would seem to be an event
+// at edge
+// its also a check next word -> actionfunction at(){}function edge(){}function atEdge(thingy, func){  thing.atEdge = function(){    if( ! inbetween(thing.x, platform.x, platform.width) ){
+      func(thingy) // func being flip() in this example
+    }  }}function flip(thingy){
+  thingy.direction.x *= -1;
+}walkPlatform(thingy)// do nothing???? since we dont have a logical stop within the codes above
+// thus stop() is always implied?
+// or is loop repeat?????
+repeat(){}
