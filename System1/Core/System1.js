@@ -194,6 +194,18 @@ export class Basestation {
       this.getKeyDown(ev); 
     }
     
+    // need expected mouse coords
+    if(this.screenSpaceMode === this.screenModes.main3d){
+    }
+    else {
+      document.addEventListener( 'pointermove', this.onPointerMoveScreenSpace.bind(this) );
+    }
+    // hrmmmmm
+    // //   this.system.screenSpaceMode = this.system.screenModes.screen;
+    // // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
+    // 
+    
+    
   }
   
   addGameToCatalog(game){
@@ -224,6 +236,21 @@ export class Basestation {
     this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
+  
+  //   window.addEventListener( 'pointermove', onPointerMove, true );
+  onPointerMoveScreenSpace( event ) {
+
+    this.pointer.x = event.clientX;
+    this.pointer.y = event.clientY;
+    // console.log(that.system.pointer);
+    
+    // we can add this later in another event
+    // EditorModeActions.pointerMoving(); 
+  }
+  
+  
+  
+  
   
   reboot(){
     this.stopLoop();
@@ -313,6 +340,7 @@ export class Basestation {
     // THIS DOES NOT BELONG HERE
     // window.addEventListener( 'resize', onWindowResize );
     // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
+    
     
     // 
     // loop loop loop loop loop loop loop

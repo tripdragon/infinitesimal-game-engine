@@ -97,6 +97,13 @@ export class Rectangle extends Quark {
     this.draw(colorUniformLocation);
   }
   
+  // quark already has it
+  // originCompute(){
+  //   this.origin.x = this.width/2;
+  //   this.origin.y = this.height/2;
+  //   this.origin.z = this.depth/2;
+  // }
+  
   clone(){
 
     var rr = new Rectangle(this.name, this.x, this.y, this.width, this.height, this.color);

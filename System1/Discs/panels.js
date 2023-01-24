@@ -28,19 +28,19 @@ disc.load = function(){
   
   
   // this shoudl be ratified up to System
-  function onPointerMove( event ) {
-
-    _this.system.pointer.x = event.clientX;
-    _this.system.pointer.y = event.clientY;
-    // console.log(that.system.pointer);
-    
-    // we can add this later in another event
-    // EditorModeActions.pointerMoving(); 
-  }
-  
-  window.addEventListener( 'pointermove', onPointerMove, true );
-  
-  
+  // function onPointerMove( event ) {
+  // 
+  //   _this.system.pointer.x = event.clientX;
+  //   _this.system.pointer.y = event.clientY;
+  //   // console.log(that.system.pointer);
+  // 
+  //   // we can add this later in another event
+  //   // EditorModeActions.pointerMoving(); 
+  // }
+  // 
+  // window.addEventListener( 'pointermove', onPointerMove, true );
+  // 
+  // 
   
   
   /*
