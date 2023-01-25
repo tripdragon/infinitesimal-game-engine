@@ -1,5 +1,5 @@
 
-import {Quark} from './Quark.js';
+import {Quark} from '../Primitives/Quark.js';
 
 // BAAAASIC for now
 

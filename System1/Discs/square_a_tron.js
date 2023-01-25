@@ -76,9 +76,9 @@ disc.load = function(){
       var sq1 = new SquareLike(null, -xx, xy, ww, wh);
       sq1.playCode = `return { do : function(obj, helpers){
         obj.x = helpers.randomBetween(${-xx},${xy});
-        obj.color.x = Math.random();
-        obj.color.y = Math.random();
-        obj.color.z = Math.random();
+        obj.color.r = Math.random();
+        obj.color.g = Math.random();
+        obj.color.b = Math.random();
       }}`;
       
       that.system.sceneGrapth.add(sq1);
@@ -113,25 +113,25 @@ disc.load = function(){
   var sq1 = new SquareLike(null, -4, 4, 4, 6);
   sq1.playCode = `return { do : function(obj, helpers){
     obj.x = helpers.randomBetween(-4,4);
-    obj.color.x = Math.random();
-    obj.color.y = Math.random();
-    obj.color.z = Math.random();
+    obj.color.r = Math.random();
+    obj.color.g = Math.random();
+    obj.color.b = Math.random();
   }}`;
   var sq2 = new SquareLike(null, -4 + -12, 4, 3, 4);
   sq2.playCode = `return { do : function(obj, helpers){
     // obj.x = helpers.randomBetween(-14,14);
     obj.y = helpers.randomBetween(-14,14);
-    obj.color.x = Math.random();
-    obj.color.y = Math.random();
-    obj.color.z = Math.random();
+    obj.color.r = Math.random();
+    obj.color.g = Math.random();
+    obj.color.b = Math.random();
   }}`;
   var sq3 = new SquareLike(null, -4 + -12, 4 + -12, 2, 5);
   sq3.playCode = `return { do : function(obj, helpers){
     obj.x = helpers.randomBetween(-24,24);
     // obj.y = helpers.randomBetween(-14,14);
-    obj.color.x = Math.random();
-    obj.color.y = Math.random();
-    obj.color.z = Math.random();
+    obj.color.r = Math.random();
+    obj.color.g = Math.random();
+    obj.color.b = Math.random();
   }}`;
   
   // APPPP.sceneGrapth.addActor();

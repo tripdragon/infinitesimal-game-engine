@@ -1,5 +1,5 @@
 
-import { Quark } from "../Core/Quark.js";
+import { Quark } from "../Primitives/Quark.js";
 
 // import { randomBetween } from "../Modules/mathness.js";
 // import { setRectangle } from "../Modules/setRectangle.js";

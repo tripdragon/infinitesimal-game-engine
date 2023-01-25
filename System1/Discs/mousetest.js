@@ -170,7 +170,7 @@ disc.load = function(){
       mPointerPos.y = pointer.y;
       mSelectedPos.x = selectedObject.x;
       mSelectedPos.y = selectedObject.y;
-      selectedObject.color = {x:0,y:0,z:1,w:0};      
+      selectedObject.color = {r:0,g:0,b:1,a:1};      
     }
     isMouseDown = true;
   }
@@ -233,13 +233,13 @@ disc.load = function(){
           }
           
           if(wall.subType !== "actor"){
-            wall.color = {x:0,y:0.5,z:0,w:0};
+            wall.color = {r:0,g:0.5,b:0,a:1};
           }
           var wasin = pointInRect(pointer, wall);
           // console.log(wall.width, wall.height);
           // console.log(pointer);
           if(wasin){
-              wall.color = {x:0,y:0,z:1,w:0};
+              wall.color = {r:0,g:0,b:1,a:0};
               if(wasEverIN == false){
                 wasEverIN = true;
                 selectedObject = wall;
@@ -337,14 +337,14 @@ disc.load = function(){
           // console.log("innnn?");
           if(pick.subType !== "actor"){
             
-            pick.color = {x:0,y:0,z:1,w:0};
+            pick.color = {r:0,g:0,b:1,a:1};
           }
           pick.onCollide();
         }
         else {
           if(pick.subType !== "actor"){
             
-            pick.color = {x:0,y:0.5,z:0,w:0};
+            pick.color = {r:0,g:0.5,b:0,a:1};
             
           }
           // console.log("ouuuut???");

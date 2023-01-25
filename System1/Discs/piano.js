@@ -129,7 +129,7 @@ gg.appendChild(pianoimg);
   {
     for (var i = 0; i < alpha.length; i++) {
       
-      var key = new Rectangle("key"+i, (24 * i) + 44, 300, 20, 100, {x:1,y:1,z:1,w:0});
+      var key = new Rectangle("key"+i, (24 * i) + 44, 300, 20, 100, {r:1,g:1,b:1,a:1});
       this.system.sceneGrapth.add(key);
       
       // lookup[alpha[i]].rect3d = key;

@@ -14,7 +14,7 @@ border1.onCollide = function(){
 */
 
 
-import { Quark } from "../Core/Quark.js";
+import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
 
 

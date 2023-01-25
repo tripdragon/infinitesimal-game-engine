@@ -10,7 +10,7 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
 import { Grid } from "../Modules/Grid.js";
 
-import { Quark } from "../Core/Quark.js";
+// import { Quark } from "../Primitives/Quark.js";
 
 export let disc = new Game("griddemo");
 
@@ -185,6 +185,9 @@ function onPointerMove( event ) {
   box2.x = gx;
   box2.y = gy;
   
+  box3.x = gx + grid.size;
+  box3.y = gy;
+  
 }
 
 window.addEventListener( 'pointermove', onPointerMove );
@@ -194,9 +197,11 @@ console.log("grid.size", grid.size);
 // rectangle to debug with
 var box1 = new Rectangle("box", 100, 100, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
 var box2 = new Plane("plane", 0, 0, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
+var box3 = new Plane("plane", 0, 0, grid.size, grid.size, {r:0.4,g:0.5,b:0.2,a:1});
 // debugger
 this.system.sceneGrapth.add(box1);
 this.system.sceneGrapth.add(box2);
+this.system.sceneGrapth.add(box3);
 // debugger
 window.box1 = box1;
 window.box2 = box2;

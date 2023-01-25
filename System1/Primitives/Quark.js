@@ -1,6 +1,6 @@
 
 
-import {Layers} from './Layers.js';
+// import {Layers} from './Layers.js';
 import {Vector3} from '../Modules/Vector3.js';
 
 // need to import some threejs functions

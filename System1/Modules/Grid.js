@@ -1,7 +1,11 @@
 
 import {Vector3} from '../Modules/Vector3.js';
 
-
+// this produces a numeric grid
+// not a physical object based grid
+// idea is that there will be many different sizes of grids
+// so make many and feed it snap(xy) and reference .position
+// from there you could make a visual layer with div or canvas
 export class Grid{
   size = 40;
   rows = 20;

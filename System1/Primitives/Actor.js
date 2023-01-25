@@ -99,7 +99,7 @@ export class Actor extends Rectangle {
       return;
     }
     super.update();
-    if(canUpdateFromInputs){
+    if(this.canUpdateFromInputs){
       // need some access to the keyboard or input device joystick
     }
   }
