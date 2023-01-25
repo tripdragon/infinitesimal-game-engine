@@ -6,7 +6,11 @@
 
 //
 import { Game } from "../Core/Game.js";
+import { Rectangle } from "../Primitives/Rectangle.js";
+import { Plane } from "../Primitives/Plane.js";
+import { Grid } from "../Modules/Grid.js";
 
+import { Quark } from "../Core/Quark.js";
 
 export let disc = new Game("griddemo");
 
@@ -72,18 +76,18 @@ disc.load = function(){
   // griddivs.appendChild(item);
   // 
   
-  var grid = {
-    space : 40,
-    rows : 20,
-    columns : 40  
-  }
-  
+  // var grid = {
+  //   space : 40,
+  //   rows : 20,
+  //   columns : 40  
+  // }
+  var grid = new Grid(40,20,40);
   
   for (var ii = 0; ii < grid.rows; ii++) {
     for (var mm = 0; mm < grid.columns; mm++) {
       let item2 = item.cloneNode();
-      var x = (-radiusLike/2) + (mm*grid.space);
-      var y = (-radiusLike/2) + (ii*grid.space);
+      var x = (-radiusLike/2) + (mm*grid.size);
+      var y = (-radiusLike/2) + (ii*grid.size);
       item2.style.cssText = `
       position: absolute;
       left: ${x}px;
@@ -99,8 +103,8 @@ disc.load = function(){
   var focusItem = document.createElement('div');
   focusItem.classList.add("item");
   var scalar = 10;
-  var x = (-(radiusLike+scalar)/2) + (18*grid.space);
-  var y = (-(radiusLike+scalar)/2) + (8*grid.space);
+  var x = (-(radiusLike+scalar)/2) + (18*grid.size);
+  var y = (-(radiusLike+scalar)/2) + (8*grid.size);
   focusItem.style.cssText = `
   background: white;
   opacity: 0.6;
@@ -132,31 +136,36 @@ function onPointerMove( event ) {
   // find the index of the mouse * space
   // can do this differently, as it snaps hard to the left top most
   // instead of compariing the half
-  // var gx = Math.floor(_this.system.pointer.x / grid.space) * grid.space;
-  // var gy = Math.floor(_this.system.pointer.y / grid.space) * grid.space;
+  // var gx = Math.floor(_this.system.pointer.x / grid.size) * grid.size;
+  // var gy = Math.floor(_this.system.pointer.y / grid.size) * grid.size;
   
   // more work but it snaps at the half with this stack
-  var ix = Math.floor(_this.system.pointer.x / grid.space);
-  var iy = Math.floor(_this.system.pointer.y / grid.space);
+  // var ix = Math.floor(_this.system.pointer.x / grid.size);
+  // var iy = Math.floor(_this.system.pointer.y / grid.size);
+  // 
+  // var minX = ix * grid.size;
+  // var maxX = (ix+1) * grid.size;
+  // 
+  // var minY = iy * grid.size;
+  // var maxY = (iy+1) * grid.size;
+  // 
+  // var xx = minX;
+  // if (_this.system.pointer.x > minX + (grid.size/2) ) { xx = maxX };
+  // var yy = minY;
+  // if (_this.system.pointer.y > minY + (grid.size/2) ) { yy = maxY };
+  // 
+  // var gx = xx;
+  // var gy = yy;
+  // 
   
-  var minX = ix * grid.space;
-  var maxX = (ix+1) * grid.space;
   
-  var minY = iy * grid.space;
-  var maxY = (iy+1) * grid.space;
-  
-  var xx = minX;
-  if (_this.system.pointer.x > minX + (grid.space/2) ) { xx = maxX };
-  var yy = minY;
-  if (_this.system.pointer.y > minY + (grid.space/2) ) { yy = maxY };
-  
-  var gx = xx;
-  var gy = yy;
-  
+  grid.snap(_this.system.pointer.x, _this.system.pointer.y);
+  var gx = grid.position.x;
+  var gy = grid.position.y;
   
   // simpler left top hard snap
-  // var gx = Math.floor(_this.system.pointer.x / grid.space) * grid.space;
-  // var gy = Math.floor(_this.system.pointer.y / grid.space) * grid.space;
+  // var gx = Math.floor(_this.system.pointer.x / grid.size) * grid.size;
+  // var gy = Math.floor(_this.system.pointer.y / grid.size) * grid.size;
   // 
   
   // var fx = (-(radiusLike+scalar)/2) + (_this.system.pointer.x);
@@ -169,9 +178,29 @@ function onPointerMove( event ) {
   
   focusItem.style.left = `${fx}px`;
   focusItem.style.top = `${fy}px`;
+  
+  // box1.x = fx;
+  // box1.y = fy;
+  
+  box2.x = gx;
+  box2.y = gy;
+  
 }
 
 window.addEventListener( 'pointermove', onPointerMove );
+
+console.log("grid.size", grid.size);
+
+// rectangle to debug with
+var box1 = new Rectangle("box", 100, 100, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
+var box2 = new Plane("plane", 0, 0, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
+// debugger
+this.system.sceneGrapth.add(box1);
+this.system.sceneGrapth.add(box2);
+// debugger
+window.box1 = box1;
+window.box2 = box2;
+
 
 
 

@@ -1,6 +1,7 @@
 
 
 import {Layers} from './Layers.js';
+import {Vector3} from '../Modules/Vector3.js';
 
 // need to import some threejs functions
 // like Vector
@@ -31,11 +32,42 @@ export class Quark {
   
   gl;
   
-  x;
-  y;
-  z;
+  // these should become get set
+  
+  get x(){
+    return this.position.x;
+  }
+  get y(){
+    return this.position.y;
+  }
+  get z(){
+    return this.position.z;
+  }
+  
+  set x(v){
+    this.position.x = v;
+  }
+  set y(v){
+    this.position.y = v;
+  }
+  set z(v){
+    this.position.z = v;
+  }
+  
+  position = new Vector3();
+  
+  
+  // these need to get BOX3 min max etc
   width;
   height;
+  mHeight;
+  mWidth;
+  // set width(v){
+  //   if (this.)
+  // }
+  
+  scale = new Vector3();
+  
   //color = {x:1.0, y:1.0, z:1.0, w:1.0};
   color = {r:1.0, g:1.0, b:1.0, a:1.0};
   origin = {x:0,y:0,z:0};
@@ -164,7 +196,21 @@ export class Quark {
     this.x = x;
     this.y = y;
     this.color = color;
+    // // this just puts the origin at the center but does not move the geometry
+    // // which means the origin is at top left
+    // // hrrrmmmmm
+    // // for a box in 3D its expected at center for transforms
+    // // and maybe bottom for a character
+    // // but a charecter its more likely a parent peeps sit
+    // // you can draw its offset in GL
+    // // but what is position then????
     this.originCompute(this.width, this.height, 0);
+    // var center = {
+    //   x:this.width/2,
+    //   y: this.width/2,
+    //   z: this.depth/2
+    // }
+    
   }
 
 }

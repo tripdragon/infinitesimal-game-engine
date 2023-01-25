@@ -41,16 +41,24 @@ function sdkjfgndf(){
       new Rectangle(gl, 4, 4, 12, 8),
       new Rectangle(gl, 12, -12, 12, 8)
   ];
+  
+  
+  var box = new Rectangle("box", 500, 140, 20, 20, {r:0,g:0.1,b:0.7,a:1});
+  this.system.sceneGrapth.add(box);
+  window.box = box;
 
 }
 
 // its 2D!!!! NOT 3D!!!
+// But it is 3D!!!
+// well that a plane then
 export class Rectangle extends Quark {
 
 
   scalar = 1;
-  mHeight;
-  mWidth;
+  // mHeight;
+  // mWidth;
+  
   setScaletemp(val){
     this.scalar = val;
     this.width = this.mWidth * this.scalar;
@@ -70,10 +78,32 @@ export class Rectangle extends Quark {
     this.pointsCount = 6;
     this.mHeight = height;
     this.mWidth = width;
+    
+    // originCompute() is called in Quark
+    // but we need the origin in the center thinking in 3d form
+    // but if its 0,0,0 then whats it for???
+    // thus its position
+    // // this just puts the origin at the center but does not move the geometry
+    // // which means the origin is at top left
+    // // hrrrmmmmm
+    // // for a box in 3D its expected at center for transforms
+    // // and maybe bottom for a character
+    // // but a charecter its more likely a parent peeps sit
+    // // you can draw its offset in GL
+    // // but what is position then????
+    // this.originCompute(this.width, this.height, 0);
+    // var center = {
+    //   x:this.width/2,
+    //   y: this.width/2,
+    //   z: this.depth/2
+    // }
+    
   }
+
 
   // draws to the buffer
   draw(colorUniformLocation){
+    // debugger
     // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
     this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
     setRectangle(this.gl, this.x, this.y, this.width, this.height);

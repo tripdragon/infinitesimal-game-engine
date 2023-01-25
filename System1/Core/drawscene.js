@@ -20,7 +20,7 @@
 // import glMatrix from 'https://cdn.skypack.dev/gl-matrix';
 import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
 
-
+console.warn("This is rendering once and giving errors before the game is ready!!!!¿¿¿");
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {
 export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
   // gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
