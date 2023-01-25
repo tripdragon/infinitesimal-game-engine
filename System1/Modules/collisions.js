@@ -1,11 +1,56 @@
 
 
 
+
+
+// temp for now place to hit test
+// y is flipped in screenspace
+// grrrrrr
+export function AABBTestScreenSpace(object1, object2){
+  
+  var isINnnn = false;
+
+  // winner function! from internets :<
+  if(object1.min.x < object2.max.x &&
+    object1.max.x > object2.min.x &&
+    -object1.min.y < -object2.max.y &&
+    -object1.max.y > -object2.min.y)
+  {
+      isINnnn = true;
+  }
+  
+  return isINnnn;
+  
+}
+
+
+// y is not flipped
+export function AABBTest3D(object1, object2){
+  
+  var isINnnn = false;
+
+  // winner function! from internets boo
+  if(object1.min.x < object2.max.x &&
+    object1.max.x > object2.min.x &&
+    -object1.min.y < object2.max.y &&
+    -object1.max.y > object2.min.y)
+  {
+      isINnnn = true;
+  }
+  
+  return isINnnn;
+  
+} 
+
+
 // temp for now place to hit test
 export function AABBTest(object1, object2){
   
   var isINnnn = false;
   
+  // this only works for left, top rectangles
+  // of which should have its own min max
+  // so they can expand themselves
   var p_minX = object1.x; // if top left is origin
   var p_maxX = object1.width + object1.x;
   var p_minY = object1.y; // if top lft is origin

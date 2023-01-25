@@ -18,12 +18,14 @@
 // ehhhhh Actor it is, tabun~
 
 import { Rectangle } from '../Primitives/Rectangle.js';
+import { Plane } from '../Primitives/Plane.js';
 
 
 // extends Rectangle cause we gotta render it somehow and in previous
 // practice making a .renderObject.x = 0839048
 // is SUCH A PAIN to keep code syncing when building
 // or you have to write get setters for EVERYTHING over again
+// export class Actor extends Plane {
 export class Actor extends Rectangle {
   
   // temp untill we fix .type

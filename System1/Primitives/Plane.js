@@ -14,8 +14,9 @@ border1.onCollide = function(){
 */
 
 
-import { Quark } from "../Primitives/Quark.js";
+// import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
+import { Vector3 } from "../Modules/Vector3.js";
 
 
 
@@ -41,8 +42,30 @@ import { Rectangle } from "./Rectangle.js";
 export class Plane extends Rectangle {
   
     cachePositions = [];
+    // counter clockwise
+    // +0   +3
+    // +1   +2
+    points = [new Vector3(),new Vector3(),new Vector3(),new Vector3()];
     
+    // this should be the world coords acording to AABB
+    // and since evertything effectly moves this has to be calculated always
+    // so at a cost we need to compute!!
+    get min(){
+      return this.boundingBox.min;
+    }
+    get max(){
+      return this.boundingBox.max;
+    }
     
+    intersects3D(plane){
+      return this.boundingBox.AABBTest3D(plane);
+    }
+    intersectsScreenSpace(plane){
+      return this.boundingBox.AABBTestScreenSpace(plane);
+    }
+    intersectsScreenSpaceWithPadding(plane){
+      return this.boundingBoxPadding.AABBTestScreenSpace(plane);
+    }
 
     // this could use some of that fancy {deconstructor} or ... new stuff
     constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
@@ -52,50 +75,47 @@ export class Plane extends Rectangle {
       // its geometry is offset to handle this by default
       // thus we have to calculate and prebake positions
       this.centerPositions();
+      this.computeBoundingBox();
+      this.computeBoundingBoxPadding();
     }
     
     centerPositions(){
-      
-      // counter clockwise
-      // top left
-      var p0 = {x:0,y:0};
-      var p1 = {x:0,y:0};;
-      var p2 = {x:0,y:0};;
-      var p3 = {x:0,y:0};;
       
       // positions count will be 6 as its two tris
       // but should use a wounding polygon calculation
       // but this is easy to do here fro 4 points
       // this could just be dont with a vector half offset calc
-      p0.x = this.x - (this.width / 2);
-      p0.y = this.y - (this.height / 2);
-      // p0.y += 10;
       
-      p1.x = this.x - (this.width / 2);
-      p1.y = this.y + (this.height / 2);
-      // p1.y += 10;
+      // counter clockwise
+      // top left
+      
+      var points = this.points;
+      
+      points[0].x = -this.width / 2;
+      points[0].y = -this.height / 2;
+      
+      points[1].x = -this.width / 2;
+      points[1].y = this.height / 2;
       
       
-      p2.x = this.x + (this.width / 2);
-      p2.y = this.y + (this.height / 2);
+      points[2].x = this.width / 2;
+      points[2].y = this.height / 2;
       
       
-      p3.x = this.x + (this.width / 2);
-      p3.y = this.y - (this.height / 2);
+      points[3].x = this.width / 2;
+      points[3].y = -this.height / 2;
+      
       
       var positions = this.cachePositions;
       // gurgle
-      positions[0] = p0.x; positions[1] = p0.y;
-      positions[2] = p1.x; positions[3] = p1.y;
-      positions[4] = p2.x; positions[5] = p2.y;
+      positions[0] = points[0].x; positions[1] = points[0].y;
+      positions[2] = points[1].x; positions[3] = points[1].y;
+      positions[4] = points[2].x; positions[5] = points[2].y;
       // tri 2
-      positions[6] = p2.x; positions[7] = p2.y;
-      positions[8] = p3.x; positions[9] = p3.y;
-      positions[10] = p0.x; positions[11] = p0.y;
+      positions[6] = points[2].x; positions[7] = points[2].y;
+      positions[8] = points[3].x; positions[9] = points[3].y;
+      positions[10] = points[0].x; positions[11] = points[0].y;
       
-      // positions[6] = p0.x; positions[7] = p0.y;
-      // positions[8] = p1.x; positions[9] = p1.y;
-      // positions[10] = p2.x; positions[11] = p2.y;
       
     }
 
