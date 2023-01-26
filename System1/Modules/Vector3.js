@@ -46,4 +46,8 @@ export class Vector3{
     return this;
   }
   
+  clone(){
+    return new Vector3().copy(this);
+  }
+  
 }

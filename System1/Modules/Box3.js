@@ -22,6 +22,11 @@ export class Box3{
   copy(box){
     this.min.copy(box.min);
     this.max.copy(box.max);
+    return this;
+  }
+  
+  clone(){
+    return new Box3().copy(this);
   }
   
   // this is a SPECIAL case for screenSpace
@@ -33,6 +38,7 @@ export class Box3{
     this.max.x += val;
     this.max.y += -val;
     this.max.z += -val; // dont know z yet
+    return this;
   }
   
 }

@@ -19,6 +19,9 @@ import { SceneGrapth } from "./SceneGrapth.js";
 
 import { loop as _loop } from "./loop.js";
 
+import { Color } from "../Modules/Color.js";
+import { Vector2 } from "../Modules/Vector2.js";
+import { Vector3 } from "../Modules/Vector3.js";
 
 
 export class Basestation {
@@ -26,6 +29,14 @@ export class Basestation {
   canvas = null;
   
   cameraDefault = {x:0,y:0, z: -70};
+  
+  // just a convenience so every file does not have to import
+  helpers = {
+    color : Color,
+    vector2 : Vector2,
+    vector3 : Vector3
+  }
+  
   
   // not proper yet 9.82?
   gravity = 9.72873473;

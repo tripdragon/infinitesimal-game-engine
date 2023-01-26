@@ -15,6 +15,7 @@ border1.onCollide = function(){
 
 
 import { Quark } from "../Primitives/Quark.js";
+import { Color } from "../Modules/Color.js";
 
 
 
@@ -70,7 +71,7 @@ export class Rectangle extends Quark {
   }
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
+  constructor(name, x, y, width, height, color ) {
     // console.log("color", color);
     super(name, x, y, width, height, 0, color);
     

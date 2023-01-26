@@ -64,7 +64,7 @@ export class BotStamp extends Tool {
   stampingObject = null;
   // grid = null;
   
-  pointerUpEvent = null;
+  // pointerUpEvent = null;
   
   start(){
     // 
@@ -82,22 +82,25 @@ export class BotStamp extends Tool {
     // Stamp action
 
     // need to cache perfect signature 
-    this.pointerUpEvent = () => this.pointerUp();
+    // this.pointerUpEvent = () => this.pointerUp();
+    // if( this.pointerUpEvent === null){
+    //   this.pointerUpEvent = this.pointerUp.bind(this);
+    // }
+    this.bindUpEvent();
 
-    this.system.canvas.addEventListener( 'pointerup', this.pointerUpEvent );
+    // this.system.canvas.addEventListener( 'pointerup', this.pointerUpEvent );
 
     
     console.log(`${this.displayName} start`);
   }
   
   replace(){
-    this.system.sceneGrapth.remove(this.visualObject);
     console.log(`${this.displayName} replace`);
+    this.stop();
   }
   
   stop(){
-
-    console.log("Stop?????");
+    console.log("Stop????? 222");
     
     this.system.sceneGrapth.remove(this.visualObject);
     
@@ -114,16 +117,12 @@ export class BotStamp extends Tool {
     this.visualObject.y = this.system.pointer.y;
   }
 
-  pointerUp(ev){
-    // this.editorModeActions.pointerUp = () => {
-      console.log("???????");
-      // need clone here
-      // debugger
+  pointerUp(){
+    
       var ff = this.stampingObject.clone();
       ff.x = this.visualObject.x;
       ff.y = this.visualObject.y;
-      // ff.color = {r:0,g:1,b:1,a:1};
-      // var gg = dupeWobjectStamp(this.stampingObject);
+      
       console.log(ff);
       this.system.sceneGrapth.add(ff);
       console.log("pointerUp");

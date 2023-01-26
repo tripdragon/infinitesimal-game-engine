@@ -24,6 +24,10 @@ export class Vector2{
     return this;
   }
   
+  clone(){
+    return new Vector2().copy(this);
+  }
+  
   addVectors(){
     
   }
