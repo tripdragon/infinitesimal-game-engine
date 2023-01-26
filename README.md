@@ -81,3 +81,33 @@ Animation can be had via the main loop hook
 ```this.system.loopHookPoints.beforeDraw = function(){```
 time functions are not yet fully in so just do deltatime with
 ```mTime = Date.now(); and Date.now() - mTime; mTime = Date.now();```
+
+
+
+
+## Note from web
+https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
+```
+Knowing this a typical WebGL program basically follows this structure
+
+At Init time
+
+    create all shaders and programs and look up locations
+    create buffers and upload vertex data
+    create textures and upload texture data
+
+At Render Time
+
+    clear and set the viewport and other global state (enable depth testing, turn on culling, etc..)
+    For each thing you want to draw
+        call gl.useProgram for the program needed to draw.
+        setup attributes for the thing you want to draw
+            for each attribute call gl.bindBuffer, gl.vertexAttribPointer, gl.enableVertexAttribArray
+        setup uniforms for the thing you want to draw
+            call gl.uniformXXX for each uniform
+            call gl.activeTexture and gl.bindTexture to assign textures to texture units.
+        call gl.drawArrays or gl.drawElements
+
+That's basically it. It's up to you how to organize your code to accomplish that task.
+
+```

@@ -11,7 +11,8 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 
 import { ToolsController as _ToolsController } from "../Tools/ToolsController.js";
 import { Tool } from "../Tools/Tool.js";
-import { BotStamp } from "../Tools/BotStamp.js";
+// import { StampTool } from "../Tools/StampTool.js";
+import { StampTool } from "../Tools/StampTool.js";
 
 export let disc = new Game("panels");
 
@@ -188,7 +189,7 @@ disc.load = function(){
   //
   // class WobjectTool extends Tool {
   
-  var wobjetStamper_tool = new BotStamp("wobject_stamper", "wobject stamper", _this.system);
+  var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", _this.system);
   wobjetStamper_tool.editorModeActions = _EditorModeActions;
   wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
   wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
@@ -236,7 +237,7 @@ disc.load = function(){
   
   
   
-  var wobjetStamper_tool222 = new BotStamp("wobject_stamper222", "wobject stamper222", _this.system);
+  var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", _this.system);
   
   wobjetStamper_tool222.editorModeActions = _EditorModeActions;
   wobjetStamper_tool222.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});

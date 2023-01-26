@@ -8,8 +8,9 @@ import { Tool } from "./Tool.js";
 // 
 function sdjifhisdufg(){
   
-
-  var wobjetStamper_tool = new BotStamp("wobject_stamper", "wobject stamper", _this.system);
+  // THiS is EXAMPLE code
+  // far below is the class
+  var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", _this.system);
   wobjetStamper_tool.editorModeActions = _EditorModeActions;
   wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
   wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
@@ -56,9 +57,13 @@ function sdjifhisdufg(){
 
 }
 
+// 
+// Main class
+// 
 
 // thinking that The Tool is a First class citizen that handles its 
-export class BotStamp extends Tool {
+export class StampTool extends Tool {
+// export class BotStamp extends Tool {
   
   visualObject = null;
   stampingObject = null;

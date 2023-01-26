@@ -6,7 +6,8 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
 
 // tools
-import { BotStamp } from "../Tools/BotStamp.js";
+// import { StampTool } from "../Tools/StampTool.js";
+import { StampTool } from "../Tools/StampTool.js";
 import { SelectTool } from "../Tools/SelectTool.js";
 
 
@@ -62,7 +63,7 @@ export class Editor111 extends Editor {
     // 
     
     
-    var wobjetStamper_tool = new BotStamp("wobject_stamper", "wobject stamper", this.system);
+    var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
     // wobjetStamper_tool.editorModeActions = _EditorModeActions;
     wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
     wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
@@ -90,7 +91,7 @@ export class Editor111 extends Editor {
     
     
     
-    var wobjetStamper_tool222 = new BotStamp("wobject_stamper222", "wobject stamper222", this.system);
+    var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
     wobjetStamper_tool222.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
     wobjetStamper_tool222.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1});
 
