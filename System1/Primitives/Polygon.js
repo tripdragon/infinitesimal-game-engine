@@ -38,12 +38,12 @@ export class Polygon extends Quark {
 
   // this could use some of that fancy {deconstructor} or ... new stuff
   //constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, points = [], x, y, scalar, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
+  constructor(name, points = [], x, y, scalar, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
     // need to compute width and height
     var hh = 0;
     var ww = 0;
-    super(name, x, y, ww, hh, color = {r:1.0, g:1.0, b:1.0, a:1.0});
+    super(name, x, y, ww, hh, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system);
     
     this.points = points;
     this.scalar = scalar;

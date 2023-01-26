@@ -72,9 +72,9 @@ export class Rectangle extends Quark {
   }
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  constructor(name, x, y, width, height, color ) {
+  constructor(name, x, y, width, height, color, system ) {
     // console.log("color", color);
-    super(name, x, y, width, height, 0, color);
+    super(name, x, y, width, height, 0, color, system);
     
     // we know this as two tris
     this.pointsCount = 6;

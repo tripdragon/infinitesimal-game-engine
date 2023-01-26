@@ -7,14 +7,19 @@ import {Bot} from "../Primitives/Bot.js";
 
 export class Alien2 extends Bot {
   
-  constructor(name, x, y, width, height, color) {
-    super(name, x, y, width, height, color);
-  }
+  // constructor(name, x, y, width, height, color, system) {
+  //   super(name, x, y, width, height, color, system);
+  // }
   
   
   update(){
     
     if(this.canUpdate === false){
+      return;
+    }
+    
+    if(!this.system){
+      console.log(" trying to animate without this.system");
       return;
     }
 

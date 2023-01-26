@@ -150,7 +150,7 @@ export class Basestation {
   
   
   
-  sceneGrapth = new SceneGrapth();
+  sceneGrapth = new SceneGrapth(this);
   // made it a getter cause typing that always is a bit much
   // but now its a function .... hrmmmm
   get colliders(){

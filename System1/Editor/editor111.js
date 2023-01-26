@@ -64,12 +64,12 @@ export class Editor111 extends Editor {
     // Stamps
     // 
     
-    
+    console.warn("Note we still need .visible = false instead of drawing offscreen -40");
     var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
     wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
     wobjetStamper_tool.visualObject.canUpdate = false;
-    wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
-    wobjetStamper_tool.stampingObject.system = this.system;
+    wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1}, this.system);
+    
 
 
     EditorMagic.addTool(wobjetStamper_tool);
@@ -82,8 +82,8 @@ export class Editor111 extends Editor {
     var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
     wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
     wobjetStamper_tool222.visualObject.canUpdate  = false;
-    wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1});
-    wobjetStamper_tool222.stampingObject.system = this.system;
+    wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    
 
     EditorMagic.addTool(wobjetStamper_tool222);
 

@@ -9,4 +9,8 @@ export class Bot extends Actor {
   subType = "bot";
   _mode = this.modes.bot;
   
+  walkingForumla(){
+    
+  }
+  
 }

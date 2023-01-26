@@ -261,7 +261,7 @@ export class Quark {
   // maaaaybe we should, but for now just make it name
   // also arguments shoudl become an object
   //constructor(gl, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
+  constructor(name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     // this.gl = gl;
     this.name = name;
     this.height = height;
@@ -270,6 +270,7 @@ export class Quark {
     this.y = y;
     this.color.copy(color);
     this.mColor.copy(color);
+    this.system = system;
     // // this just puts the origin at the center but does not move the geometry
     // // which means the origin is at top left
     // // hrrrmmmmm

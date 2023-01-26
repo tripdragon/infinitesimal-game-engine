@@ -92,9 +92,9 @@ export class Actor extends Rectangle {
   canUpdateFromInputs = true;
 
   // constructor(name, x=0, y=0, width=10, height=10, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}) {
+  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
-    super(name, x, y, width, height, color);
+    super(name, x, y, width, height, color, system);
     
     this._mode = this.modes.player;
     // this.direction = this.directions.idle;
@@ -112,7 +112,7 @@ export class Actor extends Rectangle {
   }
   
   
-  updateWalking(deltaTime, externalGravity = 9.7237864){
+  updateWalking(deltaTime, externalGravity = 9.81864){
     
     var keysDown = this.system.keysDown;
     // gravity

@@ -5,6 +5,12 @@ import {Quark} from '../Primitives/Quark.js';
 
 export class SceneGrapth{
   
+  system = null;
+  
+  constructor(system){
+    this.system = system;
+  }
+  
   lv = 1;
   
   // this should be a "Group class"
@@ -22,6 +28,9 @@ export class SceneGrapth{
   add(thingy){
     if(thingy instanceof Quark){
       this.objects.push(thingy);
+      if(!thingy.system){
+        thingy.system = this.system;
+      }
       if(thingy.canCollide){
         this.layers.colliders.push(thingy);
       }

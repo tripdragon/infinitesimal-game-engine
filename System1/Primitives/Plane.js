@@ -68,8 +68,8 @@ export class Plane extends Rectangle {
     }
 
     // this could use some of that fancy {deconstructor} or ... new stuff
-    constructor(name, x, y, width, height, color) {
-      super(name, x, y, width, height, color);
+    constructor(name, x, y, width, height, color, system) {
+      super(name, x, y, width, height, color, system);
       
       // plane has no origin persay
       // its geometry is offset to handle this by default
