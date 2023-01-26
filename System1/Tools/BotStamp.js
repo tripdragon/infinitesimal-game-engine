@@ -1,0 +1,133 @@
+
+
+import { Tool } from "./Tool.js";
+
+
+
+// makes a mouse tool for showing an object and dropping a clone at its position
+// 
+function sdjifhisdufg(){
+  
+
+  var wobjetStamper_tool = new BotStamp("wobject_stamper", "wobject stamper", _this.system);
+  wobjetStamper_tool.editorModeActions = _EditorModeActions;
+  wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
+  wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
+  wobjetStamper_tool.stampingObject.system = _this.system;
+
+  wobjetStamper_tool.stampingObject.update = function(){
+    // console.log("????");
+    // debugger
+    // console.log(this.system.time.delta);
+    // console.log(this.x);
+    // console.log(this.system.time.delta);
+      this.x += this.system.time.delta * 0.01;
+      if(this.x > window.innerWidth){
+        this.x = 0 - this.width;
+      }
+      // this.x += 0.1;
+  }
+  
+  ToolsController.addTool(wobjetStamper_tool);
+
+
+  // wobjetStamper_tool.stampingObject.play = function(){
+  //   // console.log("????");
+  //   // debugger
+  //   // console.log(this.system.time.delta);
+  //     // this.x += this.system.time.delta * 10.2;
+  // }
+
+  // animation to tricky for now
+  // var mTime = Date.now();
+  // wobjetStamper_tool.stampingObject.update = function(){
+  //   console.log("¿¿¿");
+  //   this.stampingObject.playHelpers.mTime = this.system.time.now;
+  // }
+  // wobjetStamper_tool.stampingObject.playHelpers = {
+  //   mTime : 0
+  // };
+  // // var sq1 = new SquareLike(null, -xx, xy, ww, wh);
+  // wobjetStamper_tool.stampingObject.playCode = `return { do : function(obj, helpers){
+  //   console.log("¿??///¿/");
+  //   console.log(helpers.mTime);
+  // }}`;
+
+
+}
+
+
+// thinking that The Tool is a First class citizen that handles its 
+export class BotStamp extends Tool {
+  
+  visualObject = null;
+  stampingObject = null;
+  // grid = null;
+  
+  pointerUpEvent = null;
+  
+  start(){
+    // 
+    // this.system.canvas.addEventListener( 'pointerdown', this.editorModeActions._pointerDown.bind(this.editorModeActions) );
+
+
+    this.system.sceneGrapth.add(this.visualObject);
+    
+
+    this.system.loopHookPoints.editorBeforeDraw = () => {
+
+      this.update();
+    };
+    
+    // Stamp action
+
+    // need to cache perfect signature 
+    this.pointerUpEvent = () => this.pointerUp();
+
+    this.system.canvas.addEventListener( 'pointerup', this.pointerUpEvent );
+
+    
+    console.log(`${this.displayName} start`);
+  }
+  
+  replace(){
+    this.system.sceneGrapth.remove(this.visualObject);
+    console.log(`${this.displayName} replace`);
+  }
+  
+  stop(){
+
+    console.log("Stop?????");
+    
+    this.system.sceneGrapth.remove(this.visualObject);
+    
+    console.log(`${this.displayName} stop`);
+    
+    this.system.canvas.removeEventListener( 'pointerup', this.pointerUpEvent );
+
+  }
+  
+  // will need to feed this a grid somehow
+  update(){
+    // console.log(this.system.pointer);
+    this.visualObject.x = this.system.pointer.x;
+    this.visualObject.y = this.system.pointer.y;
+  }
+
+  pointerUp(ev){
+    // this.editorModeActions.pointerUp = () => {
+      console.log("???????");
+      // need clone here
+      // debugger
+      var ff = this.stampingObject.clone();
+      ff.x = this.visualObject.x;
+      ff.y = this.visualObject.y;
+      // ff.color = {r:0,g:1,b:1,a:1};
+      // var gg = dupeWobjectStamp(this.stampingObject);
+      console.log(ff);
+      this.system.sceneGrapth.add(ff);
+      console.log("pointerUp");
+  }
+  
+  
+} 

@@ -6,6 +6,8 @@ chiuarky
 web
 https://tripdragon.github.io/infinitesimal-game-engine/
 
+http://localhost:8001/System1/index.html?game=panels
+
 local
 ```
 python3 -m http.server 8001

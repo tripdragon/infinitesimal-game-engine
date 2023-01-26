@@ -8,8 +8,16 @@
 import { Game } from "../Core/Game.js";
 
 import { Rectangle } from "../Primitives/Rectangle.js";
+import { Plane } from "../Primitives/Plane.js";
 
-export let disc = new Game("panels");
+
+
+import { Editor111 } from "../Editor/Editor111.js";
+// import { ToolsController as _ToolsController } from "../Tools/ToolsController.js";
+// import { Tool } from "../Tools/Tool.js";
+import { BotStamp } from "../Tools/BotStamp.js";
+
+export let disc = new Game("loadEditor111");
 
 disc.load = function(){
 
@@ -24,7 +32,15 @@ disc.load = function(){
   console.log("panels start like");
   
   this.system.backgroundColor = {r:0,g:0.05,b:0.05,a:1};
-  this.system.backgroundColor = {r:0.5,g:0.55,b:0.5,a:1};
+
+  var box2 = new Plane("plane", 400, 500, 200, 80, {r:0.4,g:0.4,b:0.7,a:1});
+  var box3 = new Plane("plane", 360, 400, 160, 70, {r:0.0,g:0.9,b:0.2,a:1});
+  this.system.sceneGrapth.add(box2);
+  this.system.sceneGrapth.add(box3);
+
+
+  
+  
   
   
   // this shoudl be ratified up to System
@@ -65,119 +81,106 @@ disc.load = function(){
   Stamp is faster, but gets stuck in stamp mode
   
   */
-  var EditorModes = {
-    select : "select",
-    draw : "draw"
-  }
-  
-  // this manages the database of tools thus far
-  // update is in EditorModeActions
-  var ToolsSystem = {
-    visualObject : null, // what will appear under the mouse
-    mode : EditorModes.select,
-    currentTool : null, // type Class as state machine
-    tools : {
-      // select : null,
-      // platform : null,
-      // wobject : null,
-      // player : null
-    },
-    toolsList : [],
-    
-    addTool : function(tool){
-      if(tool instanceof Tool){
-        this.tools[tool.name] = tool;
-        this.toolsList.push(tool);
-      }
-      else {
-        console.log("tool is not a tool!!!? lucky it");
-      }
-    },
-    changeTool : function(tool){
-      var index = this.toolsList.indexOf(tool);
-      if(index === -1){
-        console.log("tool missing ", tool.name);
-        return;
-      }
-      if(this.currentTool !== null){
-        this.currentTool.replace();
-      }
-      this.currentTool = tool;
-      tool.start();
-    },
-    stopTool : function(tool){
-      var index = this.toolsList.indexOf(tool);
-      if(index === -1){
-        console.log("tool missing ", tool.name);
-        return;
-      }
-      if(this.currentTool !== null){
-        this.currentTool.stop();
-      }
-    }
-  }
-  window.ToolsSystem = ToolsSystem;
+  // var EditorModes = {
+  //   select : "select",
+  //   draw : "draw"
+  // }
+  // 
+  // // this manages the database of tools thus far
+  // // update is in EditorModeActions
+  // var ToolsController = {
+  //   visualObject : null, // what will appear under the mouse
+  //   mode : EditorModes.select,
+  //   currentTool : null, // type Class as state machine
+  //   tools : {
+  //     // select : null,
+  //     // platform : null,
+  //     // wobject : null,
+  //     // player : null
+  //   },
+  //   toolsList : [],
+  // 
+  //   addTool : function(tool){
+  //     if(tool instanceof Tool){
+  //       this.tools[tool.name] = tool;
+  //       this.toolsList.push(tool);
+  //     }
+  //     else {
+  //       console.log("tool is not a tool!!!? lucky it");
+  //     }
+  //   },
+  //   changeTool : function(tool){
+  //     var index = this.toolsList.indexOf(tool);
+  //     if(index === -1){
+  //       console.log("tool missing ", tool.name);
+  //       return;
+  //     }
+  //     if(this.currentTool !== null){
+  //       this.currentTool.replace();
+  //     }
+  //     this.currentTool = tool;
+  //     tool.start();
+  //   },
+  //   stopTool : function(tool){
+  //     var index = this.toolsList.indexOf(tool);
+  //     if(index === -1){
+  //       console.log("tool missing ", tool.name);
+  //       return;
+  //     }
+  //     if(this.currentTool !== null){
+  //       this.currentTool.stop();
+  //     }
+  //   }
+  // }
+  // var ToolsController = new _ToolsController();
+  // window.ToolsController = ToolsController;
 
-  //
-  // these can get complex
-  // lots of per tool thinking and state to figure out
-  // for now just jame into EventListeners
-  //
-  class EditorModeActions {
-    
-    constructor(){
-      
-    }
-    // these go in the addEventListener
-    _pointerMoving(){
-      this.pointerMoving();
-    }
-    _pointerDown() {
-      console.log("down 1111");
-      // debugger
-      this.pointerDown();
-    }
-    _pointerUp(){
-      this.pointerUp();
-      console.log("up 2222");
-    }
-    
-    // replace these as the tool needs
-    pointerMoving(){}
-    pointerDown(){
-      console.log("down 1111");
-    }
-    pointerUp(){
-      console.log("up 2222");
-    }
-  }
-  var _EditorModeActions = new EditorModeActions();
+
+  // 
+  // //
+  // // these can get complex
+  // // lots of per tool thinking and state to figure out
+  // // for now just jame into EventListeners
+  // //
+  // class EditorModeActions {
+  // 
+  //   constructor(){
+  // 
+  //   }
+  //   // these go in the addEventListener
+  //   _pointerMoving(){
+  //     this.pointerMoving();
+  //   }
+  //   _pointerDown() {
+  //     console.log("down 1111");
+  //     // debugger
+  //     this.pointerDown();
+  //   }
+  //   _pointerUp(){
+  //     this.pointerUp();
+  //     console.log("up 2222");
+  //   }
+  // 
+  //   // replace these as the tool needs
+  //   pointerMoving(){}
+  //   pointerDown(){
+  //     console.log("down 1111");
+  //   }
+  //   pointerUp(){
+  //     console.log("up 2222");
+  //   }
+  // }
+  
+  // var _EditorModeActions = new EditorModeActions();
+  
+  
   
   // this is window without the bind
-  this.system.canvas.addEventListener( 'pointerdown', _EditorModeActions._pointerDown.bind(_EditorModeActions) );
-  this.system.canvas.addEventListener( 'pointerup', _EditorModeActions._pointerUp.bind(_EditorModeActions) );
+  // this.system.canvas.addEventListener( 'pointerdown', _EditorModeActions._pointerDown.bind(_EditorModeActions) );
+  // this.system.canvas.addEventListener( 'pointerup', _EditorModeActions._pointerUp.bind(_EditorModeActions) );
+  // 
+  // 
 
-  
-  // 
-  // 
-  // 
-  class Tool {
-    displayName = "";
-    visualObject = null;
-    stampingObject = null;
-    system = null;
-    editorModeActions = null;
-
-    constructor(name="tool", displayName){
-      this.name = name;
-      this.displayName = displayName;
-    }
-    replace(){}
-    start(){}
-    update(){}
-    stop(){}
-    
-  }
   
   
   // 
@@ -200,69 +203,15 @@ disc.load = function(){
   //
   //
   //
-  class WobjectTool extends Tool {
-    
-    
-    
-    start(){
+  // class WobjectTool extends Tool {
   
-      this.system.sceneGrapth.add(this.visualObject);
-      
-      // still thinking out where update goes
-      // EditorModeActions.pointerMoving = () => {
-      //   this.update();
-      // };
-      // also have to jam this into the loop
-      this.system.loopHookPoints.editorBeforeDraw = () => {
-        // go with the simpler for now
-        // _EditorModeActions.pointerMoving();
-        // console.log(this);
-        this.update();
-      };
-      
-      // Stamp action
-      // window.EditorModeActions = EditorModeActions;
-      var innerThis = this; // bind() ?
-      this.editorModeActions.pointerUp = function() {
-        console.log("???????");
-        // need clone here
-        var ff = innerThis.stampingObject.clone();
-        ff.x = innerThis.visualObject.x;
-        ff.y = innerThis.visualObject.y;
-        // ff.color = {r:0,g:1,b:1,a:1};
-        // var gg = dupeWobjectStamp(innerThis.stampingObject);
-        console.log(ff);
-        innerThis.system.sceneGrapth.add(ff);
-        console.log("pointerUp");
-      }
-      
-      
-      console.log(`${innerThis.displayName} start`);
-    }
-    
-    replace(){
-      this.system.sceneGrapth.remove(this.visualObject);
-      console.log(`${this.displayName} replace`);
-    }
-    
-    stop(){
-      this.system.sceneGrapth.remove(this.visualObject);
-      console.log(`${this.displayName} stop`);
-      this.editorModeActions.pointerUp = function(){};
-    }
-    
-    update(){
-      // console.log(this.system.pointer);
-      this.visualObject.x = this.system.pointer.x;
-      this.visualObject.y = this.system.pointer.y;
-    }
-    
-  } 
-
   
-  var wobjetStamper_tool = new WobjectTool("wobject_stamper", "wobject stamper");
-  wobjetStamper_tool.system = _this.system;
-  wobjetStamper_tool.editorModeActions = _EditorModeActions;
+  var EditorMagic = new Editor111(this.system);
+  
+  
+  
+  var wobjetStamper_tool = new BotStamp("wobject_stamper", "wobject stamper", _this.system);
+  // wobjetStamper_tool.editorModeActions = _EditorModeActions;
   wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
   wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
   wobjetStamper_tool.stampingObject.system = _this.system;
@@ -302,20 +251,24 @@ disc.load = function(){
   //   console.log(helpers.mTime);
   // }}`;
 
-  ToolsSystem.addTool(wobjetStamper_tool);
+
+
+
+
+  EditorMagic.addTool(wobjetStamper_tool);
 
   
   
   
   
   
-  var wobjetStamper_tool222 = new WobjectTool("wobject_stamper222", "wobject stamper222");
-  wobjetStamper_tool222.system = _this.system;
-  wobjetStamper_tool222.editorModeActions = _EditorModeActions;
+  var wobjetStamper_tool222 = new BotStamp("wobject_stamper222", "wobject stamper222", _this.system);
+  
+  // wobjetStamper_tool222.editorModeActions = _EditorModeActions;
   wobjetStamper_tool222.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
   wobjetStamper_tool222.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1});
 
-  ToolsSystem.addTool(wobjetStamper_tool222);
+  EditorMagic.addTool(wobjetStamper_tool222);
 
   wobjetStamper_tool222.stampingObject.system = _this.system;
   
@@ -338,6 +291,9 @@ disc.load = function(){
   // window.pointer = pointer;
 
   
+  
+  // return;
+  // <<<<<
   
   
   
@@ -511,14 +467,14 @@ disc.load = function(){
       // EditorModeActions.pointerMoving = function(){
       // 
       // }
-      ToolsSystem.changeTool(wobjetStamper_tool);
+      EditorMagic.changeTool(wobjetStamper_tool);
     }
     else if( ! ev.target.checked){
       console.log("checked no");
       // EditorModeActions.pointerMoving = function(){
       // 
       // }
-      ToolsSystem.stopTool(wobjetStamper_tool);
+      EditorMagic.stopTool(wobjetStamper_tool);
     }
     
   }
@@ -537,11 +493,11 @@ disc.load = function(){
     console.log(ev.target.checked);
     if(ev.target.checked){
       console.log("checked yes");
-      ToolsSystem.changeTool(wobjetStamper_tool222);
+      EditorMagic.changeTool(wobjetStamper_tool222);
     }
     else if( ! ev.target.checked){
       console.log("checked no");
-      ToolsSystem.stopTool(wobjetStamper_tool222);
+      EditorMagic.stopTool(wobjetStamper_tool222);
     }
   }
 
