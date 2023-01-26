@@ -55,6 +55,7 @@ function sdkjfgndf(){
 // well that a plane then
 export class Rectangle extends Quark {
 
+  imageTexture = null;
 
   scalar = 1;
   // mHeight;

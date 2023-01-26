@@ -19,12 +19,15 @@
 
 import { Rectangle } from '../Primitives/Rectangle.js';
 import { Plane } from '../Primitives/Plane.js';
+import { Vector3 } from '../Modules/Vector3.js';
 
 
 // extends Rectangle cause we gotta render it somehow and in previous
 // practice making a .renderObject.x = 0839048
 // is SUCH A PAIN to keep code syncing when building
 // or you have to write get setters for EVERYTHING over again
+
+// Change to PLane, just need to fix collider logic first
 // export class Actor extends Plane {
 export class Actor extends Rectangle {
   
@@ -33,7 +36,9 @@ export class Actor extends Rectangle {
   
   walkSpeed = 19.5; // needs xy
   
-  mPos = {x:0,y:0,z:0};
+  mPos = new Vector3();
+  
+  
   
   // type???
   
@@ -60,7 +65,7 @@ export class Actor extends Rectangle {
   // for mode.bot remote mote
   // can be handled by a vector2
   // but would still take impluses in
-  directionVector = {x:0, y:0, z:0};
+  directionVector = new Vector3();
   // directions = {
   //   idle : "idle",
   //   up : "up",

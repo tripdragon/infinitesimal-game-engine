@@ -6,8 +6,10 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
 
 // tools
-// import { StampTool } from "../Tools/StampTool.js";
 import { StampTool } from "../Tools/StampTool.js";
+// import { Bot } from "../Primitives/Bot.js";
+import { Alien1 } from "../Cast/Alien1.js";
+import { Alien2 } from "../Cast/Alien2.js";
 import { SelectTool } from "../Tools/SelectTool.js";
 
 
@@ -64,24 +66,10 @@ export class Editor111 extends Editor {
     
     
     var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
-    // wobjetStamper_tool.editorModeActions = _EditorModeActions;
-    wobjetStamper_tool.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
-    wobjetStamper_tool.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
+    wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
+    wobjetStamper_tool.visualObject.canUpdate = false;
+    wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1});
     wobjetStamper_tool.stampingObject.system = this.system;
-    
-    wobjetStamper_tool.stampingObject.update = function(){
-      // console.log("????");
-      // debugger
-      // console.log(this.system.time.delta);
-      // console.log(this.x);
-      // console.log(this.system.time.delta);
-        this.x += EditorMagic.system.time.delta * 0.05;
-        if(this.x > window.innerWidth){
-          this.x = 0 - this.width;
-        }
-        // this.x += 0.1;
-    }
-    
 
 
     EditorMagic.addTool(wobjetStamper_tool);
@@ -92,24 +80,12 @@ export class Editor111 extends Editor {
     
     
     var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
-    wobjetStamper_tool222.visualObject = new Rectangle("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
-    wobjetStamper_tool222.stampingObject = new Rectangle("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1});
+    wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
+    wobjetStamper_tool222.visualObject.canUpdate  = false;
+    wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1});
+    wobjetStamper_tool222.stampingObject.system = this.system;
 
     EditorMagic.addTool(wobjetStamper_tool222);
-    
-    
-    wobjetStamper_tool222.stampingObject.update = function(){
-      // console.log("????");
-      // debugger
-      // console.log(this.system.time.delta);
-      // console.log(this.x);
-      // console.log(this.system.time.delta);
-        this.y -= EditorMagic.system.time.delta * 0.05;
-        if( (this.y + this.height) < 0){
-          this.y = window.innerHeight;
-        }
-        // this.x += 0.1;
-    }
 
 
 

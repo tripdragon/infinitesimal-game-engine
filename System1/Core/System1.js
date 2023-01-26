@@ -28,6 +28,11 @@ export class Basestation {
   
   canvas = null;
   
+  // window.innerWidth
+  // window.innerHeight roughly...
+  gameWidth;
+  gameHeight;
+  
   cameraDefault = {x:0,y:0, z: -70};
   
   // just a convenience so every file does not have to import
@@ -216,6 +221,10 @@ export class Basestation {
     // // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
     // 
     
+    console.warn("this needs to be adjusted");
+    // see https://webglfundamentals.org/webgl/lessons/webgl-anti-patterns.html
+    this.gameWidth = window.innerWidth;
+    this.gameHeight = window.innerHeight;
     
   }
   
