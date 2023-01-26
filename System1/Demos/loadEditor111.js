@@ -12,7 +12,7 @@ import { Plane } from "../Primitives/Plane.js";
 
 
 
-import { Editor111 } from "../Editor/Editor111.js";
+import { Editor111 } from "../Editor/editor111.js";
 // import { ToolsController as _ToolsController } from "../Tools/ToolsController.js";
 // import { Tool } from "../Tools/Tool.js";
 // import { BotStamp } from "../Tools/BotStamp.js";
