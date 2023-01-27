@@ -37,14 +37,16 @@ disc.load = function(){
   // this.system.sceneGrapth.add(box2);
   
   
-  var box3 = new Plane("plane", 340, 400, 160, 70, {r:0.0,g:0.9,b:0.2,a:1});
+  var box3 = new Plane("plane", 440, 400, 460, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
   this.system.sceneGrapth.add(box3);
+  window.box3 = box3;
 
-  
+  // debugger
   var aa = new Alien1("aa", 260, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
   this.system.sceneGrapth.add(aa);
   // aa.system = this.system;
   // aa.canUpdate = false;
+  aa.platform = box3;
   
   aa.useGravity = false;
   aa.walkSpeed = 1.2;
@@ -52,15 +54,20 @@ disc.load = function(){
   aa.hasTurned = false;
   aa.update = function(){
     // this.x + 1;
-    this.y = box3.max.y + -this.height + -2;
+    var platform = this.platform;
+    
+    this.y = platform.max.y + -this.height + -2;
+    
     this.updateWalking(this.system.time.delta, 9);
-    if (this.x >= box3.max.x){
+    
+    // filp direction
+    if (this.x >= platform.max.x){
       aa.directionVector.x *= -1;
-      this.x = box3.max.x;
+      this.x = platform.max.x;
     }
     else if (this.x <= box3.min.x){
       aa.directionVector.x *= -1;
-      this.x = box3.min.x;
+      this.x = platform.min.x;
     }
     
   }

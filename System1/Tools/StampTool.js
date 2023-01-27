@@ -125,6 +125,7 @@ export class StampTool extends Tool {
   pointerUp(){
     
       var ff = this.stampingObject.clone();
+      // debugger
       ff.x = this.visualObject.x;
       ff.y = this.visualObject.y;
       

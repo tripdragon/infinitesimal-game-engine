@@ -89,6 +89,52 @@ export class Editor111 extends Editor {
 
 
 
+    
+    
+    console.warn("TEMPPPPPP    alien3 ");
+    var wobjetStamper_tool333 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
+    wobjetStamper_tool333.visualObject = new Alien2("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
+    wobjetStamper_tool333.visualObject.canUpdate  = false;
+    wobjetStamper_tool333.stampingObject = new Alien2("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    
+    // debugger
+      var aa = wobjetStamper_tool333.stampingObject;
+      // // debugger
+      aa.platform = window.box3;
+      // 
+      // debugger
+      aa.useGravity = false;
+      aa.walkSpeed = 1.2;
+      aa.directionVector.x = 1;
+      aa.hasTurned = false;
+      aa.update = function(){
+        // this.x + 1;
+        var platform = this.platform;
+        // var platform = window.box3;
+      
+        this.y = platform.max.y + -this.height + -2;
+      
+        this.updateWalking(this.system.time.delta, 9);
+      
+        // filp direction
+        if (this.x >= platform.max.x){
+          this.directionVector.x *= -1;
+          this.x = platform.max.x;
+        }
+        else if (this.x <= box3.min.x){
+          this.directionVector.x *= -1;
+          this.x = platform.min.x;
+        }
+      
+      }
+      // 
+      // 
+
+    EditorMagic.addTool(wobjetStamper_tool333);
+
+
+
+
 
     // 
     // DOM stuff
@@ -195,7 +241,7 @@ export class Editor111 extends Editor {
     panel.appendChild(item1Select);
     checkboxes.push(item1Select);
     
-    
+    // This pattern can be ratified
     item1Select.onclick = function(ev){
       console.log(ev.target.checked);
       checkBoxChanged(ev.target);
@@ -236,6 +282,8 @@ export class Editor111 extends Editor {
     panel.appendChild(item2);
     checkboxes.push(item2);
     
+    
+    // 
     item2.onclick = function(ev){
       console.log(ev.target.checked);
       checkBoxChanged(ev.target);
@@ -283,6 +331,32 @@ export class Editor111 extends Editor {
 
 
 
+
+  
+      // needs more robotting
+      var item4 = document.createElement('input');
+      item4.classList.add("item");
+      item4.type = "checkbox";
+      item4.style.backgroundImage = "url(./Cast/Alien2.png)";
+      panel.appendChild(item4);
+      checkboxes.push(item4);
+      
+      item4.onclick = function(ev){
+        checkBoxChanged(ev.target);
+        console.log(ev.target.checked);
+        if(ev.target.checked){
+          console.log("checked yes");
+          EditorMagic.changeTool(wobjetStamper_tool333);
+        }
+        else if( ! ev.target.checked){
+          console.log("checked no");
+          EditorMagic.stopTool(wobjetStamper_tool333);
+        }
+      }
+
+
+    // Make select tool active first
+    item1Select.click();
 
 
 

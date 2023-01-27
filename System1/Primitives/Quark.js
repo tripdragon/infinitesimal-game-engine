@@ -17,6 +17,21 @@ bb = new TT()
 rr = new PP()
 rr instanceof Quark
   */
+  
+  // note when subclasses this you need to implement clone() and copy()
+  /*
+  // example
+  clone(){
+    return = new this.constructor().copy(this);
+  }
+  
+  copy(thing){
+    super.copy(thing);
+    this.subType = thing.subType;
+    this._mode = thing._mode;
+    return this;
+  }
+  */
 export class Quark {
 
   system;
@@ -208,37 +223,74 @@ export class Quark {
   // // this.tacos = "derps";
   // this.gl = 
   // }
-  copyTo(thing){
-    thing.system = this.system;
-    thing.gl = this.gl;
-    thing.x = this.x;
-    thing.y = this.y;
-    thing.z = this.z;
-    thing.position = this.position.clone();
-    thing.width = this.width;
-    thing.height = this.height;
-    thing.isType = this.isType;
-    thing.subType = this.subType;
-    thing.boxPadding = this.boxPadding;
+  // copyTo(thing){
+  //   thing.system = this.system;
+  //   thing.gl = this.gl;
+  //   thing.x = this.x;
+  //   thing.y = this.y;
+  //   thing.z = this.z;
+  //   thing.position = this.position.clone();
+  //   thing.width = this.width;
+  //   thing.height = this.height;
+  //   thing.isType = this.isType;
+  //   thing.subType = this.subType;
+  //   thing.boxPadding = this.boxPadding;
+  // 
+  //   thing.boundingBox = this.boundingBox.clone();
+  //   thing.boundingBoxPadding = this.boundingBoxPadding.clone();
+  // 
+  //   // thing.color = this.color;
+  //   thing.color = this.color.clone();
+  //   // thing.origin = this.origin;
+  //   thing.origin = this.origin.clone();
+  //   thing.pointsCount = this.pointsCount;
+  //   thing.canUpdate = this.canUpdate;
+  //   thing.useInEditMode = this.useInEditMode;
+  //   thing.canCollide = this.canCollide;
+  //   thing.name = this.name;
+  //   // not sure about these yet
+  //   thing.playCode = this.playCode;
+  //   thing.playCodeDecompressed = this.playCodeDecompressed;
+  //   thing.playHelpers = this.playHelpers;
+  //   thing.update = this.update;
+  //   thing.play = this.play;
+  // }
+  
+  clone(){
+    return this.constructor().copy(this);
+  }
+  
+  copy(thing){
+    this.system = thing.system;
+    this.gl = thing.gl;
+    this.x = thing.x;
+    this.y = thing.y;
+    this.z = thing.z;
+    this.position = thing.position.clone();
+    this.width = thing.width;
+    this.height = thing.height;
+    this.isType = thing.isType;
+    this.subType = thing.subType;
+    this.boxPadding = thing.boxPadding;
 
-    thing.boundingBox = this.boundingBox.clone();
-    thing.boundingBoxPadding = this.boundingBoxPadding.clone();
+    this.boundingBox = thing.boundingBox.clone();
+    this.boundingBoxPadding = thing.boundingBoxPadding.clone();
     
-    // thing.color = this.color;
-    thing.color = this.color.clone();
-    // thing.origin = this.origin;
-    thing.origin = this.origin.clone();
-    thing.pointsCount = this.pointsCount;
-    thing.canUpdate = this.canUpdate;
-    thing.useInEditMode = this.useInEditMode;
-    thing.canCollide = this.canCollide;
-    thing.name = this.name;
+    // this.color = thing.color;
+    this.color = thing.color.clone();
+    // this.origin = thing.origin;
+    this.origin = thing.origin.clone();
+    this.pointsCount = thing.pointsCount;
+    this.canUpdate = thing.canUpdate;
+    this.useInEditMode = thing.useInEditMode;
+    this.canCollide = thing.canCollide;
+    this.name = thing.name;
     // not sure about these yet
-    thing.playCode = this.playCode;
-    thing.playCodeDecompressed = this.playCodeDecompressed;
-    thing.playHelpers = this.playHelpers;
-    thing.update = this.update;
-    thing.play = this.play;
+    this.playCode = thing.playCode;
+    this.playCodeDecompressed = thing.playCodeDecompressed;
+    this.playHelpers = thing.playHelpers;
+    this.update = thing.update;
+    this.play = thing.play;
   }
   
   update(){

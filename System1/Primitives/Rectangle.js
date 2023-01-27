@@ -136,19 +136,32 @@ export class Rectangle extends Quark {
   //   this.origin.z = this.depth/2;
   // }
   
+  copy(thing){
+    super.copy(thing);
+    this.scalar = thing.scalar;
+    this.mHeight = thing.mHeight;
+    this.mWidth = thing.mWidth;
+    
+    this.imageTexture = thing.imageTexture;
+    this.scalar = thing.scalar;
+    
+    return this;
+  }
+  
   clone(){
 
-    var rr = new Rectangle(this.name, this.x, this.y, this.width, this.height, this.color);
+    // var rr = new Rectangle(this.name, this.x, this.y, this.width, this.height, this.color);
+    var rr = new this.constructor().copy(this);
     // these belong in a super() but how?
     // this.tacos = "narfs";
     // super.clone();
-    this.copyTo(rr);
-    rr.scalar = this.scalar;
-    rr.mHeight = this.mHeight;
-    rr.mWidth = this.mWidth;
+    // this.copyTo(rr);
+    // rr.scalar = this.scalar;
+    // rr.mHeight = this.mHeight;
+    // rr.mWidth = this.mWidth;
   
 
-    console.log("clone needs more for Rectangle");
+    // console.log("clone needs more for Rectangle");
     return rr;
   }
   

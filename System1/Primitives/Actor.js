@@ -38,7 +38,10 @@ export class Actor extends Rectangle {
   
   mPos = new Vector3();
   
-  
+  // the thing its standing on
+  // if your flying it shoudl revert to null
+  // if it needs to "guard" a platform that some other logic
+  platform = null;
   
   // type???
   
@@ -100,6 +103,61 @@ export class Actor extends Rectangle {
     // this.direction = this.directions.idle;
     
   }
+  
+  clone(){
+    return new this.constructor().copy(this);
+  }
+  
+  copy(thing){
+    super.copy(thing);
+
+    this.subType = thing.subType;
+    this.walkSpeed = thing.walkSpeed;
+    this.mPos = thing.mPos.clone();
+    this.platform = thing.platform;
+    
+    this._mode = thing._mode;
+    
+    this.directionVector = thing.directionVector.clone();
+    
+    this.mGravity = thing.mGravity;
+    
+    // not sure how to copy this function
+    // this.gravityForce = function(delta, gravity){
+    //   this.y += (delta * 0.01 ) + gravity;
+    // }
+    this.gravityForce = thing.gravityForce;
+    this.useGravity = thing.useGravity;
+
+    this.canUpdateFromInputs = thing.canUpdateFromInputs;
+    
+    return this;
+  }
+  
+  
+  // clone(){
+  //   var rr = new Actor(this.name, this.x, this.y, this.width, this.height, this.color);
+  //   super.clone();
+  // 
+  //   platform
+  // 
+  //   this.copyTo(rr);
+  //   // 
+  //   // rr.scalar = this.scalar;
+  //   // rr.mHeight = this.mHeight;
+  //   // rr.mWidth = this.mWidth;
+  // 
+  // 
+  //   console.log("clone needs more for Actor");
+  //   return rr;
+  // 
+  // }
+  // 
+  // copyTo(thing){
+  // 
+  // }
+  
+  
     
   update(){
     if( !this.canUpdate ){
@@ -111,6 +169,7 @@ export class Actor extends Rectangle {
     }
   }
   
+
   
   updateWalking(deltaTime, externalGravity = 9.81864){
     
