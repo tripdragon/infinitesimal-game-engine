@@ -120,6 +120,26 @@ export class Plane extends Rectangle {
     }
 
 
+
+    
+    clone(){
+
+      var rr = new this.constructor().copy(this);
+      
+      return rr;
+    }
+    
+    copy(thing){
+      super.copy(thing);
+      
+      this.cachePositions = thing.cachePositions.slice();
+      
+      return this;
+    }
+    
+
+
+
     // draws to the buffer
     draw(colorUniformLocation){
       this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);

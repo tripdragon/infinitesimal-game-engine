@@ -21,19 +21,28 @@ export class SceneGrapth{
   layers = {
     main: [],
     colliders : [], // if it collides you can then deicde if it was just a trigger
+    platforms : [],
     // triggers : []
   }
   
   // need to add compare istype etc
   add(thingy){
     if(thingy instanceof Quark){
+      
       this.objects.push(thingy);
+      
       if(!thingy.system){
         thingy.system = this.system;
       }
+      
       if(thingy.canCollide){
         this.layers.colliders.push(thingy);
       }
+      
+      if( thingy.canCollide && thingy.subType === "platform"){
+        this.layers.platforms.push(thingy);
+      }
+      
     }
   }
   

@@ -12,7 +12,7 @@ import { Game } from "../Core/Game.js";
 import { keyboard } from '../Modules/input/keyboard.js';
 import { randomBetween, random1orNeg, simpleNoise, remapNegPositiveOne } from "../Modules/mathness.js";
 
-import { AABBTest, pointInRect } from "../Modules/collisions.js";
+import { AABBTest, pointInRect } from "../Modules/Colliders/collisions.js";
 
 
 import { Actor } from "../Primitives/Actor.js";

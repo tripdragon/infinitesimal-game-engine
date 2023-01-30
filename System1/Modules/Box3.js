@@ -2,7 +2,7 @@
 
 // most of this will be copied from THREE.js
 import { Vector3 } from "../Modules/Vector3.js";
-import { AABBTestScreenSpace, AABBTest3D } from "./collisions.js";
+import { AABBTestScreenSpace, AABBTest3D } from "./Colliders/collisions.js";
 
 export class Box3{
   

@@ -12,7 +12,7 @@ import { Game } from "../Core/Game.js";
 import { keyboard } from '../Modules/input/keyboard.js';
 import { randomBetween } from "../Modules/mathness.js";
 
-import { AABBTest } from "../Modules/collisions.js";
+import { AABBTest } from "../Modules/Colliders/collisions.js";
 
 export let disc = new Game("superjumpybocky");
 

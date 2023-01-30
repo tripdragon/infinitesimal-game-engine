@@ -21,6 +21,8 @@ import { Rectangle } from '../Primitives/Rectangle.js';
 import { Plane } from '../Primitives/Plane.js';
 import { Vector3 } from '../Modules/Vector3.js';
 
+import { BehavioursController, Behaviour } from '../Behaviours/Behaviour.js';
+
 
 // extends Rectangle cause we gotta render it somehow and in previous
 // practice making a .renderObject.x = 0839048
@@ -28,8 +30,8 @@ import { Vector3 } from '../Modules/Vector3.js';
 // or you have to write get setters for EVERYTHING over again
 
 // Change to PLane, just need to fix collider logic first
-// export class Actor extends Plane {
-export class Actor extends Rectangle {
+export class Actor extends Plane {
+// export class Actor extends Rectangle {
   
   // temp untill we fix .type
   subType = "actor";
@@ -37,6 +39,8 @@ export class Actor extends Rectangle {
   walkSpeed = 19.5; // needs xy
   
   mPos = new Vector3();
+  
+  delayStart = false;
   
   // the thing its standing on
   // if your flying it shoudl revert to null
@@ -64,10 +68,35 @@ export class Actor extends Rectangle {
     }
   }
   
+  // bots mainly use this BUT actor can as well
+  // so leave it here for now
+  behaviours = new BehavioursController();
+  // action = {};
+  // reaction = {};
+  // quest = {};
+  // task = {}; // job
+  // Hrrrrrmmmm this is a space of AI
+  
+  // thinky thinky
+  // idle, walking, seeking, alsleepIdle, etc...
+  // behaviours = {
+  //   current : null,
+  //   cache : null,
+  //   list : {}
+  // }
+  
+  /*
+  
+  
+  */
+  
+  
+  
   
   // for mode.bot remote mote
   // can be handled by a vector2
   // but would still take impluses in
+  // Can also be used for main Actor so leave it in here
   directionVector = new Vector3();
   // directions = {
   //   idle : "idle",
@@ -94,6 +123,9 @@ export class Actor extends Rectangle {
   // long name....
   canUpdateFromInputs = true;
 
+  
+
+
   // constructor(name, x=0, y=0, width=10, height=10, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
   constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
@@ -101,6 +133,8 @@ export class Actor extends Rectangle {
     
     this._mode = this.modes.player;
     // this.direction = this.directions.idle;
+    
+    
     
   }
   
@@ -133,32 +167,11 @@ export class Actor extends Rectangle {
     
     return this;
   }
-  
-  
-  // clone(){
-  //   var rr = new Actor(this.name, this.x, this.y, this.width, this.height, this.color);
-  //   super.clone();
-  // 
-  //   platform
-  // 
-  //   this.copyTo(rr);
-  //   // 
-  //   // rr.scalar = this.scalar;
-  //   // rr.mHeight = this.mHeight;
-  //   // rr.mWidth = this.mWidth;
-  // 
-  // 
-  //   console.log("clone needs more for Actor");
-  //   return rr;
-  // 
-  // }
-  // 
-  // copyTo(thing){
-  // 
-  // }
-  
-  
-    
+
+  // overwite this as needed
+  start(){}
+
+
   update(){
     if( !this.canUpdate ){
       return;
@@ -167,10 +180,16 @@ export class Actor extends Rectangle {
     if(this.canUpdateFromInputs){
       // need some access to the keyboard or input device joystick
     }
+    
+    // if(this._mode === this.modes.bot){
+    // 
+    // }
+    // this.
+    
   }
   
 
-  
+  // this.updateWalking(this.system.time.delta, 9);
   updateWalking(deltaTime, externalGravity = 9.81864){
     
     var keysDown = this.system.keysDown;
@@ -203,13 +222,18 @@ export class Actor extends Rectangle {
       }
       
     }
+    
+    // this is a yet to figure out "Behaviour"
+    // instead of a direct if item
     else if(this._mode === this.modes.bot){
       
       // this.useGravity = false;
       // this could be handled by a simple vector2/3
       // but would still take impulses in
-      this.x += this.walkSpeed * this.directionVector.x;
-      this.y += this.walkSpeed * this.directionVector.y * -1;
+
+                  // this.x += this.walkSpeed * this.directionVector.x;
+                  // this.y += this.walkSpeed * this.directionVector.y * -1;
+
       // console.log("this.x", this.x);
       // this.y += this.walkSpeed * -1;
       // this.y += (this.y + this.walkSpeed) * this.directionVector.y * -1;
@@ -230,6 +254,9 @@ export class Actor extends Rectangle {
       
     }
     
+    
+    // this is an "EDGE" "Behaviour"
+    // Dont know where to place it yet
     // needs an IF
     // ASTROIDS!!!! like
     if(this.x > window.innerWidth){

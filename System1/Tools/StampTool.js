@@ -71,12 +71,13 @@ export class StampTool extends Tool {
   
   // pointerUpEvent = null;
   
-  start(){
+  start(callback){
     // 
     // this.system.canvas.addEventListener( 'pointerdown', this.editorModeActions._pointerDown.bind(this.editorModeActions) );
 
 
     this.system.sceneGrapth.add(this.visualObject);
+    
     
 
     this.system.loopHookPoints.editorBeforeDraw = () => {
@@ -97,6 +98,11 @@ export class StampTool extends Tool {
 
     
     console.log(`${this.displayName} start`);
+    
+    // replace for promise???
+    if(callback){
+      callback();
+    }
   }
   
   replace(){
@@ -125,13 +131,28 @@ export class StampTool extends Tool {
   pointerUp(){
     
       var ff = this.stampingObject.clone();
-      // debugger
+      
       ff.x = this.visualObject.x;
       ff.y = this.visualObject.y;
+      ff.start(); //optional
       
       console.log(ff);
       this.system.sceneGrapth.add(ff);
       console.log("pointerUp");
+      
+      
+      // 
+      // var outColliders = [];
+      // this.system.testColliders(ff, this.system.platforms, outColliders);
+      // console.log(outColliders);
+      // debugger
+      // if(outColliders.length > 0){
+      //   debugger
+      //   actor.plaform = outColliders[0];
+      //   // actor.useGravity = false;
+      //   debugger
+      // }
+      
   }
   
   

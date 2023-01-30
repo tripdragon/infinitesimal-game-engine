@@ -7,7 +7,7 @@ import { Game } from "../Core/Game.js";
 
 import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
-// import { AABBTestScreenSpace } from "../Modules/collisions.js";
+// import { AABBTestScreenSpace } from "../Modules/Colliders/collisions.js";
 
 
 

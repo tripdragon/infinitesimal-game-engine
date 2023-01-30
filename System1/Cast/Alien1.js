@@ -21,9 +21,21 @@ import {StampTool} from "../Tools/StampTool.js";
 import {Bot} from "../Primitives/Bot.js";
 
 
+import {Behaviour} from "../Behaviours/Behaviour.js";
+import {walk} from "../Behaviours/walk.js";
+import {freefall} from "../Behaviours/freefall.js";
+import {flipdirection} from "../Behaviours/flipdirection.js";
+
+
 // Be sure to assign system
 // this really should be auto handled
 export class Alien1 extends Bot {
+  
+  
+  walkSpeed = 4;
+  useGravity = true;
+  
+  
   
   // stampTool = null;
   // 
@@ -41,6 +53,28 @@ export class Alien1 extends Bot {
   // }
   // 
   
+  start(){
+    
+    
+    // this.behaviours.actions["taks"] = 
+    this.behaviours.add(walk(this));
+    this.behaviours.add(freefall(this));
+    
+    this.behaviours.add(flipdirection(this));
+    
+    this.directionVector.x = 1;
+    
+    // debugger
+    
+  }
+  
+  
+  
+  
+  // IN this example we use behaviours.updateTasks
+  // to perform walking and logic testing
+  // you dont have to use it, its a greater complicated system
+  // for quazy ai
   update(){
     
     // super.update();
@@ -51,19 +85,44 @@ export class Alien1 extends Bot {
       console.log(" trying to animate without this.system");
       return;
     }
-    // console.log("????");
-    // debugger
-    // console.log(this.system.time.delta);
-    // console.log(this.x);
-    // console.log(this.system.time.delta);
+
+    
+    
+    // this.behaviours.updateTasks();
+    
+    // this.behaviours.updateActions();
+    
+    
+    
+    // here we just directly call it
+    // not as roboty
+    
+    if( this.platform ){
+    
+      this.behaviours.walk.update();
+    }
+    else {
+      this.behaviours.inSpace.update();
       
+    }
+    
+    
+    this.behaviours.updateActions();
+    
+
+    // simpler code walk example
     // this delta time will not work with pause for now
     // the width here is too hard coded
-    this.x += this.system.time.delta * 0.05;
-    if(this.x > this.system.gameWidth){
-      this.x = 0 - this.width;
-    }
+
+    // this.x += this.system.time.delta * 0.05;
+    // if(this.x > this.system.gameWidth){
+    //   this.x = 0 - this.width;
+    // }
+
     // this.x += 0.1;
+    
+    
+    
   }
   
   

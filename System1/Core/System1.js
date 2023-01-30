@@ -23,6 +23,8 @@ import { Color } from "../Modules/Color.js";
 import { Vector2 } from "../Modules/Vector2.js";
 import { Vector3 } from "../Modules/Vector3.js";
 
+import { testColliders as _testColliders } from "../Modules/Colliders/testColliders.js";
+
 
 export class Basestation {
   
@@ -156,6 +158,17 @@ export class Basestation {
   get colliders(){
     return this.sceneGrapth.layers.colliders;
   }
+  get platforms(){
+    return this.sceneGrapth.layers.platforms;
+  }
+  
+  // basic hit testing outside of the loop
+  // AABBD was moved to Plane and Box3 as it handles proper screenspace
+  // var out = []
+  // this.system.testColliders("platforms", this.system.platforms, out)
+  // testColliders = _testColliders;
+  
+  
   
   // need enum
   runtimeState = "play"; // play pause step?

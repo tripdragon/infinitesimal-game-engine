@@ -4,7 +4,7 @@
 // It would be nice to be able to use a tool without a ToolsController
 // well we have Stop()
 
-import { AABBTest, pointInRect, pointInBoundingBoxScreenSpace } from "../Modules/collisions.js";
+import { AABBTest, pointInRect, pointInBoundingBoxScreenSpace } from "../Modules/Colliders/collisions.js";
 
 
 import { Tool } from "./Tool.js";
@@ -64,15 +64,29 @@ export class SelectTool extends Tool {
   
   pointerDown(){
     
-    if(this.selectedObject !== null && pointInRect(this.system.pointer, this.selectedObject)){
-      this.mode = this.modes.canDrag;
-      this.mPointerPos.x = this.system.pointer.x;
-      this.mPointerPos.y = this.system.pointer.y;
-      this.mSelectedPos.x = this.selectedObject.x;
-      this.mSelectedPos.y = this.selectedObject.y;
-      this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
+    var wasIn = false;
+    
+    if(this.selectedObject !== null){
+      
+      if(this.selectedObject instanceof Plane){
+        wasIn = pointInBoundingBoxScreenSpace(this.system.pointer, this.selectedObject);
+      }
+      else {
+        wasIn = pointInRect(this.system.pointer, this.selectedObject);
+      } 
+      
+      if(wasIn){
+        this.mode = this.modes.canDrag;
+        this.mPointerPos.x = this.system.pointer.x;
+        this.mPointerPos.y = this.system.pointer.y;
+        this.mSelectedPos.x = this.selectedObject.x;
+        this.mSelectedPos.y = this.selectedObject.y;
+        this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
+      }
     }
+    
     this.isMouseDown = true;
+    
     
   }
   

@@ -10,6 +10,7 @@ import { Game } from "../Core/Game.js";
 
 import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
+import { Platform } from "../Primitives/Platform.js";
 
 
 
@@ -37,40 +38,53 @@ disc.load = function(){
   // this.system.sceneGrapth.add(box2);
   
   
-  var box3 = new Plane("plane", 440, 400, 460, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  var box3 = new Platform("plane", 440, 400, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
   this.system.sceneGrapth.add(box3);
   window.box3 = box3;
 
+
+  // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  var box4 = new Platform("plane", 580, 600, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  this.system.sceneGrapth.add(box4);
+  window.box4 = box4;
+
+
+
+
   // debugger
-  var aa = new Alien1("aa", 260, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+  var aa = new Alien1("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
   this.system.sceneGrapth.add(aa);
-  // aa.system = this.system;
   // aa.canUpdate = false;
-  aa.platform = box3;
+  // for now we need some defaults items to get the bot to walk
+  // aa.platform = box3;
+  // aa.directionVector.x = 1;
   
-  aa.useGravity = false;
-  aa.walkSpeed = 1.2;
-  aa.directionVector.x = 1;
-  aa.hasTurned = false;
-  aa.update = function(){
-    // this.x + 1;
-    var platform = this.platform;
-    
-    this.y = platform.max.y + -this.height + -2;
-    
-    this.updateWalking(this.system.time.delta, 9);
-    
-    // filp direction
-    if (this.x >= platform.max.x){
-      aa.directionVector.x *= -1;
-      this.x = platform.max.x;
-    }
-    else if (this.x <= box3.min.x){
-      aa.directionVector.x *= -1;
-      this.x = platform.min.x;
-    }
-    
-  }
+  aa.start();
+  
+  // aa.useGravity = false;
+  // aa.walkSpeed = 4.2;
+  // aa.directionVector.x = 1;
+  // aa.hasTurned = false;
+  // aa.update = function(){
+  //   // this.x + 1;
+  //   var platform = this.platform;
+  // 
+  //   this.y = platform.max.y + -this.height + -2;
+  // 
+  //   this.updateWalking(this.system.time.delta, 9);
+  // 
+  //   // filp direction
+  //   if (this.x >= platform.max.x){
+  //     aa.directionVector.x *= -1;
+  //     this.x = platform.max.x;
+  //   }
+  //   else if (this.x <= box3.min.x){
+  //     aa.directionVector.x *= -1;
+  //     this.x = platform.min.x;
+  //   }
+  // 
+  // }
   
 
   
