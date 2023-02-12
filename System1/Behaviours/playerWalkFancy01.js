@@ -207,6 +207,7 @@ export function playerWalkFancy01(actor, system){
     
     // U0:
     // if(keysDown[" "] ){
+    // here we limit to only jummping when on a platform
     if(keysDown[" "] && isDown.space === false && actor.platform){
       
       m_deltaTime = deltaTime;
