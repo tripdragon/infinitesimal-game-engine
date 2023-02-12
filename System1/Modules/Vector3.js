@@ -12,6 +12,14 @@ export class Vector3{
   // 
   // }
   
+  set(x,y,z){
+    this.x = x; this.y = y; this.z = z;
+  }
+  
+  clear(){
+    this.x = 0; this.y = 0; this.z = 0;
+  }
+  
   add(v){
     this.x += v.x;
     this.y += v.y;
@@ -33,11 +41,45 @@ export class Vector3{
     return this;
   }
   
+  divideScalar(val){
+    this.x /= val;
+    this.y /= val;
+    this.z /= val;
+    return this;
+  }
+  
   equals( v ) {
 
 		return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) );
 
 	}
+  
+  
+	lengthSq() {
+    return this.magnitudeSq();
+  }
+  
+	magnitudeSq() {
+
+		return this.x * this.x + this.y * this.y + this.z * this.z;
+
+	}
+
+	length() {
+    return this.magnitude();
+  }
+  
+	magnitude() {
+
+		return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
+
+	}
+  
+  normalize() {
+
+    return this.divideScalar( this.magnitude() || 1 );
+
+  }
   
   copy(v){
     this.x = v.x;

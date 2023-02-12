@@ -1,5 +1,17 @@
 
 
+// https://github.com/mrdoob/three.js/blob/master/src/math/MathUtils.js
+// https://en.wikipedia.org/wiki/Linear_interpolation
+export function lerp( x, y, t ) {
+
+	return ( 1 - t ) * x + t * y;
+
+}
+
+export function clamp(val, min, max) {
+  return Math.max(min, Math.min(val, max));
+}
+
 export function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }

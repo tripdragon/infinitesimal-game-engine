@@ -21,7 +21,7 @@ import {StampTool} from "../Tools/StampTool.js";
 import {Bot} from "../Primitives/Bot.js";
 
 
-import {Behaviour} from "../Behaviours/Behaviour.js";
+// import {Behaviour} from "../Behaviours/Behaviour.js";
 import {walk} from "../Behaviours/walk.js";
 import {freefall} from "../Behaviours/freefall.js";
 import {flipdirection} from "../Behaviours/flipdirection.js";
@@ -75,17 +75,20 @@ export class Alien1 extends Bot {
   // to perform walking and logic testing
   // you dont have to use it, its a greater complicated system
   // for quazy ai
-  update(){
+  // update(){
+  // 
+  //   // super.update();
+  //   if(this.canUpdate === false){
+  //     return;
+  //   }
+  //   if(!this.system){
+  //     console.log(" trying to animate without this.system");
+  //     return;
+  //   }
+  // 
+  // }
     
-    // super.update();
-    if(this.canUpdate === false){
-      return;
-    }
-    if(!this.system){
-      console.log(" trying to animate without this.system");
-      return;
-    }
-
+  behavioursHook(){
     
     
     // this.behaviours.updateTasks();
@@ -121,10 +124,7 @@ export class Alien1 extends Bot {
 
     // this.x += 0.1;
     
-    
-    
   }
-  
   
 }
 // // 

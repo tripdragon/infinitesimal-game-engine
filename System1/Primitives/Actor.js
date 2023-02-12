@@ -42,10 +42,42 @@ export class Actor extends Plane {
   
   delayStart = false;
   
+  // make this easier to type
+  get deltaTime(){
+    return this.system.time.delta;
+  }
+  
   // the thing its standing on
   // if your flying it shoudl revert to null
   // if it needs to "guard" a platform that some other logic
   platform = null;
+  outColliders = [];
+  
+  // is this just a helper function>????
+  // logic was/is in Behaviour > Freefall
+  // we need to hide the outColliders but not create it in a loop
+  findPlatform(){
+    this.outColliders = [];
+    var colliders = this.system.platforms;
+    
+    this.platform = null;
+    
+    for (var i = 0; i < colliders.length; i++) {
+      
+      var wasIn = this.intersectsScreenSpaceWithPadding(colliders[i]);
+      if(wasIn){
+        
+        this.outColliders.push(colliders[i]);
+      }
+    }
+    if(this.outColliders.length > 0){
+      // debugger
+      this.platform = this.outColliders[0];
+      
+    }
+  }
+  
+  
   
   // type???
   
@@ -71,6 +103,10 @@ export class Actor extends Plane {
   // bots mainly use this BUT actor can as well
   // so leave it here for now
   behaviours = new BehavioursController();
+  
+  // called in update
+  behavioursHook(){}
+  
   // action = {};
   // reaction = {};
   // quest = {};
@@ -111,14 +147,107 @@ export class Actor extends Plane {
   // };
   // direction = this.directions.idle;
   
+  // constant
+  gravity = 9.2;
+  acceleration = new Vector3();
+  force = new Vector3();
+  mass = 1; // nothing value for now
+  velocity = new Vector3();
+  frictionPlatform = 0.01; // this shoudl come from the platform, but if in space need something as well
+  frictionInSpace = 0.01;
+  dragForce = new Vector3();
+  
   
   // you can change this func for the funs
   mGravity = function(){};
   
-  gravityForce = function(delta, gravity){
-    this.y += (delta * 0.01 ) + gravity;
+  gravityForce = function(delta, _gravity){
+    this.y += (delta * 0.01 ) + _gravity;
   }
   useGravity = true;
+  
+  
+  setApplyForce(x,y,z){
+    if(isNaN(x) || isNaN(y) || isNaN(z)){
+      debugger
+    }
+    this.force.set(x,y,z);
+    this.force.divideScalar(this.mass);
+    this.acceleration.add(this.force);
+    
+    // console.log("this.force", this.force);
+    // var speed = this.velocity.magnitude();
+    // if(isNaN(speed)){
+    //   debugger
+    // }
+
+  }
+  applyForce(_force){
+    if(isNaN(_force.x) || isNaN(_force.y) || isNaN(_force.z)){
+      debugger
+    }
+    this.force.copy(_force);
+    this.force.divideScalar(this.mass);
+    this.acceleration.add(this.force);
+    
+    // console.log("this.force 222", this.force);
+    
+    // var speed = this.velocity.magnitude();
+    // if(isNaN(speed)){
+    //   debugger
+    // }
+  }
+  
+  skjdfndf = new Vector3();
+  updateFromForces(){
+    // Velocity changes according to acceleration
+    this.velocity.add(this.acceleration);
+    // console.log("this.acceleration", this.acceleration);
+    var speed = this.velocity.magnitude();
+    // if(isNaN(speed)){
+    //   debugger
+    // }
+    
+    // console.log("this.velocity 222", this.velocity);
+    // position changes by velocity
+    // this.velocity.y *= -1;
+    // this.skjdfndf.copy(this.position).add(this.velocity);
+    // if(isNaN(this.skjdfndf.x) || isNaN(this.skjdfndf.y) || isNaN(this.skjdfndf.z)){
+    //   debugger
+    // }
+    this.position.add(this.velocity);
+    this.updateBoundingBox(); // MUST do this or it breaks collisions
+    
+    // We must clear acceleration each frame
+    this.acceleration.clear();
+    
+    // need to clear to avoid it ramping up but breaks sliding friction
+    // also might need to recalculate it then?
+    // this.velocity.clear();
+  }
+  
+  skjdfndf2222 = new Vector3();
+  getDragForce(type = "platform"){
+    var ff = this.frictionPlatform;
+    if(type === "inSpace"){
+      ff = this.frictionInSpace;
+    }
+    
+    var speed = this.velocity.magnitude();
+    // var speed = 1;
+    var dragMagnitude = ff * speed * speed;
+    this.dragForce.copy(this.velocity);
+    this.dragForce.multiplyScalar(-1);
+    this.dragForce.normalize();
+    this.dragForce.multiplyScalar(dragMagnitude);
+    
+    if(isNaN(this.dragForce.x) || isNaN(this.dragForce.y) || isNaN(this.dragForce.z)){
+      debugger
+    }
+    
+    return this.dragForce;
+  }
+  
   
   // long name....
   canUpdateFromInputs = true;
@@ -181,6 +310,11 @@ export class Actor extends Plane {
       // need some access to the keyboard or input device joystick
     }
     
+    
+    this.behavioursHook();
+    
+    
+    // console.log("actor update???");
     // if(this._mode === this.modes.bot){
     // 
     // }
@@ -188,44 +322,48 @@ export class Actor extends Plane {
     
   }
   
+  // function overloading for updateWalking
+  updateWalking2(){
+    this.updateWalking(this.system.time.delta, this.gravity);
+  }
 
   // this.updateWalking(this.system.time.delta, 9);
   updateWalking(deltaTime, externalGravity = 9.81864){
     
-    var keysDown = this.system.keysDown;
-    // gravity
-    // player.gravity = function(){
-    //   player.y += (delta * 0.01 ) + window.gravity;
-    // }
-    // wrong formula
-    // player.y += (delta * 0.01 ) + 9.7;
-    // player.y += 0.5;
-    if(this.useGravity){
-      this.gravityForce(deltaTime, externalGravity);
-    }
-    
-    if(this._mode === this.modes.player){
-      // console.log("¿¿¿¿¿");
-      //if(arrowsDown.left){
-      if(keysDown.ArrowLeft){
-        this.x += -this.walkSpeed;
-      }
-      if(keysDown.ArrowRight){
-        this.x += this.walkSpeed;
-      }
-      // in screen space we need to flip y
-      if(keysDown.ArrowDown){
-        this.y += -this.walkSpeed * -1;
-      }
-      if(keysDown.ArrowUp){
-        this.y += this.walkSpeed * -1;
-      }
-      
-    }
+              // var keysDown = this.system.keysDown;
+              // // gravity
+              // // player.gravity = function(){
+              // //   player.y += (delta * 0.01 ) + window.gravity;
+              // // }
+              // // wrong formula
+              // // player.y += (delta * 0.01 ) + 9.7;
+              // // player.y += 0.5;
+              // if(this.useGravity){
+              //   this.gravityForce(deltaTime, externalGravity);
+              // }
+              // 
+              // if(this._mode === this.modes.player){
+              //   // console.log("¿¿¿¿¿");
+              //   //if(arrowsDown.left){
+              //   if(keysDown.ArrowLeft){
+              //     this.x += -this.walkSpeed;
+              //   }
+              //   if(keysDown.ArrowRight){
+              //     this.x += this.walkSpeed;
+              //   }
+              //   // in screen space we need to flip y
+              //   if(keysDown.ArrowDown){
+              //     this.y += -this.walkSpeed * -1;
+              //   }
+              //   if(keysDown.ArrowUp){
+              //     this.y += this.walkSpeed * -1;
+              //   }
+              // 
+              // }
     
     // this is a yet to figure out "Behaviour"
     // instead of a direct if item
-    else if(this._mode === this.modes.bot){
+    // else if(this._mode === this.modes.bot){
       
       // this.useGravity = false;
       // this could be handled by a simple vector2/3
@@ -252,26 +390,26 @@ export class Actor extends Plane {
       // }
       
       
-    }
+    // }
     
-    
-    // this is an "EDGE" "Behaviour"
-    // Dont know where to place it yet
-    // needs an IF
-    // ASTROIDS!!!! like
-    if(this.x > window.innerWidth){
-      this.x = 0;
-    }
-    else if(this.x < 0){
-      this.x = window.innerWidth;
-    }
-    if(this.y > window.innerHeight){
-      this.y = 0;
-    }
-    else if(this.y < 0){
-      this.y = window.innerHeight;
-    }
-    
+    // 
+    // // this is an "EDGE" "Behaviour"
+    // // Dont know where to place it yet
+    // // needs an IF
+    // // ASTROIDS!!!! like
+    // if(this.x > window.innerWidth){
+    //   this.x = 0;
+    // }
+    // else if(this.x < 0){
+    //   this.x = window.innerWidth;
+    // }
+    // if(this.y > window.innerHeight){
+    //   this.y = 0;
+    // }
+    // else if(this.y < 0){
+    //   this.y = window.innerHeight;
+    // }
+    // 
     
     
   }

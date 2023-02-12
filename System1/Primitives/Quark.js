@@ -56,8 +56,50 @@ export class Quark {
   // lets go with local for now and use "get world()"
   // if you set attributes of this, they wont update the boundingBox
   // since they dont have setters
-  position = new Vector3();
   
+  // need a setter function instead so we know to update the bounding box automaticly
+  // to do that we would need to redo all of the mutating functions of vector3
+  // add sub etc...
+  // OR remove the auto stuff and remember to ALWAYS call updateBoundingBox()
+  // cuase in update its not so great either, can be overwritten
+  // or its running constatly
+  // get position(){
+  //   return this._position;
+  // }
+  position = new Vector3();
+  // _position = new Vector3();
+
+  
+  get x(){
+    return this.position.x;
+  }
+  get y(){
+    return this.position.y;
+  }
+  get z(){
+    return this.position.z;
+  }
+  
+  set x(v){
+    this.position.x = v;
+    this.updateBoundingBox();
+  }
+  set y(v){
+    this.position.y = v;
+    this.updateBoundingBox();
+  }
+  set z(v){
+    this.position.z = v;
+    this.updateBoundingBox();
+  }
+  
+  updateBoundingBox(){
+    this.computeBoundingBox();
+    this.computeBoundingBoxPadding();
+  }
+  
+
+
   
   // these need to get BOX3 min max etc
   width = 0;
@@ -181,35 +223,6 @@ export class Quark {
     this.boundingBoxPadding.addPaddingScreenSpace(this.boxPadding);
   }
   
-  
-
-  // these should become get set
-  
-  get x(){
-    return this.position.x;
-  }
-  get y(){
-    return this.position.y;
-  }
-  get z(){
-    return this.position.z;
-  }
-  
-  set x(v){
-    this.position.x = v;
-    this.computeBoundingBox();
-    this.computeBoundingBoxPadding();
-  }
-  set y(v){
-    this.position.y = v;
-    this.computeBoundingBox();
-    this.computeBoundingBoxPadding();
-  }
-  set z(v){
-    this.position.z = v;
-    this.computeBoundingBox();
-    this.computeBoundingBoxPadding();
-  }
   
 
   // 

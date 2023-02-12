@@ -12,6 +12,10 @@ export class Vector2{
   // 
   // }
   
+  set(x,y){
+    this.x = x; this.y = y;
+  }
+  
   add(v){
     this.x += v.x;
     this.y += v.y;
@@ -21,6 +25,18 @@ export class Vector2{
   copy(v){
     this.x = v.x;
     this.y = v.y;
+    return this;
+  }
+  
+  multiplyScalar(val){
+    this.x *= val;
+    this.y *= val;
+    return this;
+  }
+  
+  divideScalar(val){
+    this.x /= val;
+    this.y /= val;
     return this;
   }
   
