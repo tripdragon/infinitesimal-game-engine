@@ -42,7 +42,7 @@ export function playerWalkFancy01(actor, system){
     space : false
   }
   
-  var mGravity = 0;
+  var mGravity = null;
   
   var mPos = new Vector3();
   
@@ -50,38 +50,12 @@ export function playerWalkFancy01(actor, system){
   var m_deltaTime;
   var start_deltaTime;
   var m_startTime;
+  
+  var space = " ";
   // maxJumpHeight is on player
   
   // start()????
-  
-  // hard coded function over the speed and max
-  // bb.clampSpeedIncrease = function(axis){
-  //   var actor = this.actor;
-  //   if(actor.currentSpeed[axis] > actor.maxSpeed[axis]){
-  //     actor.currentSpeed[axis] = actor.maxSpeed[axis];
-  //   }
-  //   // if(axis === "x"){
-  //   //   if(actor.currentSpeed.x > actor.maxSpeed.x){
-  //   //     actor.currentSpeed.x = actor.maxSpeed.x;
-  //   //   }
-  //   // }
-  //   // else if(axis === "y"){
-  //   //   if(actor.currentSpeed.y > actor.maxSpeed.y){
-  //   //     actor.currentSpeed.y = actor.maxSpeed.y;
-  //   //   }
-  //   // }
-  // }
-  
-  // 
-  // bb.clampSpeedDecrease = function(axis){
-  //   var actor = this.actor;
-  // 
-  //   if(actor.currentSpeed[axis] < 0 ){
-  //     actor.currentSpeed[axis] = 0;
-  //   }
-  // 
-  // }
-  
+
   bb.update = function() {
     
     var actor = this.actor;
@@ -176,12 +150,14 @@ export function playerWalkFancy01(actor, system){
       }
     }
     
+    // Freefall replacement
     // gravity!!! again.... again....
     // if( !actor.platform && actor.useGravity ){
     if( !actor.platform ){
       // actor.velocity.y += actor.gravity * deltaTime;
       // actor.y += actor.velocity.y;
-      actor.y += actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      // actor.y += actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      actor.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
     }
     
     // actor.updateBoundingBox();
@@ -208,7 +184,7 @@ export function playerWalkFancy01(actor, system){
     // U0:
     // if(keysDown[" "] ){
     // here we limit to only jummping when on a platform
-    if(keysDown[" "] && isDown.space === false && actor.platform){
+    if(keysDown[space] && isDown.space === false && actor.platform){
       
       m_deltaTime = deltaTime;
       start_deltaTime = deltaTime;
@@ -234,11 +210,15 @@ export function playerWalkFancy01(actor, system){
       isDown.space = true;
     }
     // 
-    else if(keysUp[" "]){
+    else if(keysUp[space]){
+      // debugger
       isDown.space = false;
       // actor.mass = 1;
       // actor.gravity = 9;
-      actor.gravity = mGravity;
+      if(mGravity !== null){
+        
+        actor.gravity = mGravity;
+      }
     }
     // 
     
@@ -259,7 +239,7 @@ export function playerWalkFancy01(actor, system){
       
       norTime = clamp(norTime, 0,1);
       // var yy = easing.linear(mPos.y, mPos.y + -actor.maxJumpHeight, norTime );
-      var yy = easing.easeOutExpo(mPos.y, mPos.y + -actor.maxJumpHeight, norTime );
+      var yy = easing.easeOutExpo(mPos.y, mPos.y + actor.maxJumpHeight, norTime );
       
       // hard assign
       actor.y = yy;

@@ -17,7 +17,11 @@ export function drawSceneScreenspace(app, gl, programInfo, positionCheap = {x:0,
   // Clear the canvas before we start drawing on it.
   // Tell WebGL how to convert from clip space to pixels
   
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  
+  // FOR NOW, this is a simple camera for offset entire scene
+  // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  // gl.viewport(app.cameraDefault.x, app.cameraDefault.y, gl.canvas.width*app.cameraZoom, gl.canvas.height*app.cameraZoom);
+  gl.viewport(app.cameraDefault.x, app.cameraDefault.y, gl.canvas.width, gl.canvas.height);
   // gl.viewport(0, 0, window.innerWidth, window.innerHeight);
   
   

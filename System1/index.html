@@ -8,6 +8,8 @@
     python3 -m http.server 8001 
     -->
 
+  <script src="./custom-components/joysticky.js" ___type="module" ___defer></script>
+
     <style media="screen">
         *{
           margin: 0;
@@ -132,6 +134,8 @@
       
       // import { randomBetween } from "./Modules/mathness.js";
       // import { SquareLike } from "./Primitives/squareLike.js";
+      
+      // import { DRRR_Joysticky } from "./custom-components/DRRR_Joysticky.js";
       
       
       import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
@@ -288,7 +292,39 @@
       
       
       
+      // 
       
+      var content = document.getElementById('gamespace');
+
+
+      var joy1 = new DRRR_Joysticky("joy1", 100, 80, 0, 1.0, 100, 100);
+      content.appendChild(joy1);
+      joy1.style.zIndex = 100;
+      joy1.style.position = "absolute";
+
+      // var joy2 = new DRRR_Joysticky("joy1", 200, 200, 0, 1.0, 0.5, 0.5, false);
+      // content.appendChild(joy2);
+      
+      function remap(from0, to0, from1, to1, value) {
+          return from1 + (to1 - from1) * (value - from0) / (to0 - from0);
+      }
+
+      window.addEventListener('joystickUpdate', function(ev){
+        // debugger
+        console.log("mouse",ev.detail.value.mouse);
+        console.log("normalizedUV",ev.detail.value.normalizedUV);
+        var nor = ev.detail.value.normalizedUV;
+        
+        var valX = remap(0,1, -400, 890*2,  nor.x);
+        var valY = remap(0,1, -200, 490,  nor.y);
+        
+        // APPPP.cameraDefault.x = 1 - (890*2) * nor.x;
+        APPPP.cameraDefault.x = valX;
+        APPPP.cameraDefault.y = valY;
+        
+        
+        // APPPP.cameraDefault.x = -10
+      });
       
     </script>
   </body>

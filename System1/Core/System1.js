@@ -35,7 +35,9 @@ export class Basestation {
   gameWidth;
   gameHeight;
   
-  cameraDefault = {x:0,y:0, z: -70};
+  // cameraDefault = {x:0,y:0, z: -70};
+  cameraDefault = {x:0,y:0, z: 0};
+  cameraZoom = 1;
   
   // just a convenience so every file does not have to import
   helpers = {

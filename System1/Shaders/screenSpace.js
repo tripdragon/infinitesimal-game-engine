@@ -1,7 +1,8 @@
 
 
 
-
+// this ones flipped -y, y 0 starts at top
+// its annoying
 
 export const vScreen = `
     
@@ -30,7 +31,8 @@ export const vScreen = `
       // gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       
       // need to flip y to up
-      gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+      // gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+      gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // upside down world!!!
     }
   `;
   
