@@ -2,7 +2,7 @@
 
 // most of this will be copied from THREE.js
 import { Vector3 } from "../Modules/Vector3.js";
-import { AABBTestScreenSpace, AABBTest3D } from "./Colliders/collisions.js";
+import { AABBTestScreenSpace, AABBTest3D, AABBTestScreenSpace222BackToTopYYY } from "./Colliders/collisions.js";
 
 export class Box3{
   
@@ -12,7 +12,9 @@ export class Box3{
   
   
   AABBTestScreenSpace(object){
-    return AABBTestScreenSpace(this,object);
+    // return AABBTestScreenSpace(this,object);
+    // y starts at bottom as it should!
+    return AABBTestScreenSpace222BackToTopYYY(this,object);
   }
   
   AABBTest3D(object){

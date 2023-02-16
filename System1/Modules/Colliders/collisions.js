@@ -24,6 +24,25 @@ export function AABBTestScreenSpace(object1, object2){
 }
 
 
+// y starts at bottom as it should!
+export function AABBTestScreenSpace222BackToTopYYY(object1, object2){
+  
+  var isINnnn = false;
+
+  // winner function! from internets :<
+  if(object1.min.x < object2.max.x &&
+    object1.max.x > object2.min.x &&
+    object1.min.y < object2.max.y &&
+    object1.max.y > object2.min.y)
+  {
+      isINnnn = true;
+  }
+  
+  return isINnnn;
+  
+}
+
+
 // y is not flipped
 export function AABBTest3D(object1, object2){
   

@@ -365,13 +365,18 @@ export class Quark {
   
   // change per subclass
   // HRmmmmm max y is wrong for screenspace
+  // NOTE: DONT know why this works worldMatrix offset, but it seems to ?!?!?!
   computeBoundingBox(){
     this.boundingBox.min.x = (-this.width / 2) + this.x;
-    this.boundingBox.min.y = (this.height / 2) + this.y;
+    // y starts at bottom as it should!
+    // this.boundingBox.min.y = (this.height / 2) + this.y;
+    this.boundingBox.min.y = (-this.height / 2) + this.y; // this should be the correct one
     this.boundingBox.min.z = (-this.depth / 2) + this.z;
     
     this.boundingBox.max.x = (this.width / 2) + this.x;
-    this.boundingBox.max.y = (-this.height / 2) + this.y;
+    // y starts at bottom as it should!
+    // this.boundingBox.max.y = (-this.height / 2) + this.y;
+    this.boundingBox.max.y = (this.height / 2) + this.y; // this should be the correct one
     this.boundingBox.max.z = (this.depth / 2) + this.z;
   }
   
