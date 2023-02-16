@@ -1,4 +1,15 @@
 
+/*
+
+this.system.sceneGrapth.add(box4);
+
+should become
+
+system.add()
+
+
+*/
+
 import {Quark} from '../Primitives/Quark.js';
 
 // BAAAASIC for now
@@ -61,6 +72,8 @@ export class SceneGrapth{
       
     }
   }
+  
+  // delete
   
   // actors move around
   // addActor(thingy){

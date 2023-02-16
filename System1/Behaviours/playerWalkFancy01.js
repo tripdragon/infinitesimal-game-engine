@@ -103,7 +103,7 @@ export function playerWalkFancy01(actor, system){
     // 
     // });
     
-    if(keysDown.ArrowLeft){
+    if(keysDown.ArrowLeft || keysDown.a){
       
       actor.velocity.x += -actor.walkSpeed * deltaTime;
       actor.velocity.x = clamp(actor.velocity.x, -actor.maxSpeed.x, 0);
@@ -111,7 +111,7 @@ export function playerWalkFancy01(actor, system){
       actor.x += actor.velocity.x;
     }
     
-    else if(keysDown.ArrowRight){
+    else if(keysDown.ArrowRight || keysDown.d){
       
       actor.velocity.x += actor.walkSpeed * deltaTime;
       actor.velocity.x = clamp(actor.velocity.x, 0, actor.maxSpeed.x);
@@ -125,7 +125,7 @@ export function playerWalkFancy01(actor, system){
     // keysUp is always called once its been pressed once
     // so instead we need to check both as that makes sense
     // walking left
-    if(keysUp.ArrowLeft && keysUp.ArrowRight){
+    if(keysUp.ArrowLeft && keysUp.ArrowRight && keysUp.a && keysUp.d ){
       if(actor.velocity.x === 0){
         // do nothing
       }
@@ -246,7 +246,7 @@ export function playerWalkFancy01(actor, system){
       
       // force drop
       var gHoldTime = (time - m_startTime) * 0.01;
-      console.log("gHoldTime", gHoldTime);
+      // console.log("gHoldTime", gHoldTime);
       if(gHoldTime >= holdtime){
         actor.isJumping = false;
         actor.gravity = 9;

@@ -99,7 +99,9 @@ gg().ff(a)
     }
     // var gg = this.playCodeDecompressed;
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
-    this.draw(colorUniformLocation);
+    
+    // internals runs this, so it does not belong here at ALL
+    // this.draw(colorUniformLocation);
   }
 }
 

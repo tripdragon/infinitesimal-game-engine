@@ -102,10 +102,13 @@ export class Alien1 extends Bot {
     
     if( this.platform ){
     
-      this.behaviours.walk.update();
+      // this.behaviours.walk.update();
+      // debugger
+      this.behaviours.walk.walk.update();
     }
     else {
-      this.behaviours.inSpace.update();
+      // this.behaviours.inSpace.update();
+      this.behaviours.inSpace.freefall.update();
       
     }
     

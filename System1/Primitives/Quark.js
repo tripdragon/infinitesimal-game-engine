@@ -4,6 +4,7 @@
 import {Vector3} from '../Modules/Vector3.js';
 import {Box3} from '../Modules/Box3.js';
 import {Color} from '../Modules/Color.js';
+import {Matrix4} from '../Modules/GL-Matrix.js';
 
 // need to import some threejs functions
 // like Vector
@@ -50,7 +51,111 @@ export class Quark {
   isType = "Quark";
   subType = "anything";
   
+  // GL stuff
   gl;
+  program;
+  
+  // workMatrix = new Matrix();
+  localMatrix = new Matrix4();
+  worldMatrix = new Matrix4();
+  
+  // localMatrix_changed = false; // dirty flag ?
+  worldMatrix_changed = false; // dirty flag ?
+  workMatrix = new Matrix4();
+  
+  // APPPP.world.updateWorldMatrix()
+  // if you call it with a matrix then it will change its world position
+  // otherwise will stay the same
+  // it then does the same for all down chain
+  updateWorldMatrix(parentWorldMatrix){
+    // debugger
+    if(this.name !== "world"){
+      // debugger
+    }
+    if(parentWorldMatrix){
+      // force updates the world Matrix
+      
+      // console.log("parentWorldMatrix",parentWorldMatrix.getPosition());
+      // debugger
+      // console.log("name", this.name);
+      this.worldMatrix.narf = "narf111";
+      this.worldMatrix.multiplyMatrices(parentWorldMatrix, this.localMatrix);
+      // debugger
+      // console.log("this.worldMatrix", this.worldMatrix.getPosition());
+      
+      // this.worldMatrix.multiplyMatrices(this.localMatrix, parentWorldMatrix);
+      // console.log(this.localMatrix.elements, parentWorldMatrix.elements);
+      // this.worldMatrix.multiplyMatrices( parentWorldMatrix, this.localMatrix);
+    }
+    else {
+      // debugger
+      // make sure its local!
+      if(this.parent === null){
+        this.worldMatrix.copy(this.localMatrix);
+      }
+    }
+    
+    // recussion updates chain
+    // now process all the children
+    
+    var worldMatrix = this.worldMatrix;
+    if(this.peeps.length > 0){
+      this.peeps.forEach(function(item) {
+        item.updateWorldMatrix(worldMatrix);
+      });
+    }
+  }
+  
+  // draws to the buffer
+  draw(colorUniformLocation, matrixLocation){
+    
+    // this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);      
+    
+    // if(colorUniformLocation)
+    
+    // debugger
+    this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
+    
+    
+  }
+  
+  
+  refreshMatrixes(){
+    if(!this.mPosition.equals(this.position)){
+
+      this.mPosition.copy(this.position);
+    }
+    
+    // this performs the matrix updates for now
+    // this one applys the position translation
+    // this.u_matrix.setTranslation(0,0,0);
+    
+    // this is most likely not the right way to do this, but its working for now
+    // this.u_matrix.identity().multiply(this.system.projectionMatrix);
+    // this.localMatrix.identity().multiply(this.system.projectionMatrix);
+    // this.localMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
+
+        // 
+        // this.localMatrix.copy(this.system.projectionMatrix);
+        // this.localMatrix.translate(this.position.x,this.position.y,this.position.z);
+
+        // debugger
+            this.localMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
+            // debugger
+            // this.localMatrix.translate(this.position.x,this.position.y,this.position.z);
+
+
+    this.updateWorldMatrix();
+    
+  }
+  
+  
+  
+  
+  
+  
+  
+  
   
   // is position world? or local?
   // lets go with local for now and use "get world()"
@@ -66,10 +171,14 @@ export class Quark {
   // get position(){
   //   return this._position;
   // }
+  
+  // NOTE if you mutate this vector directly you must call updateBoundingBox()
+  // and maybe update local matrix as well
+  // need a wrapper function
   position = new Vector3();
+  mPosition = new Vector3(); // not sure of this yet
   // _position = new Vector3();
 
-  
   get x(){
     return this.position.x;
   }
@@ -129,12 +238,55 @@ export class Quark {
   
   // when updating
   // need to update matrix stuff
-  peeps = new Set();
+  _parent = null;
+  
+  // Not sure of this get set yet
+  get parent(){
+    return this._parent;
+  }
+  set parent(peep){
+    if(peep instanceof Quark){
+      peep.add(this);
+    }
+    else if(peep === null){
+      peep.remove(this);
+    }
+  }
+  
+  //peeps = new Set();
+  peeps = [];
+  
   add(peep){
       // if typeOf is needed
       if(peep instanceof Quark){
-        this.peeps.add(peep);
+        var index = this.peeps.indexOf(peep);
+        if(index > -1){
+          console.log("already have peep");
+        }
+        else {
+          if(peep._parent !== null){
+            peep._parent.remove(peep);
+          }
+          this.peeps.push(peep);
+          peep._parent = this;
+          // debugger
+        }
       }
+      else {
+        console.warn("not instanceof Quark");
+      }
+  }
+  remove(peep){
+    if(peep instanceof Quark){
+      var index = this.peeps.indexOf(peep);
+      if(index > -1){
+        this.peeps.splice(index,1);
+        peep._parent = null;
+      }
+    }
+    else {
+      console.warn("not instanceof Quark");
+    }
   }
   
   // NOT USEd d yet, see source
@@ -162,6 +314,11 @@ export class Quark {
   }`;
   playCodeDecompressed = null;
   playHelpers = {};
+  
+  play(){}
+  
+  
+  
   /*
   
   // sq1.playCode = `return { do : function(obj, helpers){
@@ -170,7 +327,6 @@ export class Quark {
   //   obj.color.y = Math.random();
   //   obj.color.z = Math.random();
   // }}`;
-  
   
     play(colorUniformLocation){
 
@@ -186,7 +342,8 @@ export class Quark {
       }
       // var gg = this.playCodeDecompressed;
       //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
-      this.draw(colorUniformLocation);
+      // internals runs this, so it does not belong here at ALL
+      // this.draw(colorUniformLocation);
     }
     */
   
@@ -225,10 +382,10 @@ export class Quark {
   
   
 
+  // // 
+  // worldPosition(){
   // 
-  worldPosition(){
-    
-  }
+  // }
 
 
   // clone(){
@@ -304,10 +461,16 @@ export class Quark {
     this.playHelpers = thing.playHelpers;
     this.update = thing.update;
     this.play = thing.play;
-  }
-  
-  update(){
     
+    this.parent = thing.parent;
+    // console.warn("localMatrix and worldMAtrix clone not yet implemented!!!");
+    this.localMatrix.copy(thing.localMatrix);
+    this.worldMatrix.copy(thing.worldMatrix);
+  }
+
+  // not sure yet this placement
+  update(){
+
   }
   
 
@@ -326,7 +489,8 @@ export class Quark {
   // maaaaybe we should, but for now just make it name
   // also arguments shoudl become an object
   //constructor(gl, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
+  // constructor(name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
+  constructor(name, x, y, z, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     // this.gl = gl;
     this.name = name;
     this.height = height;

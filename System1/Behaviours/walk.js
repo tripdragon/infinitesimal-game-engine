@@ -6,7 +6,8 @@ import { Behaviour } from './Behaviour.js';
 
 export function walk(actor, system){
   
-  var bb = new Behaviour("walk", "task", actor, system);
+  // var bb = new Behaviour("walk", "task", actor, system);
+  var bb = new Behaviour("walk", "walk", actor, system);
   
   bb.update = function() {
     var actor = this.actor;

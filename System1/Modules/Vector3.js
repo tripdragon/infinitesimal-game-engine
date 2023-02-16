@@ -81,6 +81,12 @@ export class Vector3{
 
   }
   
+  equals( v ) {
+
+    return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) );
+
+  }
+  
   copy(v){
     this.x = v.x;
     this.y = v.y;

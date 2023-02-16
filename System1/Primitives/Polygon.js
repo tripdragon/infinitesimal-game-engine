@@ -1,5 +1,13 @@
 
+
+// UGH THIS IS NOT PLANE()
+// DONT USE FOR NOW
+
+
+// import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
+
 import { Quark } from "../Primitives/Quark.js";
+import { Matrix4 } from "../Modules/GL-Matrix.js";
 
 // import { randomBetween } from "../Modules/mathness.js";
 // import { setRectangle } from "../Modules/setRectangle.js";
@@ -32,12 +40,19 @@ import { Quark } from "../Primitives/Quark.js";
 // }
 
 export class Polygon extends Quark {
-
+  
+  // in Quark()
+  // program;
+  // gl;
+  
   scalar;
-  points = [];
+  points = []; // wuts the diff???
+  positions = [];
+  
+  u_matrix = new Matrix4().setTranslation(0,0,0);
 
   // this could use some of that fancy {deconstructor} or ... new stuff
-  //constructor(gl, points = [], x, y, scalar, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
+  // .gl is assigned when the object is added to the scenegrapth
   constructor(name, points = [], x, y, scalar, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
     // need to compute width and height
@@ -55,38 +70,50 @@ export class Polygon extends Quark {
   }
 
   // draws to the buffer
-  draw(colorUniformLocation){
+  draw(colorUniformLocation, matrixLocation){
+  // debugger
     // gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+  
     this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
-    // setSquareLike(this.gl, this.x, this.y, this.width, this.height);
-    // console.log(this.x);
-    // setPolygon(this.gl, this.x, this.y, this.scalar, this.points);
+    
+    // var u_matrix = new Matrix4().setTranslation(0,0,0);
+    
+    // debugger
+    
+    // this.gl.uniform4f(u_matrix, 0,0,0, 1);
+    this.gl.uniformMatrix4fv(matrixLocation, false, this.u_matrix.elements);
+    // <<<<  
+    // this needs to be converted to matrixes
     this.setPolygon();
     
   }
 
-  /*
-  https://stackoverflow.com/questions/939326/execute-javascript-code-stored-as-a-string
-  aa = `return {rr : 4}`;
-  var gg = new Function(aa);
-  ww = gg()
-  ww.rr => 4
+  
+  play(){
+    /*
+    
+    this is for play()
+    
+    https://stackoverflow.com/questions/939326/execute-javascript-code-stored-as-a-string
+    aa = `return {rr : 4}`;
+    var gg = new Function(aa);
+    ww = gg()
+    ww.rr => 4
 
 
-  // this works but its noisy
-  a = { rr: 4 }
+    // this works but its noisy
+    a = { rr: 4 }
 
-  mm = `return { ff : (obj) => {
-console.log("foof");
-console.log(obj);
-obj.rr = 45436;
-}}`;
+    mm = `return { ff : (obj) => {
+    console.log("foof");
+    console.log(obj);
+    obj.rr = 45436;
+    }}`;
 
-gg = new Function(mm);
-gg().ff(a)
+    gg = new Function(mm);
+    gg().ff(a)
 
-  */
-  play(colorUniformLocation){
+    */
 
     if(this.playCodeDecompressed === null){
 
@@ -100,30 +127,33 @@ gg().ff(a)
     }
     // var gg = this.playCodeDecompressed;
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
-    this.draw(colorUniformLocation);
+    
+    // internals runs this, so it does not belong here at ALL
+    //this.draw(colorUniformLocation);
+    
   }
   
   
   
   
-  positions = [];
-
+  
+  // need to update for matrixes
+  // We DONT want to do this each frame
+  // that what matrixes are for
   setPolygon() {
+    
     var points = this.points;
-    
-    // console.log("x", x);
-    // var x1 = x;
-    // var x2 = x + width;
-    // var y1 = y;
-    // var y2 = y + height;
-    
+        
     // this does not account for the center yet
     // every other od even x y
     // num % 2; 
     // need some matrix magic here for scaling
+    
     this.positions = [];
+    
     // for now its scaling the points from the center????
     // would want to move that to the matrix and origin
+    
     for (var i = 0; i < this.points.length; i++) {
       var og = this.points[i] * this.scalar;
       // var og = points[i];
@@ -139,14 +169,6 @@ gg().ff(a)
       this.positions.push(og);
     }
     
-    // estimated guess!!!!!
-    // need an actual box3 function
-    // console.log("this.positions[0]", this.positions[0], this.x);
-    // console.log("this.positions[4]", this.positions[4], this.x);
-    // this.width = (this.positions[0] - this.x) + (this.positions[4] - this.x);
-    // this.height = (this.positions[1] - this.y) + (this.positions[5] - this.y);
-    
-    
 
     // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
     // whatever buffer is bound to the `ARRAY_BUFFER` bind point
@@ -158,10 +180,3 @@ gg().ff(a)
   }
   
 }
-
-// function demo(gl){
-//   setRectangle(gl, randomBetween(-4,4), 8, 12, 8)
-//   foooof = [
-//     new SquareLike(gl, )
-//   ];
-// }

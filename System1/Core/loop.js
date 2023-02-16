@@ -1,5 +1,5 @@
 
-
+// this is typeof System()
 
 export let loop = function(){
 
@@ -16,10 +16,10 @@ export let loop = function(){
   //console.log("moof");
   
   // we need a larger mouse mover
-  this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
-  this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
-  //this.fauxPointer.z = this.pointer.z;
-  this.fauxPointer.z = -100.0;
+  // this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
+  // this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
+  // //this.fauxPointer.z = this.pointer.z;
+  // this.fauxPointer.z = -100.0;
   
   
   this.loopHookPoints.editorBeforeDraw();
@@ -27,7 +27,8 @@ export let loop = function(){
   this.loopHookPoints.beforeDraw();
   
   // drawScene(gl, programInfo);
-  this.drawScene(this, this.gl, this.programInfo, this.fauxPointer);
+  // this.drawScene(this, this.gl, this.programInfo, this.fauxPointer);
+  this.drawScene(this, this.gl, this.programInfo);
   
   this.time.mTime = this.time.now;
 };

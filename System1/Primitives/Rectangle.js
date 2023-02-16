@@ -1,6 +1,11 @@
 
 
 
+// Might get replaced fully for Polygon()
+// with just an origin kinda tools
+// and maybe handle sprites
+
+
 /*
 var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
 this.system.sceneGrapth.add(border1);
@@ -126,7 +131,9 @@ export class Rectangle extends Quark {
     }
     // var gg = this.playCodeDecompressed;
     //setSquareLike(this.gl, gg.x, gg.y, gg.width, gg.height);
-    this.draw(colorUniformLocation);
+    
+    // internals runs this, so it does not belong here at ALL
+    // this.draw(colorUniformLocation);
   }
   
   // quark already has it

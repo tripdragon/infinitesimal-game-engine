@@ -7,32 +7,47 @@
 export const vScreen = `
     
     attribute vec4 aVertexPosition;
-    // attribute vec2 aVertexPosition;
     
-    uniform mat4 uModelViewMatrix;
+    // not yet
+    //uniform mat4 uModelViewMatrix;
     
+    // not yet
     uniform mat4 uProjectionMatrix;
     
     uniform vec2 u_resolution;
     
+    uniform mat4 u_matrix;
     
     
     void main() {
       
       // convert the position from pixels to 0.0 to 1.0
-      vec2 zeroToOne = aVertexPosition.xy / u_resolution;
       
-      // convert from 0->1 to 0->2
+      
+      // old
+      // vec2 zeroToOne = aVertexPosition.xy / u_resolution;
+      
+      vec2 zeroToOne = (u_matrix * aVertexPosition).xy / u_resolution;
+        // convert from 0->1 to 0->2
       vec2 zeroToTwo = zeroToOne * 2.0;
-      
-      // convert from 0->2 to -1->+1 (clip space)
+        // convert from 0->2 to -1->+1 (clip space)
       vec2 clipSpace = zeroToTwo - 1.0;
-
-      // gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       
-      // need to flip y to up
-      // gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-      gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // upside down world!!!
+      // not yet
+      // gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+
+        // need to flip y to up      
+      // gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1); // upside down world!!!
+      
+        // original
+      gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1);
+      
+      // no
+      // gl_Position = u_matrix * aVertexPosition;
+      
+      
+      gl_Position = u_matrix * aVertexPosition;
+      
     }
   `;
   

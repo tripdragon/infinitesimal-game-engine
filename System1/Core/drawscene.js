@@ -1,5 +1,10 @@
 
 
+
+// OBSOLETE for now
+// it is used at start but it gets swapped later
+// so we just put in a return for now
+
 // Main GL render system
 
 
@@ -18,11 +23,20 @@
 // https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js
 // import { mat4 } from "https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js";
 // import glMatrix from 'https://cdn.skypack.dev/gl-matrix';
-import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
+
+// import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
+
+// var mat4 = {};
+
 
 console.warn("This is rendering once and giving errors before the game is ready!!!!¿¿¿");
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {
 export function drawScene(app, gl, programInfo, positionCheap = {x:0, y:0, z:-76.0} ) {
+  
+  // debugger
+  return;
+  
+  
   // gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
   var color = app.backgroundColor;
   gl.clearColor(color.r, color.g, color.b, color.a); // Clear to black, fully opaque

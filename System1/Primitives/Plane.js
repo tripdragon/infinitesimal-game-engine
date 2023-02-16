@@ -13,8 +13,9 @@ border1.onCollide = function(){
 
 */
 
+import { Matrix4 } from "../Modules/GL-Matrix.js";
 
-// import { Quark } from "../Primitives/Quark.js";
+import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
 import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
@@ -39,13 +40,32 @@ import { Color } from "../Modules/Color.js";
 // But it is 3D!!!
 // well that a plane then
 // export class Plane extends Quark {
-export class Plane extends Rectangle {
+// This should extend polygon instead
+// export class Plane extends Rectangle {
+export class Plane extends Quark {
+  // 
+  // setScaletemp(val){
+  //   this.scalar = val;
+  //   this.width = this.mWidth * this.scalar;
+  //   this.height = this.scalar * this.mHeight;
+  // }
   
-    cachePositions = [];
+    // hasSetPlane = false;
+    
+    positions = [];
+  
+    // cachePositions = [];
     // counter clockwise
     // +0   +3
     // +1   +2
+    // the points of the geometry not the buffer positions
+    // buffer has 6 points has 4
     points = [new Vector3(),new Vector3(),new Vector3(),new Vector3()];
+    
+    u_matrix = new Matrix4().setTranslation(0,0,0);
+    // ? not sure yet
+    // mvpMatrix
+    translationMatrix = new Matrix4().setTranslation(0,0,0);
     
     // this should be the world coords acording to AABB
     // and since evertything effectly moves this has to be calculated always
@@ -68,8 +88,18 @@ export class Plane extends Rectangle {
     }
 
     // this could use some of that fancy {deconstructor} or ... new stuff
-    constructor(name, x, y, width, height, color, system) {
-      super(name, x, y, width, height, color, system);
+    // Missing Z
+    // gonna have to fix for ALL
+    // Derp
+    constructor(name, x, y, z, width, height, color, system) {
+      super(name, x, y, z, width, height, 0, color, system);
+
+      
+      this.system = system;
+      // debugger
+      this.pointsCount = 6;
+      this.mHeight = height;
+      this.mWidth = width;
       
       // plane has no origin persay
       // its geometry is offset to handle this by default
@@ -77,7 +107,37 @@ export class Plane extends Rectangle {
       this.centerPositions();
       this.computeBoundingBox();
       this.computeBoundingBoxPadding();
+      
+      // this.setRectangle(this.gl, this.x, this.y, this.width, this.height);
+
     }
+    
+    // 
+    // setRectangle(gl, x, y, width, height) {
+    //   var x1 = x;
+    //   var x2 = x + width;
+    //   var y1 = y;
+    //   var y2 = y + height;
+    // 
+    //   // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+    //   // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+    //   // but so far we only have one buffer. If we had more than one
+    //   // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+    // 
+    //   var positions = [
+    //     x1, y1,
+    //     x1, y2,
+    //     x2, y2,
+    //     x2, y1,
+    //     // other tri
+    //     x1, y1,
+    //     x2, y2
+    //   ];
+    // 
+    //   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    // }
+
+    
     
     centerPositions(){
       
@@ -89,6 +149,8 @@ export class Plane extends Rectangle {
       // counter clockwise
       // top left
       
+      
+      // this should just be a transform and apply
       var points = this.points;
       
       points[0].x = -this.width / 2;
@@ -106,15 +168,26 @@ export class Plane extends Rectangle {
       points[3].y = -this.height / 2;
       
       
-      var positions = this.cachePositions;
+      // var positions = this.cachePositions;
+      var positions = this.positions;
+      
       // gurgle
-      positions[0] = points[0].x; positions[1] = points[0].y;
-      positions[2] = points[1].x; positions[3] = points[1].y;
-      positions[4] = points[2].x; positions[5] = points[2].y;
+      // positions[0] = points[0].x; positions[1] = points[0].y;
+      // positions[2] = points[1].x; positions[3] = points[1].y;
+      // positions[4] = points[2].x; positions[5] = points[2].y;
+      // // tri 2
+      // positions[6] = points[2].x; positions[7] = points[2].y;
+      // positions[8] = points[3].x; positions[9] = points[3].y;
+      // positions[10] = points[0].x; positions[11] = points[0].y;
+      // 
+      // need Z now
+      positions[0] = points[0].x; positions[1] = points[0].y; positions[2] = 0;
+      positions[3] = points[1].x; positions[4] = points[1].y; positions[5] = 0;
+      positions[6] = points[2].x; positions[7] = points[2].y; positions[8] = 0;
       // tri 2
-      positions[6] = points[2].x; positions[7] = points[2].y;
-      positions[8] = points[3].x; positions[9] = points[3].y;
-      positions[10] = points[0].x; positions[11] = points[0].y;
+      positions[9] = points[2].x; positions[10] = points[2].y; positions[11] = 0;
+      positions[12] = points[3].x; positions[13] = points[3].y; positions[14] = 0;
+      positions[15] = points[0].x; positions[16] = points[0].y; positions[17] = 0;
       
       
     }
@@ -132,23 +205,154 @@ export class Plane extends Rectangle {
     copy(thing){
       super.copy(thing);
       
-      this.cachePositions = thing.cachePositions.slice();
+      // this.cachePositions = thing.cachePositions.slice();
+      this.positions = thing.positions.slice();
+      
       
       return this;
     }
     
 
 
-
-    // draws to the buffer
-    draw(colorUniformLocation){
+    // 
+    // // draws to the buffer
+    // draw(colorUniformLocation, matrixLocation){
+    // 
+    //   // update()
+    //   // checks to todate the matrix
+    //   // but it might belong here
+    // 
+    // 
+    // 
+    //   // this performs the matrix updates for now
+    //   // this one applys the position translation
+    //   // this.u_matrix.setTranslation(0,0,0);
+    // 
+    //   // this is most likely not the right way to do this, but its working for now
+    //   // this.u_matrix.identity().multiply(this.system.projectionMatrix);
+    // 
+    //             // // this.u_matrix.copy(this.system.projectionMatrix);
+    //             // this.localMatrix.copy(this.system.projectionMatrix);
+    //             // // 
+    //             // 
+    //             // this.localMatrix.translate(this.position.x,this.position.y,this.position.z);
+    //             // 
+    //             // // this.u_matrix.setTranslation(this.position.x,this.position.y,this.position.z);
+    //             // // this.translationMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
+    //             // // this.u_matrix.multiply(this.translationMatrix);
+    //             // 
+    // 
+    //   this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);      
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.u_matrix.elements);
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.localMatrix.elements);
+    // 
+    // 
+    // 
+    // 
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
+    // 
+    // 
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMartix.multiplyMatrices(this.system.projectionMatrix, this.worldMatrix).elements);
+    // 
+    //   this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
+    // 
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.multiply(this.system.projectionMatrix).elements);
+    // 
+    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.translationMatrix.elements);
+    // 
+    // 
+    // 
+    // 
+    // 
+    //   // this.u_matrix.setTranslation(this.position.x,this.position.y,this.position.z);
+    //   // this.u_matrix.setTranslation(0,0,0);
+    //   // this needs to be converted to matrixes
+    //   // this.setPlane();
+    //   // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+    // 
+    //   // if( !this.hasSetPlane ){
+    //   //   // this.setPlane();
+    //   //   this.hasSetPlane = true;
+    //   // }
+    //   // else {
+    //   // }
+    // 
+    // 
+    //   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+    // 
+    // }
+    
+    // workMatrix = new Matrix4();
+    // 
+    // updateWorldMatrix(parentWorldMatrix){
+    //   if(parentWorldMatrix){
+    //     // force updates the world Matrix
+    // 
+    //     console.log("parentWorldMatrix",parentWorldMatrix.getPosition());
+    //     // debugger
+    //     console.log("name", this.name);
+    //     this.worldMatrix.narf = "narf111";
+    //     this.worldMatrix.multiplyMatrices(parentWorldMatrix, this.localMatrix);
+    //     // debugger
+    //     console.log("this.worldMatrix", this.worldMatrix.getPosition());
+    // 
+    //     // this.worldMatrix.multiplyMatrices(this.localMatrix, parentWorldMatrix);
+    //     // console.log(this.localMatrix.elements, parentWorldMatrix.elements);
+    //     // this.worldMatrix.multiplyMatrices( parentWorldMatrix, this.localMatrix);
+    //   }
+    //   else {
+    //     // debugger
+    //     this.worldMatrix.copy(this.localMatrix);
+    //   }
+    // 
+    //   // recussion updates chain
+    //   // now process all the children
+    // 
+    //   var worldMatrix = this.worldMatrix;
+    //   if(this.peeps.length > 0){
+    //     this.peeps.forEach(function(item) {
+    //       item.updateWorldMatrix(worldMatrix);
+    //     });
+    //   }
+    //   if(this.name !== "world"){
+    //     // debugger
+    //   }
+    // }
+    // 
+    
+    // updateWorldMatrix(){
+    //   super.updateWorldMatrix();
+    //   console.log("updateWorldMatrix 2222", this.worldMatrix.getPosition());
+    // }
+    draw(colorUniformLocation, matrixLocation){
+      // debugger
+      // super.draw(colorUniformLocation, matrixLocation);
       this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
-      this.setPlane();
-      // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+      
+      // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
+      
+      // this.localMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
 
+
+      // MAYBE handle the projection here
+      // its building but not moving
+      // debugger
+      // console.log("draw world", this.worldMatrix.getPosition());
+      // console.log("draw local", this.localMatrix.getPosition());
+      // console.log("draw name", this.name);
+      // debugger
+      this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.worldMatrix, this.system.projectionMatrix).elements);
+      
+      // debugger
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.localMatrix.elements);
+
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
     }
     
-    positions = [];
+    
     setPlane() {
       // var x1 = x;
       // var x2 = x + width;
@@ -176,20 +380,23 @@ export class Plane extends Rectangle {
       //   x2, y2
       // ];
       
-      this.positions = [];
+      // this.positions = [];
+      // 
+      // for (var i = 0; i < this.cachePositions.length; i++) {
+      // 
+      //   // this does not work for z
+      //   // if od its y, otherwise x
+      //   if(i % 2){
+      //     this.positions[i] = this.cachePositions[i] + this.y;
+      //   }
+      //   else {
+      //     this.positions[i] = this.cachePositions[i] + this.x;
+      //   }
+      // }
       
-      for (var i = 0; i < this.cachePositions.length; i++) {
-        
-        // if od its y, otherwise x
-        if(i % 2){
-          this.positions[i] = this.cachePositions[i] + this.y;
-        }
-        else {
-          this.positions[i] = this.cachePositions[i] + this.x;
-        }
-      }
+      
 
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+      // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
     }
 
   }

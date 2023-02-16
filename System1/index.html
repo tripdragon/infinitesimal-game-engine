@@ -292,7 +292,8 @@
       
       
       
-      // 
+      // map mover
+      // this belongs in editor class
       
       var content = document.getElementById('gamespace');
 
@@ -311,16 +312,24 @@
 
       window.addEventListener('joystickUpdate', function(ev){
         // debugger
-        console.log("mouse",ev.detail.value.mouse);
-        console.log("normalizedUV",ev.detail.value.normalizedUV);
+        // console.log("mouse",ev.detail.value.mouse);
+        // console.log("normalizedUV",ev.detail.value.normalizedUV);
         var nor = ev.detail.value.normalizedUV;
         
-        var valX = remap(0,1, -400, 890*2,  nor.x);
-        var valY = remap(0,1, -200, 490,  nor.y);
+        // var valX = remap(0,1, -400, 890*2,  nor.x);
+        // var valY = remap(0,1, -200, 490,  nor.y);
         
         // APPPP.cameraDefault.x = 1 - (890*2) * nor.x;
-        APPPP.cameraDefault.x = valX;
-        APPPP.cameraDefault.y = valY;
+        
+        // APPPP.cameraDefault.x = valX;
+        // APPPP.cameraDefault.y = valY;
+        // 
+        
+        var valX = remap(0,1, -1800, 890*2,  nor.x);
+        var valY = remap(0,1, -200, 490,  nor.y);
+        
+        APPPP.world.x = valX;
+        APPPP.world.y = valY;
         
         
         // APPPP.cameraDefault.x = -10

@@ -256,9 +256,9 @@ export class Actor extends Plane {
 
 
   // constructor(name, x=0, y=0, width=10, height=10, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
+  constructor(name, x, y, z, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
-    super(name, x, y, width, height, color, system);
+    super(name, x, y, z, width, height, color, system);
     
     this._mode = this.modes.player;
     // this.direction = this.directions.idle;

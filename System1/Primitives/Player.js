@@ -47,9 +47,9 @@ export class Player extends Actor {
   frictionPlatform = 0.01; // this shoudl come from the platform, but if in space need something as well
   frictionInSpace = 0.001;
 
-  constructor(name, x, y, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
+  constructor(name, x, y, z, width, height, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     
-    super(name, x, y, width, height, color, system);
+    super(name, x, y, z, width, height, color, system);
     
     this._mode = this.modes.player;
     

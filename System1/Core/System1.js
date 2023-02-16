@@ -19,9 +19,13 @@ import { SceneGrapth } from "./SceneGrapth.js";
 
 import { loop as _loop } from "./loop.js";
 
+import { Quark } from "../Primitives/Quark.js";
+import { World } from "../Primitives/World.js";
 import { Color } from "../Modules/Color.js";
 import { Vector2 } from "../Modules/Vector2.js";
 import { Vector3 } from "../Modules/Vector3.js";
+
+import { Matrix4 } from "../Modules/GL-Matrix.js";
 
 import { testColliders as _testColliders } from "../Modules/Colliders/testColliders.js";
 
@@ -30,20 +34,53 @@ export class Basestation {
   
   canvas = null;
   
+  programInfo;
+  gl;
+  
+  // console.warn("this needs to be adjusted");
+  // see https://webglfundamentals.org/webgl/lessons/webgl-anti-patterns.html
   // window.innerWidth
   // window.innerHeight roughly...
-  gameWidth;
-  gameHeight;
+  get gameWidth(){
+    return this.gl.canvas.width;
+  }
+  get gameHeight(){
+    return this.gl.canvas.height;
+  }
+  
+  
+  
   
   // cameraDefault = {x:0,y:0, z: -70};
-  cameraDefault = {x:0,y:0, z: 0};
+  cameraDefault = {x:0,y:0, z: 0}; // this can become a full object
   cameraZoom = 1;
+  
+  // main place to run matrix updates
+  // are there universes????
+  world = null;
+  
+  // internal to these are validation checking
+  // so its simple here
+  // this should later handle routing of which objects go where
+  // or do the longer names addBot etc...
+  add(thingy){
+    this.sceneGrapth.add(thingy);
+    this.world.add(thingy);
+  }
+  remove(thingy){
+    this.sceneGrapth.remove(thingy);
+    this.world.remove(thingy);
+  }
+  
+  
+  
   
   // just a convenience so every file does not have to import
   helpers = {
     color : Color,
     vector2 : Vector2,
-    vector3 : Vector3
+    vector3 : Vector3,
+    Quark : Quark
   }
   
   
@@ -181,8 +218,7 @@ export class Basestation {
   
   fauxPointer = {};
   
-  programInfo;
-  gl;
+  
   
   currentGame = null;
   
@@ -235,12 +271,23 @@ export class Basestation {
     // //   this.system.screenSpaceMode = this.system.screenModes.screen;
     // // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
     // 
+    console.warn("this needs to be adjusted gameWidth gameHeight");
+    // check above the getter functions for the correct pointer values
     
-    console.warn("this needs to be adjusted");
-    // see https://webglfundamentals.org/webgl/lessons/webgl-anti-patterns.html
-    this.gameWidth = window.innerWidth;
-    this.gameHeight = window.innerHeight;
-    
+    // debugger
+    this.addWorld();
+
+  }
+  
+  addWorld(){
+    if(this.world){
+      this.sceneGrapth.remove(this.world);
+    }
+    this.world = new World(this);
+    this.sceneGrapth.add(this.world);
+    if(this.world === null){
+      // debugger
+    }
   }
   
   addGameToCatalog(game){
@@ -249,6 +296,7 @@ export class Basestation {
   }
   
   // type of Game
+  // this needs to recontruct system construct functions
   insertDisc(game){
     if(this.currentGame !== null){
       this.currentGame.unload();
@@ -261,9 +309,14 @@ export class Basestation {
     
   }
   
+  
   unloadDisc(){
+    console.warn("unloadDisc NOT GOOD ENOUGH!!!");
     // simply trash arrays for now
     this.sceneGrapth = new SceneGrapth();
+    // needs world.DeleteAll
+    console.warn("needs world.DeleteAll");
+    this.addWorld();
   }
   
   // this is for 3d coords
@@ -303,7 +356,8 @@ export class Basestation {
     }
     
     // this.canvas = document.getElementById(canvasId);
-        
+    
+    console.warn("NOT SuRE OF THIS this.canvas.width = window.innerWidth;");
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
           
@@ -331,7 +385,8 @@ export class Basestation {
     // Initialize a shader program; this is where all the lighting
     // for the vertices and so forth is established.
     var shaderProgram;
-
+    
+    // this might not be nessesary unless some other design is added later for a loading screen
     if(this.screenSpaceMode === this.screenModes.screen){
       shaderProgram = initShaderProgram(gl, vScreen, fScreen);
     }
@@ -369,110 +424,91 @@ export class Basestation {
     // Draw the scene once
     // and later run loop
     //drawScene(gl, programInfo, buffers);
-    this.drawScene(this, gl, programInfo);
+              // this.drawScene(this, gl, programInfo);
 
-    console.warn("pointermove, THIS DOES NOT BELONG HERE");
+    // console.warn("pointermove, THIS DOES NOT BELONG HERE");
     // THIS DOES NOT BELONG HERE
     // window.addEventListener( 'resize', onWindowResize );
     // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
     
     
-    // 
-    // loop loop loop loop loop loop loop
-    // 
     
-    var that = this;
+    // testing where this stuff goes not in the loop
     
-    // var fauxPointer = {};
-    
-		// function animate() {
-    //   if(that.runtimeState === "play"){
-    //     requestAnimationFrame( animate );
-    //   }
-    //   // console.log("popcorn");
-		// 	// cube.rotation.x += 0.01;
-		// 	// cube.rotation.y += 0.01;
-    // 
-		// 	// renderer.render( scene, camera );
-    //   // console.log(that.pointer);
-    //   //console.log("moof");
-    // 
-    //   // we need a larger mouse mover
-    //   fauxPointer.x = that.pointer.x * that.pointerXYScalar;
-    //   fauxPointer.y = that.pointer.y * that.pointerXYScalar;
-    //   //fauxPointer.z = that.pointer.z;
-    //   fauxPointer.z = -100.0;
-    // 
-    //   //drawScene(gl, programInfo, buffers, fauxPointer);
-    //   // drawScene(gl, programInfo);
-    //   drawScene(that, gl, programInfo, fauxPointer);
-    // 
-		// };
-    // function animate() {
-    //   //requestAnimationFrame( animate.bind(this) );
-    //   //requestAnimationFrame( animate.bind(this) );
-    //   requestAnimationFrame( animate.bind(this) );
-    // 
-    //   if(this.runtimeState === "play"){
-    //   }
-    //   // console.log("popcorn");
-    //   // cube.rotation.x += 0.01;
-    //   // cube.rotation.y += 0.01;
-    // 
-    //   // renderer.render( scene, camera );
-    //   // console.log(this.pointer);
-    //   //console.log("moof");
-    // 
-    //   // we need a larger mouse mover
-    //   fauxPointer.x = this.pointer.x * this.pointerXYScalar;
-    //   fauxPointer.y = this.pointer.y * this.pointerXYScalar;
-    //   //fauxPointer.z = this.pointer.z;
-    //   fauxPointer.z = -100.0;
-    // 
-    //   //drawScene(gl, programInfo, buffers, fauxPointer);
-    //   // drawScene(gl, programInfo);
-    //   drawScene(this, gl, programInfo, fauxPointer);
-    // 
-    // };
+                        
+                        // Tell WebGL to use our program when drawing
+                        gl.useProgram(programInfo.program);
+                        
+                        // #GLRWORK does this belong here????
+                        const positionBuffer = gl.createBuffer();
+                        
+                        // #GLRWORK
+                        // does this belong here????
+                        // var colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");
+                        this.colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");
+                        // 
+                        // var matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
+                        this.matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
 
-		// animate.bind(this);
-    // animate(this);
-    // animate().bind(this);
+
+// figuring out where to put the projection Matrix and then
+// in the model where to put its com[putation]
+var m4 = new Matrix4();
+{
+var left = 0;
+var right = this.gameWidth;
+var bottom = this.gameHeight;
+var top = 0;
+var near = 400;
+var far = -400;
+m4.makeOrthographic(left, right, bottom, top, near, far);
+
+this.projectionMatrix = m4;
+}
+
+                      // var mm = new mat4.create()
+
+
+                        //gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+                        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                        
+                          
+                        // Tell WebGL how to pull out the positions from the position
+                        // buffer into the vertexPosition attribute.
+                        // setPositionAttribute(gl, buffers, programInfo);
+                        // const numComponents = 2; // pull out 2 values per iteration
+                        const numComponents = 3; // pull out 3 values per iteration for xyz
+                        const type = gl.FLOAT; // the data in the buffer is 32bit floats
+                        const normalize = false; // don't normalize
+                        const stride = 0; // how many bytes to get from one set of values to the next
+                        // 0 = use type and numComponents above
+                        const offset = 0; // how many bytes inside the buffer to start from
+                        gl.vertexAttribPointer(
+                          programInfo.attribLocations.vertexPosition,
+                          numComponents,
+                          type,
+                          normalize,
+                          stride,
+                          offset
+                        );
+                        
+                        
+
+                        gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+
+                        // Pass in the canvas resolution so we can convert from
+                        // pixels to clipspace in the shader
+                        if(programInfo.uniformLocations.resolution){
+                          //console.log("resolution", programInfo.uniformLocations.resolution);
+                          gl.uniform2f(programInfo.uniformLocations.resolution, gl.canvas.width, gl.canvas.height);
+                        }
+
     
-    //this.animate.call(this);
-    // debugger
-    // this.loop.call(this);
+    
+    
     this.startLoop();
 
 
   }
-  // 
-  // animate() {
-  //   //requestAnimationFrame( animate.bind(this) );
-  //   //requestAnimationFrame( animate.bind(this) );
-  //   if(this.runtimeState === "play"){
-  //     requestAnimationFrame( this.animate.bind(this) );
-  //   }
-  //   // console.log("popcorn");
-  //   // cube.rotation.x += 0.01;
-  //   // cube.rotation.y += 0.01;
-  // 
-  //   // renderer.render( scene, camera );
-  //   // console.log(this.pointer);
-  //   //console.log("moof");
-  // 
-  //   // we need a larger mouse mover
-  //   this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
-  //   this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
-  //   //this.fauxPointer.z = this.pointer.z;
-  //   this.fauxPointer.z = -100.0;
-  // 
-  //   this.loopHookPoints.beforeDraw();
-  //   //drawScene(gl, programInfo, buffers, fauxPointer);
-  //   // drawScene(gl, programInfo);
-  //   drawScene(this, this.gl, this.programInfo, this.fauxPointer);
-  // 
-  // };
-  // 
 
 }

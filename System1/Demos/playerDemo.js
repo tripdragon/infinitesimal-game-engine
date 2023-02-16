@@ -39,41 +39,46 @@ disc.load = function(){
 
 
   
-  
+  // 
   // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  var box3 = new Platform("plane", 0, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box3);
+  var box3 = new Platform("plane", 0, 0, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // this.system.sceneGrapth.add(box3);
+  this.system.add(box3);
   // window.box3 = box3;
 
   
   
   
-  var box4 = new Platform("plane", 540, 520, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box4);
+  var box4 = new Platform("plane magic", 540, 520, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  this.system.add(box4);
+  // this.system.sceneGrapth.add(box4);
   window.box4 = box4;
   
   
   
-  var box5 = new Platform("plane", 240, 200, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box5);
+  var box5 = new Platform("plane", 240, 200, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  this.system.add(box5);
+  // this.system.sceneGrapth.add(box5);
   
   
+  // 
   
+  var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  this.system.add(box5);
+  // this.system.sceneGrapth.add(box5);
   
-  var box5 = new Platform("plane", 180, 260, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box5);
-  
-  
+  // 
   for (var i = 0; i < 20; i++) {
   
     var w = 80;
     var h = 8;
-    var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-    this.system.sceneGrapth.add(box);
+    var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), 0, w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+    this.system.add(box);
+    // this.system.sceneGrapth.add(box);
   
   
   }
-  // 
+  
   
 
   // debugger
@@ -87,15 +92,17 @@ disc.load = function(){
   // aa.start();
   
   
-  // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-  var aa = new Player("aa", 470, 300, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-  this.system.sceneGrapth.add(aa);
-  // aa.canUpdate = false;
-  // for now we need some defaults items to get the bot to walk
-  // aa.platform = box3;
-  // aa.directionVector.x = 1;
-  
-  aa.start();
+        // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        var aa = new Player("aa", 470, 300, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        this.system.add(aa);
+        // this.system.sceneGrapth.add(aa);
+        window.player__ = aa;
+        // aa.canUpdate = false;
+        // for now we need some defaults items to get the bot to walk
+        // aa.platform = box3;
+        // aa.directionVector.x = 1;
+        
+        aa.start();
   
   // aa.platform = box3;
   
