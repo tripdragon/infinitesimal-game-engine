@@ -309,8 +309,8 @@ export class Plane extends Quark {
     //   // now process all the children
     // 
     //   var worldMatrix = this.worldMatrix;
-    //   if(this.peeps.length > 0){
-    //     this.peeps.forEach(function(item) {
+    //   if(this.friends.length > 0){
+    //     this.friends.forEach(function(item) {
     //       item.updateWorldMatrix(worldMatrix);
     //     });
     //   }

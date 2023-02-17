@@ -16,6 +16,7 @@ import { drawSceneScreenspace as _drawSceneScreenspace } from "./drawsceneScreen
 
 import { loadSquares } from "../Demos/loadSquares.js";
 import { SceneGrapth } from "./SceneGrapth.js";
+import { Pointer } from "./Pointer.js";
 
 import { loop as _loop } from "./loop.js";
 
@@ -89,11 +90,32 @@ export class Basestation {
   
   backgroundColor = {r:0,g:0,b:0,a:1};
   
+  // need more logic, to a classsss!!!
   // need a default far z
-  pointer = { x: 0, y: 0, z:0};
-  pointerXYScalar = 12;
-  pointerGrid = 1; // ideally there are multiple grids, so its more a function, object dimentions matter
+  // pointer = new Vector3();
+  pointer = new Pointer(this);
+  
+  
+  // pointerXYScalar = 12;
+  // pointerGrid = 1; // ideally there are multiple grids, so its more a function, object dimentions matter
   // pointer = {x:0,y:0};
+  // this is for 3d coords
+  // onPointerMove( event ) {
+  //   this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  //   this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  // }
+  // 
+  // //   window.addEventListener( 'pointermove', onPointerMove, true );
+  // onPointerMoveScreenSpace( event ) {
+  // 
+  //   this.pointer.x = event.clientX;
+  //   this.pointer.y = event.clientY;
+  //   // console.log(that.system.pointer);
+  // 
+  //   // we can add this later in another event
+  //   // EditorModeActions.pointerMoving(); 
+  // }
+  
   /*
   function onPointerMove( event ) {
 
@@ -191,7 +213,8 @@ export class Basestation {
   
   
   
-  sceneGrapth = new SceneGrapth(this);
+  // sceneGrapth = new SceneGrapth(this);
+  sceneGrapth = null;
   // made it a getter cause typing that always is a bit much
   // but now its a function .... hrmmmm
   get colliders(){
@@ -249,6 +272,7 @@ export class Basestation {
   
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
+    this.sceneGrapth = new SceneGrapth(this);
     this.bootUp_CM();
     // this.screenSpaceMode = this.screenModes.screen;
     // this.colliders = this.sceneGrapth.layers.colliders;
@@ -261,12 +285,14 @@ export class Basestation {
       this.getKeyDown(ev); 
     }
     
+    window.addEventListener( 'pointermove', this.pointer.onPointerMove.bind(this.pointer), true );
+    
     // need expected mouse coords
-    if(this.screenSpaceMode === this.screenModes.main3d){
-    }
-    else {
-      document.addEventListener( 'pointermove', this.onPointerMoveScreenSpace.bind(this) );
-    }
+    // if(this.screenSpaceMode === this.screenModes.main3d){
+    // }
+    // else {
+    //   document.addEventListener( 'pointermove', this.onPointerMoveScreenSpace.bind(this) );
+    // }
     // hrmmmmm
     // //   this.system.screenSpaceMode = this.system.screenModes.screen;
     // // document.addEventListener( 'pointermove', this.onPointerMove.bind(this) );
@@ -313,29 +339,13 @@ export class Basestation {
   unloadDisc(){
     console.warn("unloadDisc NOT GOOD ENOUGH!!!");
     // simply trash arrays for now
-    this.sceneGrapth = new SceneGrapth();
+    this.sceneGrapth = new SceneGrapth(this);
     // needs world.DeleteAll
     console.warn("needs world.DeleteAll");
     this.addWorld();
   }
   
-  // this is for 3d coords
-  onPointerMove( event ) {
-    this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-  }
-  
-  //   window.addEventListener( 'pointermove', onPointerMove, true );
-  onPointerMoveScreenSpace( event ) {
 
-    this.pointer.x = event.clientX;
-    this.pointer.y = event.clientY;
-    // console.log(that.system.pointer);
-    
-    // we can add this later in another event
-    // EditorModeActions.pointerMoving(); 
-  }
-  
   
   
   

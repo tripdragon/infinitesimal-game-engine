@@ -38,13 +38,15 @@ export class SceneGrapth{
   
   // need to add compare istype etc
   add(thingy){
+    // debugger
     if(thingy instanceof Quark){
       
       this.objects.push(thingy);
       
       if(!thingy.system){
-        thingy.system = this.system;
       }
+      thingy.system = this.system;
+      // debugger
       
       if(thingy.canCollide){
         this.layers.colliders.push(thingy);

@@ -127,7 +127,10 @@ export function pointInRect(point, rect){
 export function pointInBoundingBoxScreenSpace(point, box){
   var wasin = false;
   // debugger
-  if(point.x > box.min.x && point.y > box.max.y && point.x < box.max.x && point.y < box.min.y){
+  // if(point.x > box.min.x && point.y > box.max.y && point.x < box.max.x && point.y < box.min.y){
+  //   return true;
+  // }
+  if(point.x > box.min.x && point.y > box.min.y && point.x < box.max.x && point.y < box.max.y){
     return true;
   }
   return wasin;

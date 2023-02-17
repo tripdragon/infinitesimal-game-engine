@@ -21,6 +21,13 @@ export class Color{
     return new Color().copy(this);
   }
   
+  random(){
+    this.r = Math.random();
+    this.g = Math.random();
+    this.b = Math.random();
+    return this;
+  }
+  
 
   
 }

@@ -95,7 +95,7 @@ export class Rectangle extends Quark {
     // // hrrrmmmmm
     // // for a box in 3D its expected at center for transforms
     // // and maybe bottom for a character
-    // // but a charecter its more likely a parent peeps sit
+    // // but a charecter its more likely a parent friends sit
     // // you can draw its offset in GL
     // // but what is position then????
     // this.originCompute(this.width, this.height, 0);

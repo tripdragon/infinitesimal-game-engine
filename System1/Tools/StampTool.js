@@ -76,7 +76,8 @@ export class StampTool extends Tool {
     // this.system.canvas.addEventListener( 'pointerdown', this.editorModeActions._pointerDown.bind(this.editorModeActions) );
 
 
-    this.system.sceneGrapth.add(this.visualObject);
+    // this.system.sceneGrapth.add(this.visualObject);
+    this.system.add(this.visualObject);
     
     
 
@@ -113,7 +114,8 @@ export class StampTool extends Tool {
   stop(){
     console.log("Stop????? 222");
     
-    this.system.sceneGrapth.remove(this.visualObject);
+    // this.system.sceneGrapth.remove(this.visualObject);
+    this.system.remove(this.visualObject);
     
     console.log(`${this.displayName} stop`);
     
@@ -124,8 +126,10 @@ export class StampTool extends Tool {
   // will need to feed this a grid somehow
   update(){
     // console.log(this.system.pointer);
-    this.visualObject.x = this.system.pointer.x;
-    this.visualObject.y = this.system.pointer.y;
+    // this.visualObject.x = this.system.pointer.client.x;
+    // this.visualObject.y = this.system.pointer.client.y;
+    this.visualObject.x = this.system.pointer.worldUV.x;
+    this.visualObject.y = this.system.pointer.worldUV.y;
   }
 
   pointerUp(){
@@ -137,7 +141,8 @@ export class StampTool extends Tool {
       ff.start(); //optional
       
       console.log(ff);
-      this.system.sceneGrapth.add(ff);
+      // this.system.sceneGrapth.add(ff);
+      this.system.add(ff);
       console.log("pointerUp");
       
       

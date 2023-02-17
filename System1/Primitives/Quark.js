@@ -99,8 +99,8 @@ export class Quark {
     // now process all the children
     
     var worldMatrix = this.worldMatrix;
-    if(this.peeps.length > 0){
-      this.peeps.forEach(function(item) {
+    if(this.friends.length > 0){
+      this.friends.forEach(function(item) {
         item.updateWorldMatrix(worldMatrix);
       });
     }
@@ -244,31 +244,31 @@ export class Quark {
   get parent(){
     return this._parent;
   }
-  set parent(peep){
-    if(peep instanceof Quark){
-      peep.add(this);
+  set parent(friend){
+    if(friend instanceof Quark){
+      friend.add(this);
     }
-    else if(peep === null){
-      peep.remove(this);
+    else if(this.friend === null){
+      friend.remove(this);
     }
   }
   
-  //peeps = new Set();
-  peeps = [];
+  //friends = new Set();
+  friends = [];
   
-  add(peep){
+  add(friend){
       // if typeOf is needed
-      if(peep instanceof Quark){
-        var index = this.peeps.indexOf(peep);
+      if(friend instanceof Quark){
+        var index = this.friends.indexOf(friend);
         if(index > -1){
-          console.log("already have peep");
+          console.log("already have friend");
         }
         else {
-          if(peep._parent !== null){
-            peep._parent.remove(peep);
+          if(friend._parent !== null){
+            friend._parent.remove(friend);
           }
-          this.peeps.push(peep);
-          peep._parent = this;
+          this.friends.push(friend);
+          friend._parent = this;
           // debugger
         }
       }
@@ -276,18 +276,33 @@ export class Quark {
         console.warn("not instanceof Quark");
       }
   }
-  remove(peep){
-    if(peep instanceof Quark){
-      var index = this.peeps.indexOf(peep);
+  remove(friend, shouldDelete){
+    // console.warn("need to check if this REEAAAALLLY clears the buffers and such");
+    if(friend instanceof Quark){
+      var index = this.friends.indexOf(friend);
       if(index > -1){
-        this.peeps.splice(index,1);
-        peep._parent = null;
+        this.friends.splice(index,1);
+        friend._parent = null;
+        
+        if(shouldDelete){
+          this.delete();
+        }
       }
     }
     else {
       console.warn("not instanceof Quark");
     }
   }
+  delete(){
+    if(this.parent){
+      this.parent.remove(this);
+    }
+    
+    this.system.sceneGrapth.remove(this);
+    
+    console.warn("need to check if this REEAAAALLLY clears the buffers and such");
+  }
+  
   
   // NOT USEd d yet, see source
   // this MUST be an enum
@@ -510,7 +525,7 @@ export class Quark {
     // // hrrrmmmmm
     // // for a box in 3D its expected at center for transforms
     // // and maybe bottom for a character
-    // // but a charecter its more likely a parent peeps sit
+    // // but a charecter its more likely a parent friends sit
     // // you can draw its offset in GL
     // // but what is position then????
     this.originCompute(this.width, this.height, 0);

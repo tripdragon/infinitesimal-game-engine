@@ -81,7 +81,7 @@ disc.load = function(){
   //   rows : 20,
   //   columns : 40  
   // }
-  var grid = new Grid(40,20,40);
+  var grid = new Grid(40,20,40, this.system);
   
   for (var ii = 0; ii < grid.rows; ii++) {
     for (var mm = 0; mm < grid.columns; mm++) {
@@ -120,6 +120,14 @@ disc.load = function(){
 
 var _this = this;
 
+// later need this
+// https://stackoverflow.com/questions/39905892/three-js-orthographic-camera-zoom-to-mouse-point
+// https://threejs.org/docs/#api/en/core/Raycaster
+// https://threejs.org/docs/?q=vect#api/en/math/Vector3.unproject
+
+
+// there should already be a mouse event
+// oh we did not dumb this into a render hook
 /// div griid test
 function onPointerMove( event ) {
 
@@ -159,12 +167,16 @@ function onPointerMove( event ) {
   // 
   
   
+  
   // the _this.system.gameHeight - is to move the mouse point into y bottom space
   // HOWEVER this wont work with the world offset just yet
   // need to EITHER raycast and convert
   // OR and multyply by the worlds matrix
   
-  grid.snap(_this.system.pointer.x, _this.system.pointer.y);
+  grid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
+  // console.log("screen", _this.system.pointer.screen);
+  // console.log("3d", _this.system.pointer.world);
+  
   // console.log("_this.system.pointer.y", _this.system.pointer.y);
   var gx = grid.position.x;
   // var gy = _this.system.gameHeight - grid.position.y;
@@ -190,17 +202,24 @@ function onPointerMove( event ) {
   // box1.y = fy;
   
   // box2.x = gx;
-  box2.x = gx - _this.system.world.position.x;
+  // box2.x = gx - _this.system.world.position.x;
+  box2.x = grid.position3D.x;
+  // box2.y = gy;
+  box2.y = grid.position3D.y;
   // box2.y = _this.system.gameHeight - gy;
-  box2.y = (_this.system.gameHeight - gy) - _this.system.world.position.y;
+  // box2.y = (_this.system.gameHeight - gy) - _this.system.world.position.y;
   // console.log(gy);
   
   box3.x = gx + grid.size;
-  box3.y = _this.system.gameHeight - gy;
+  // box3.y = _this.system.gameHeight - gy;
+  // box3.y = gy;
+  box3.y = grid.position3D.y;
   
 }
 
 window.addEventListener( 'pointermove', onPointerMove );
+
+
 
 console.log("grid.size", grid.size);
 

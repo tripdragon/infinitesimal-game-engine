@@ -1,4 +1,28 @@
 
+/*
+
+debug within
+
+
+plat = box4;
+plat.boundingBox.print()
+
+point = {x:0,y:0}
+point.x = plat.boundingBox.min.x;
+point.y = plat.boundingBox.max.y;
+
+if(box){
+box.delete()
+box = null;
+}
+var box = new Plane("boxlike", point.x, point.y, 0, 10, 10, new Color().random());
+APPPP.add(box);
+
+pointInBoundingBoxScreenSpace(point, plat)
+
+*/
+
+
 
 
 // It would be nice to be able to use a tool without a ToolsController
@@ -9,14 +33,17 @@ import { AABBTest, pointInRect, pointInBoundingBoxScreenSpace } from "../Modules
 
 import { Tool } from "./Tool.js";
 import { Plane } from "../Primitives/Plane.js";
+import { Platform } from "../Primitives/Platform.js";
+import { Vector3 } from "../Modules/Vector3.js";
+import { Color } from "../Modules/Color.js";
 
 export class SelectTool extends Tool {
   
   selectedObject = null;
   
   isMouseDown = false;
-  mPointerPos = {x:0,y:0};
-  mSelectedPos = {x:0,y:0};
+  mPointerPos = new Vector3();
+  mSelectedPos = new Vector3();
   
   // var wasEverIN = false;
   
@@ -43,6 +70,10 @@ export class SelectTool extends Tool {
       this.update();
     };
     
+    // debugger
+    window.pointInBoundingBoxScreenSpace = pointInBoundingBoxScreenSpace;
+    window.Plane = Plane;
+    window.Color = Color;
     
   }
   
@@ -63,22 +94,27 @@ export class SelectTool extends Tool {
   }
   
   pointerDown(){
-    
     var wasIn = false;
     
     if(this.selectedObject !== null){
       
-      if(this.selectedObject instanceof Plane){
-        wasIn = pointInBoundingBoxScreenSpace(this.system.pointer, this.selectedObject);
+      if(this.selectedObject instanceof Plane || this.selectedObject instanceof Platform){
+        // debugger
+        // wasIn = pointInBoundingBoxScreenSpace(this.system.pointer, this.selectedObject);
+        // wasIn = pointInBoundingBoxScreenSpace(this.system.pointer.client, this.selectedObject);
+        wasIn = pointInBoundingBoxScreenSpace(this.system.pointer.worldUV, this.selectedObject);
       }
       else {
-        wasIn = pointInRect(this.system.pointer, this.selectedObject);
+        wasIn = pointInRect(this.system.pointer.worldUV, this.selectedObject);
       } 
       
       if(wasIn){
         this.mode = this.modes.canDrag;
-        this.mPointerPos.x = this.system.pointer.x;
-        this.mPointerPos.y = this.system.pointer.y;
+        // this.mPointerPos.x = this.system.pointer.x;
+        // this.mPointerPos.y = this.system.pointer.y;
+        // this.mPointerPos.copy(this.system.pointer.client);
+        this.mPointerPos.copy(this.system.pointer.worldUV);
+
         this.mSelectedPos.x = this.selectedObject.x;
         this.mSelectedPos.y = this.selectedObject.y;
         this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
@@ -96,7 +132,10 @@ export class SelectTool extends Tool {
 
   mouseSelecting(){
     
-    var pointer = this.system.pointer;
+    // var pointer = this.system.pointer.client;
+    var pointer = this.system.pointer.worldUV;
+    
+    // console.log("pointer UV", this.system.pointer.worldUV);
     
     if(this.mode === this.modes.mousing){
       
@@ -123,7 +162,7 @@ export class SelectTool extends Tool {
         }
         
         var wasIn = false;
-        if(wall instanceof Plane){
+        if(wall instanceof Plane || wall instanceof Platform){
           wasIn = pointInBoundingBoxScreenSpace(pointer, wall);
           // debugger
         }

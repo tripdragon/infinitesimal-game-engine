@@ -15,12 +15,6 @@ export let loop = function(){
   // console.log(this.pointer);
   //console.log("moof");
   
-  // we need a larger mouse mover
-  // this.fauxPointer.x = this.pointer.x * this.pointerXYScalar;
-  // this.fauxPointer.y = this.pointer.y * this.pointerXYScalar;
-  // //this.fauxPointer.z = this.pointer.z;
-  // this.fauxPointer.z = -100.0;
-  
   
   this.loopHookPoints.editorBeforeDraw();
   

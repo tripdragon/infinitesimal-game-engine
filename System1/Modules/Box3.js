@@ -1,5 +1,29 @@
 
 
+/*
+
+debug within
+
+
+plat = box4;
+plat.boundingBox.print()
+
+point = {x:0,y:0}
+point.x = plat.boundingBox.min.x;
+point.y = plat.boundingBox.max.y;
+
+if(box){
+box.delete()
+box = null;
+}
+var box = new Plane("boxlike", point.x, point.y, 0, 10, 10, new Color().random());
+APPPP.add(box);
+
+pointInBoundingBoxScreenSpace(point, plat)
+
+*/
+
+
 // most of this will be copied from THREE.js
 import { Vector3 } from "../Modules/Vector3.js";
 import { AABBTestScreenSpace, AABBTest3D, AABBTestScreenSpace222BackToTopYYY } from "./Colliders/collisions.js";
@@ -43,6 +67,11 @@ export class Box3{
     // this.max.y += val;
     this.max.z += -val; // dont know z yet
     return this;
+  }
+  
+  print(){
+    console.log(this.min.x, this.max.y, "____", this.max.x, this.max.y);
+    console.log(this.min.x, this.min.y, "____", this.max.x, this.min.y);
   }
   
 }

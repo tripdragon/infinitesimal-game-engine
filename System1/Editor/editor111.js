@@ -66,9 +66,9 @@ export class Editor111 extends Editor {
     
     console.warn("Note we still need .visible = false instead of drawing offscreen -40");
     var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
-    wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:1,b:1,a:1});
+    wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
     wobjetStamper_tool.visualObject.canUpdate = false;
-    wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:0,b:1,a:1}, this.system);
+    wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:0,b:1,a:1}, this.system);
     
 
 
@@ -80,9 +80,9 @@ export class Editor111 extends Editor {
     
     
     var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
-    wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
+    wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
     wobjetStamper_tool222.visualObject.canUpdate  = false;
-    wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
     
 
     EditorMagic.addTool(wobjetStamper_tool222);
@@ -93,9 +93,9 @@ export class Editor111 extends Editor {
     
     console.warn("TEMPPPPPP    alien3 ");
     var wobjetStamper_tool333 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
-    wobjetStamper_tool333.visualObject = new Alien2("newRect", -40, -40, 40, 40, {r:1,g:0,b:1,a:1});
+      wobjetStamper_tool333.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
     wobjetStamper_tool333.visualObject.canUpdate  = false;
-    wobjetStamper_tool333.stampingObject = new Alien1("newRect", -40, -40, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    wobjetStamper_tool333.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
     
     
       var aa = wobjetStamper_tool333.stampingObject;
@@ -365,6 +365,51 @@ export class Editor111 extends Editor {
 
 
 
+    
+    // map mover
+    // this belongs in editor class
+    
+    var content = document.getElementById('gamespace');
+
+
+    var joy1 = new DRRR_Joysticky("joy1", 100, 80, 0, 1.0, 100, 100);
+    // content.appendChild(joy1);
+    panel.appendChild(joy1);
+    joy1.style.zIndex = 100;
+    // joy1.style.position = "absolute";
+
+    // var joy2 = new DRRR_Joysticky("joy1", 200, 200, 0, 1.0, 0.5, 0.5, false);
+    // content.appendChild(joy2);
+    
+    function remap(from0, to0, from1, to1, value) {
+        return from1 + (to1 - from1) * (value - from0) / (to0 - from0);
+    }
+
+    window.addEventListener('joystickUpdate', function(ev){
+      // debugger
+      // console.log("mouse",ev.detail.value.mouse);
+      // console.log("normalizedUV",ev.detail.value.normalizedUV);
+      var nor = ev.detail.value.normalizedUV;
+      
+      // var valX = remap(0,1, -400, 890*2,  nor.x);
+      // var valY = remap(0,1, -200, 490,  nor.y);
+      
+      // APPPP.cameraDefault.x = 1 - (890*2) * nor.x;
+      
+      // APPPP.cameraDefault.x = valX;
+      // APPPP.cameraDefault.y = valY;
+      // 
+      
+      var valX = remap(0,1, -1800, 890*2,  nor.x);
+      var valY = remap(0,1, -200, 490,  nor.y);
+      
+      APPPP.world.x = valX;
+      APPPP.world.y = valY;
+      
+      
+      // APPPP.cameraDefault.x = -10
+    });
+    
 
     
     

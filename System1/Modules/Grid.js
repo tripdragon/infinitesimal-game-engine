@@ -1,4 +1,14 @@
 
+/*
+
+var grid = new Grid(40,20,40, this.system);
+grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
+box2.x = grid.position3D.x;
+box2.y = grid.position3D.y;
+
+*/
+
+
 import {Vector3} from '../Modules/Vector3.js';
 
 // this produces a numeric grid
@@ -6,17 +16,25 @@ import {Vector3} from '../Modules/Vector3.js';
 // idea is that there will be many different sizes of grids
 // so make many and feed it snap(xy) and reference .position
 // from there you could make a visual layer with div or canvas
+
+// Related to Pointer() just dont know how to merge yet
+
 export class Grid{
   size = 40;
   rows = 20;
   columns = 40;
   
+  system;
+  
   position = new Vector3();
   
-  constructor(size = 40, rows = 20, columns = 20){
+  position3D = new Vector3();
+  
+  constructor(size = 40, rows = 20, columns = 20, system){
     this.size = size;
     this.rows = rows;
     this.columns = columns;
+    this.system = system;
   }
   
   snap(_x,_y, vectorIn){
@@ -31,6 +49,8 @@ export class Grid{
     
     
     // more work but it snaps at the half with this stack
+    // should this y be ceil??? since 3d y is UP
+    // No that looks wrong in testing
     var ix = Math.floor( _x / this.size);
     var iy = Math.floor( _y / this.size);
     
@@ -52,13 +72,13 @@ export class Grid{
     if(vectorIn){
       vectorIn.x = xx;
       vectorIn.y = yy;
-      return vectorIn;
+      // return vectorIn;
     }
     else {
       this.position.x = xx;
       this.position.y = yy;
       this.position.z = 0;
-      return this.position;
+      // return this.position;
     }
     
     
@@ -84,6 +104,18 @@ export class Grid{
     // not right, the 
     // box2.x = gx;
     // box2.y = gy;
+    
+    return this;
+  }
+  
+  // this will at some ponti need a matirx instead
+  screenTo3D(vectorIn){
+    this.position3D.x = this.position.x - this.system.world.position.x;
+    this.position3D.y = this.system.gameHeight - this.position.y - this.system.world.position.x;
+    if(vectorIn){
+      vectorIn.copy(this.position3D);
+    }
+    return this;
   }
   
   

@@ -12,7 +12,7 @@ import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
 import { Platform } from "../Primitives/Platform.js";
 
-
+import { Grid } from "../Modules/Grid.js";
 
 import { Editor111 } from "../Editor/editor111.js";
 import { Alien1 } from "../Cast/Alien1.js";
@@ -39,22 +39,25 @@ disc.load = function(){
   
   
   // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  var box3 = new Platform("plane", 440, 400, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box3);
+  var box3 = new Platform("plane", 440, 400, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // this.system.sceneGrapth.add(box3);
+  this.system.add(box3);
   window.box3 = box3;
 
 
   // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  var box4 = new Platform("plane", 580, 600, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.sceneGrapth.add(box4);
+  var box4 = new Platform("plane", 580, 500, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // this.system.sceneGrapth.add(box4);
+  this.system.add(box4);
   window.box4 = box4;
 
 
 
 
   // debugger
-  var aa = new Alien1("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-  this.system.sceneGrapth.add(aa);
+  var aa = new Alien1("aa", 320, 320, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+  // this.system.sceneGrapth.add(aa);
+  this.system.add(aa);
   // aa.canUpdate = false;
   // for now we need some defaults items to get the bot to walk
   // aa.platform = box3;
