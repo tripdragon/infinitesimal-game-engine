@@ -159,8 +159,15 @@ function onPointerMove( event ) {
   // 
   
   
+  // the _this.system.gameHeight - is to move the mouse point into y bottom space
+  // HOWEVER this wont work with the world offset just yet
+  // need to EITHER raycast and convert
+  // OR and multyply by the worlds matrix
+  
   grid.snap(_this.system.pointer.x, _this.system.pointer.y);
+  // console.log("_this.system.pointer.y", _this.system.pointer.y);
   var gx = grid.position.x;
+  // var gy = _this.system.gameHeight - grid.position.y;
   var gy = grid.position.y;
   
   // simpler left top hard snap
@@ -182,11 +189,14 @@ function onPointerMove( event ) {
   // box1.x = fx;
   // box1.y = fy;
   
-  box2.x = gx;
-  box2.y = gy;
+  // box2.x = gx;
+  box2.x = gx - _this.system.world.position.x;
+  // box2.y = _this.system.gameHeight - gy;
+  box2.y = (_this.system.gameHeight - gy) - _this.system.world.position.y;
+  // console.log(gy);
   
   box3.x = gx + grid.size;
-  box3.y = gy;
+  box3.y = _this.system.gameHeight - gy;
   
 }
 
@@ -195,13 +205,16 @@ window.addEventListener( 'pointermove', onPointerMove );
 console.log("grid.size", grid.size);
 
 // rectangle to debug with
-var box1 = new Rectangle("box", 100, 100, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
-var box2 = new Plane("plane", 0, 0, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1});
-var box3 = new Plane("plane", 0, 0, grid.size, grid.size, {r:0.4,g:0.5,b:0.2,a:1});
+var box1 = new Rectangle("box", 100, 100, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1}, this.system);
+var box2 = new Plane("plane", 0, 0, 0, grid.size, grid.size, {r:0.4,g:0.4,b:0.7,a:1}, this.system);
+var box3 = new Plane("plane", 0, 0, 0, grid.size, grid.size, {r:0.4,g:0.5,b:0.2,a:1}, this.system);
 // debugger
-this.system.sceneGrapth.add(box1);
-this.system.sceneGrapth.add(box2);
-this.system.sceneGrapth.add(box3);
+// this.system.sceneGrapth.add(box1);
+// this.system.sceneGrapth.add(box2);
+// this.system.sceneGrapth.add(box3);
+this.system.add(box1);
+this.system.add(box2);
+this.system.add(box3);
 // debugger
 window.box1 = box1;
 window.box2 = box2;

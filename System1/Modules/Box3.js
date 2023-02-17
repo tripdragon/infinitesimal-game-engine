@@ -35,10 +35,12 @@ export class Box3{
   addPaddingScreenSpace(val){
     this.min.x += -val;
     this.min.y += val;
+    // this.min.y += -val;
     this.min.z += val; // dont know z yet
     
     this.max.x += val;
     this.max.y += -val;
+    // this.max.y += val;
     this.max.z += -val; // dont know z yet
     return this;
   }

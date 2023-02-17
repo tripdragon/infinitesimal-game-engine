@@ -155,7 +155,7 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     var ff = app.sceneGrapth.objects[i];
     ff.gl = gl;
     // 
-    if(ff.subType === "world"){
+    if(ff.subType === "worldsdfsdg"){
       // debugger
       
       // if (ff.x > 400) {
