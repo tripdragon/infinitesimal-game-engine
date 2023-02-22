@@ -76,7 +76,7 @@ export class StampTool extends Tool {
     // this.system.canvas.addEventListener( 'pointerdown', this.editorModeActions._pointerDown.bind(this.editorModeActions) );
 
 
-    // this.system.sceneGrapth.add(this.visualObject);
+
     this.system.add(this.visualObject);
     
     
@@ -87,15 +87,8 @@ export class StampTool extends Tool {
     };
     
     // Stamp action
-
-    // need to cache perfect signature 
-    // this.pointerUpEvent = () => this.pointerUp();
-    // if( this.pointerUpEvent === null){
-    //   this.pointerUpEvent = this.pointerUp.bind(this);
-    // }
+    
     this.bindUpEvent();
-
-    // this.system.canvas.addEventListener( 'pointerup', this.pointerUpEvent );
 
     
     console.log(`${this.displayName} start`);
@@ -120,6 +113,8 @@ export class StampTool extends Tool {
     console.log(`${this.displayName} stop`);
     
     this.system.canvas.removeEventListener( 'pointerup', this.pointerUpEvent );
+    this.system.canvas.removeEventListener( 'pointerdown', this.pointerDownEvent );
+    this.system.canvas.removeEventListener( 'pointermove', this.pointerMoveEvent );
 
   }
   
@@ -145,6 +140,8 @@ export class StampTool extends Tool {
       this.system.add(ff);
       console.log("pointerUp");
       
+      console.warn("global recent here for debug");
+      window.recent = ff;
       
       // 
       // var outColliders = [];

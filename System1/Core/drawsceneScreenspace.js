@@ -153,6 +153,9 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
   
   for (var i = 0; i < app.sceneGrapth.objects.length; i++) {
     var ff = app.sceneGrapth.objects[i];
+    if(ff.visible === false){
+      continue; // skip this render
+    }
     ff.gl = gl;
     // 
     if(ff.subType === "worldsdfsdg"){

@@ -1,5 +1,8 @@
 
 
+
+// mostly from THREE.js Color
+
 export class Color{
   r = 1;
   g = 1;
@@ -27,6 +30,23 @@ export class Color{
     this.b = Math.random();
     return this;
   }
+  
+  // 0x00ff37 insteaf of "#00ff37"
+  // setHex( hex, colorSpace = SRGBColorSpace ) {
+  setHex( hex ) {
+
+		hex = Math.floor( hex );
+
+		this.r = ( hex >> 16 & 255 ) / 255;
+		this.g = ( hex >> 8 & 255 ) / 255;
+		this.b = ( hex & 255 ) / 255;
+
+    // not using this yet
+		//ColorManagement.toWorkingColorSpace( this, colorSpace );
+
+		return this;
+
+	}
   
 
   

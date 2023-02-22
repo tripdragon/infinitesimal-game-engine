@@ -41,6 +41,8 @@ export class Quark {
   
   lv = 0;
   
+  visible = true;
+  
   
   // max = new Vector3();
   
@@ -172,6 +174,8 @@ export class Quark {
   //   return this._position;
   // }
   
+  
+  
   // NOTE if you mutate this vector directly you must call updateBoundingBox()
   // and maybe update local matrix as well
   // need a wrapper function
@@ -226,7 +230,25 @@ export class Quark {
   color = new Color();
   mColor = new Color();
   
+  // for color and such
+  selectState(){
+    this.mColor.copy(this.color);
+  }
+  deselectState(){
+    this.color.copy(this.mColor);
+  }
+  
+  
+  // this is NOT the position, dont have rules for this yet
   origin = new Vector3();
+  
+  // this belongs on the object as a method
+  // this is just a centroid
+  originCompute(width, height, depth = 0){
+    this.origin.x = width/2;
+    this.origin.y = height/2;
+    this.origin.z = depth/2;
+  }
   
   pointsCount = 0;
   
@@ -331,6 +353,7 @@ export class Quark {
   playHelpers = {};
   
   play(){}
+  start(){}
   
   
   
@@ -381,6 +404,9 @@ export class Quark {
   // change per subclass
   // HRmmmmm max y is wrong for screenspace
   // NOTE: DONT know why this works worldMatrix offset, but it seems to ?!?!?!
+  // THIS FAILS if the position is not in the center of the geometry
+  // Its wrong anyway, AABB is still a local space coords thing
+  // you move it via a matrix when nessesary as expected
   computeBoundingBox(){
     this.boundingBox.min.x = (-this.width / 2) + this.x;
     // y starts at bottom as it should!
@@ -401,57 +427,22 @@ export class Quark {
   }
   
   
-
-  // // 
-  // worldPosition(){
-  // 
-  // }
-
-
-  // clone(){
-  // // debugger
-  // // this.tacos = "derps";
-  // this.gl = 
-  // }
-  // copyTo(thing){
-  //   thing.system = this.system;
-  //   thing.gl = this.gl;
-  //   thing.x = this.x;
-  //   thing.y = this.y;
-  //   thing.z = this.z;
-  //   thing.position = this.position.clone();
-  //   thing.width = this.width;
-  //   thing.height = this.height;
-  //   thing.isType = this.isType;
-  //   thing.subType = this.subType;
-  //   thing.boxPadding = this.boxPadding;
-  // 
-  //   thing.boundingBox = this.boundingBox.clone();
-  //   thing.boundingBoxPadding = this.boundingBoxPadding.clone();
-  // 
-  //   // thing.color = this.color;
-  //   thing.color = this.color.clone();
-  //   // thing.origin = this.origin;
-  //   thing.origin = this.origin.clone();
-  //   thing.pointsCount = this.pointsCount;
-  //   thing.canUpdate = this.canUpdate;
-  //   thing.useInEditMode = this.useInEditMode;
-  //   thing.canCollide = this.canCollide;
-  //   thing.name = this.name;
-  //   // not sure about these yet
-  //   thing.playCode = this.playCode;
-  //   thing.playCodeDecompressed = this.playCodeDecompressed;
-  //   thing.playHelpers = this.playHelpers;
-  //   thing.update = this.update;
-  //   thing.play = this.play;
-  // }
+  // roughing roughly from THREEjs
+  // mainly move the coords of the boundingbox to the cameras matrix space
+  raycastCheck(ray){
+    
+  }
   
+  
+
   clone(){
-    return this.constructor().copy(this);
+    // constructor(name, x, y, z, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system)
+    return this.constructor(this.name, this.x, this.y, this.z, this.width, this.height, this.depth, this.color.clone(), this.system).copy(this);
   }
   
   copy(thing){
     this.system = thing.system;
+    this.visible = thing.visible;
     this.gl = thing.gl;
     this.x = thing.x;
     this.y = thing.y;
@@ -468,7 +459,6 @@ export class Quark {
     
     // this.color = thing.color;
     this.color = thing.color.clone();
-    // this.origin = thing.origin;
     this.origin = thing.origin.clone();
     this.pointsCount = thing.pointsCount;
     this.canUpdate = thing.canUpdate;
@@ -495,15 +485,8 @@ export class Quark {
   
 
   
-  
 
-  
-  // this belongs on the object as a method
-  originCompute(width, height, depth = 0){
-    this.origin.x = width/2;
-    this.origin.y = height/2;
-    this.origin.z = depth/2;
-  }
+
 
   // we never have the gl available yet on start of game....
   // maaaaybe we should, but for now just make it name

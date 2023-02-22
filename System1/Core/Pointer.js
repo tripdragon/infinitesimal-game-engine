@@ -1,5 +1,8 @@
 
 
+//     window.addEventListener( 'pointermove', this.pointer.onPointerMove.bind(this.pointer), true );
+
+
 // import { SceneGrapth } from "./SceneGrapth.js";
 
 // import { loop as _loop } from "./loop.js";
@@ -28,12 +31,16 @@ export class Pointer {
   onPointerMove( event ) {
     // debugger
     // return
+    // cartesian
     this.worldCenter.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.worldCenter.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     
+    // screen y top mouse
     this.client.x = event.clientX;
     this.client.y = event.clientY;
     
+    
+    // y bottom in 3d space
     // this should become a matrix later
     // OR replace with a raycast
     // later need this

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bleep bleep</title>
+    <!-- <script src="mission1.js" type="module" defer></script> -->
+    <!-- 
+    python3 -m http.server 8001 
+    
+    this is just a canvas 2d app for pixel painting for now
+    
+    it shows how class Grid works
+    
+    localhost:8001/System1/Demos/paintgrid.html
+    
+    -->
+
+
+    <style media="screen">
+        *{
+          margin: 0;
+          padding: 0;
+        }
+        body{
+          overflow: hidden;
+        }
+        
+        /* ideally canvas gl is the bottom of the stack */
+        #canvassss {
+          z-index: -1;
+          position: absolute;
+        }
+    </style>
+
+    <style media="screen">
+      /* #controls{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        
+        width: 100px;
+        height: 100px;
+        padding: 20px 0 0 20px;
+      }
+
+      #controls .add{
+        
+      } */
+      
+      #canvassss{
+        /* background-color: orange; */
+      }
+      
+      
+      .button{
+        width: 32px;
+        height: 32px;
+      }
+      
+      #controls222 {
+        position: absolute;
+        top: 0px;
+        z-index: 1;
+        
+        width: 100%;
+        height: 35px;
+        padding: 20px 0 0 20px;
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: flex-start;
+      }
+
+      #controls222 .button {
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+        margin: 0 4px;
+        font-size: 20px;
+        
+      }
+      
+      #ksdjfg{
+        position: absolute;
+        z-index: 12;
+        bottom: 100px;
+        left: 100px;
+        background-color: white;
+        width: 1px;
+        height: 1px;
+      }
+      
+
+    </style>
+    
+    <!-- idea is to inject here and clear when switching games -->
+    <style id="gamestyles" media="screen">
+      .fish {
+        color: "pwgjpodg";
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
+
+    <canvas id="canvassss" width="512" height="512"></canvas>
+
+    <div id="gamespace"></div>
+    <div id="bodyInjectionPointMain">
+    </div>
+
+    <script type="text/javascript">
+        var APPPP;
+
+    </script>
+
+    <script type="module" type="text/javascript">
+      // import AppMain from './AppMain.js';
+      // APPPP = AppMain();
+
+      import {Vector2} from '../Modules/Vector2.js';
+      import {Grid} from '../Modules/Grid.js';
+      
+      const canvas = document.getElementById("canvassss");
+      const canvasBuffer = document.createElement('canvas');
+      canvasBuffer.width = 512;
+      canvasBuffer.height = 512;
+      const ctx = canvas.getContext("2d");
+      const ctxBuffer = canvasBuffer.getContext("2d");
+      
+      window.canvasGG = canvas;
+      
+      var mouse = new Vector2();
+      
+      // var brushSize = 10;
+      window.brushSize = 10;
+      
+      window.brushSizeUnit = 1;
+      
+      var IS_DOWN = false;
+      // en do paint app clean line later
+      var mPointDown = new Vector2();
+      
+      
+      // if you dont get power of 2 numbers it draws borders at times
+      // var sizeToFit = 512 / 9; //sizeToFit = Math.floor(sizeToFit);
+      // var sizeToFit = 512 / Math.pow(2,4);
+      var sizeToFit = 512 / Math.pow(2,5);
+      var grid = new Grid(sizeToFit,1,1,null).computeRowsColumns(512, 512);
+      
+      
+      // grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
+      // box2.x = grid.position3D.x;
+      // box2.y = grid.position3D.y;
+      
+      
+      
+      function rColor(){
+        return Math.floor(Math.random()*255);
+      }
+      
+      // clear once
+      function clear(){
+        
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        ctx.fillRect(0, 0, canvasGG.width, canvasGG.height);
+        
+        for (var ii = 0; ii < grid.rows; ii++) {
+          for (var mm = 0; mm < grid.columns; mm++) {
+            ctx.fillStyle = `rgba(${rColor()}, ${rColor()}, ${rColor()}, 1)`;
+            ctx.fillRect(ii*grid.size, mm*grid.size, grid.size, grid.size);
+          }
+        }
+      }
+      
+      
+      function showGridTopLeft(){
+        for (var ii = 0; ii < grid.rows; ii++) {
+          for (var mm = 0; mm < grid.columns; mm++) {
+            ctx.fillStyle = `rgba(255,255,255, 1)`;
+            var ssb = 10;
+            ctx.fillRect(ii*grid.size, mm*grid.size, ssb, ssb);
+          }
+        }
+      }
+      
+      function showGridCenter(){
+        for (var ii = 0; ii < grid.rows+1; ii++) {
+          for (var mm = 0; mm < grid.columns+1; mm++) {
+            
+            grid.snapAtRowCol(ii, mm);
+            
+            ctx.fillStyle = `rgba(255,255,255, 1)`;
+            var ssb = 10;
+            ctx.fillRect(grid.positionCenter.x- (ssb/2), grid.positionCenter.y - (ssb/2), ssb, ssb);
+            // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, ssb, ssb);
+          }
+        }
+      }
+      
+      
+      // var USE_DEBUGGER_Mouse = true;
+      var USE_DEBUGGER_Mouse = false;
+      
+      
+      function draw() {
+        if (canvas.getContext) {
+
+          if(USE_DEBUGGER_Mouse){
+            // restore canvas
+            ctx.drawImage(canvasBuffer, 0,0);
+            
+          }
+
+          
+          if(IS_DOWN){
+            
+            mPointDown.copy(mouse);
+            
+            // even odd brush sizes would have different snap and builder locations
+            // so an even 2 would be a square
+            
+            // if brushsize 1
+            grid.snap(mouse.x, mouse.y);
+            
+            // ctx.fillRect(mouse.x, mouse.y, brushSize, brushSize);
+            // ctx.fillRect(grid.position.x - (grid.size / 2), grid.position.y - (grid.size / 2), grid.size, grid.size);
+            ctx.fillStyle = "rgba(0, 10, 100, 1)";
+            
+            // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
+            // ctx.fillRect(grid.position.x, grid.position.y, grid.size, grid.size);
+            
+            ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            
+            // 
+            // additional brushes, though a bit computational its narry much to recall
+            // 
+            if(brushSizeUnit === 2){
+              var row = grid.indexRow; var col = grid.indexCol;
+              
+              grid.snapAtRowCol(row-1, grid.indexCol);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+
+              grid.snapAtRowCol(row+1, col);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+              
+              grid.snapAtRowCol(row, col+1);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+              
+              grid.snapAtRowCol(row, col-1);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            }
+            
+          }
+          
+          // showGridTopLeft();
+          // showGridCenter();
+          
+          
+          if(USE_DEBUGGER_Mouse){
+            // we need a little debugger moving box and not in dom element
+            // so copy the canvar and redraw it at the start
+            ctxBuffer.drawImage(canvas, 0,0);
+            
+            grid.snap(mouse.x, mouse.y);
+            ctx.fillStyle = "rgba(10, 10, 10, 1)";
+            // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
+            // ctx.fillRect(grid.position.x, grid.position.y, 10, 10);
+            // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, 10, 10);
+            ctx.fillRect(grid.positionCenter.x - 10/2, grid.positionCenter.y - 10/2, 10, 10);
+            
+            ctx.fillStyle = "rgba(0, 250, 240, 1)";
+            // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
+            ctx.fillRect(grid.position.x - 10/2, grid.position.y - 10/2, 10, 10);
+            
+          }
+          
+          
+          
+          
+        }
+      }
+      
+
+      var loopID;
+      
+      let loop = function(){
+
+        loopID = requestAnimationFrame( loop.bind(this) );
+        // console.log("popcorn");
+        
+        // this.time.now = Date.now();
+        // this.time.delta = this.time.now - this.time.mTime;
+
+        draw();
+        
+        // this.time.mTime = this.time.now;
+      };
+
+      function onPointerMove( event ) {
+        
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        
+        // console.log(mouse);
+
+      }
+      
+      function onPointerDown(ev){
+        // debugger
+        IS_DOWN = true;
+      }
+      function onPointerUp(ev){
+        IS_DOWN = false;
+      }
+      
+      
+      
+      // Setup
+      
+      clear();
+      
+      
+      
+      
+      
+      canvas.addEventListener( 'pointermove', onPointerMove.bind(this), true );
+      canvas.addEventListener( 'pointerdown', onPointerDown.bind(this), true );
+      canvas.addEventListener( 'pointerup', onPointerUp.bind(this), true );
+
+
+
+      loop.call(this);
+    
+
+      
+    </script>
+  </body>
+</html>

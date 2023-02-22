@@ -87,6 +87,27 @@ export class Vector3{
 
   }
   
+  
+	lerp( v, alpha ) {
+
+		this.x += ( v.x - this.x ) * alpha;
+		this.y += ( v.y - this.y ) * alpha;
+		this.z += ( v.z - this.z ) * alpha;
+
+		return this;
+
+	}
+
+	lerpVectors( v1, v2, alpha ) {
+
+		this.x = v1.x + ( v2.x - v1.x ) * alpha;
+		this.y = v1.y + ( v2.y - v1.y ) * alpha;
+		this.z = v1.z + ( v2.z - v1.z ) * alpha;
+
+		return this;
+
+	}
+  
   copy(v){
     this.x = v.x;
     this.y = v.y;

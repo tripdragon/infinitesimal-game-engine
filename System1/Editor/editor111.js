@@ -4,6 +4,7 @@ import { Editor } from "./Editor.js";
 
 import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
+import { Platform } from "../Primitives/Platform.js";
 
 // tools
 import { StampTool } from "../Tools/StampTool.js";
@@ -11,6 +12,12 @@ import { StampTool } from "../Tools/StampTool.js";
 import { Alien1 } from "../Cast/Alien1.js";
 import { Alien2 } from "../Cast/Alien2.js";
 import { SelectTool } from "../Tools/SelectTool.js";
+
+import { Grid } from "../Modules/Grid.js";
+
+
+
+import { PlatformStampTool } from "../Tools/PlatformStampTool.js";
 
 
 
@@ -57,6 +64,8 @@ export class Editor111 extends Editor {
     EditorMagic.addTool(selectTool);
     
     
+    EditorMagic.baseGrid = new Grid(40,20,40, this.system);
+    
     
     
     
@@ -64,13 +73,12 @@ export class Editor111 extends Editor {
     // Stamps
     // 
     
+    // ----
     console.warn("Note we still need .visible = false instead of drawing offscreen -40");
     var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
     wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
     wobjetStamper_tool.visualObject.canUpdate = false;
     wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:0,b:1,a:1}, this.system);
-    
-
 
     EditorMagic.addTool(wobjetStamper_tool);
 
@@ -78,27 +86,78 @@ export class Editor111 extends Editor {
     
     
     
-    
+    // ----
     var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
     wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
     wobjetStamper_tool222.visualObject.canUpdate  = false;
     wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
-    
 
     EditorMagic.addTool(wobjetStamper_tool222);
 
 
+    // ---- 
+    
+    var platy = new Platform("platy", 0, 0, 0, 10, 10, {r:0,g:0,b:1,a:1});
+    // this.system.add(box);
+
+    // box.onCollide = function(){
+    //   console.log("wap!", box.name);
+    //   // soundboard1.play();
+    //   var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
+    //   ss.play();
+    // }
+
+    var platy_stamper = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
+    platy_stamper.visualObject = platy;
+    platy_stamper.visualObject.canUpdate  = false;
+    platy_stamper.stampingObject = new Platform("platy", 0, 0, 0, 10, 10, {r:0,g:0,b:1,a:1});
+    
+    EditorMagic.addTool(platy_stamper);
+
+
+
+
+    var platy222 = new Platform("platy", 0, 0, 0, 160, 140, {r:0,g:1,b:1,a:1});
+    var platy_stamper222 = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
+    platy_stamper222.visualObject = platy222;
+    platy_stamper222.visualObject.canUpdate  = false;
+    platy_stamper222.stampingObject = platy222.clone();
+    
+    EditorMagic.addTool(platy_stamper222);
+
 
     
+
+    var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1});
+    var platy_stamper333 = new PlatformStampTool("wobject_stamper_platform", "platform stamper", this.system);
+    platy_stamper333.visualObject = platy333;
+    platy_stamper333.visualObject.canUpdate  = false;
+    // platy_stamper333.stampingObject = platy333.clone();
+    platy_stamper333.stampingObject = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1});
+    platy_stamper333.stampingObject.color.setHex(0x00ff37);
+    platy_stamper333.baseGrid = EditorMagic.baseGrid;
+    platy_stamper333.editor = EditorMagic;
     
-    console.warn("TEMPPPPPP    alien3 ");
-    var wobjetStamper_tool333 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
-      wobjetStamper_tool333.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
-    wobjetStamper_tool333.visualObject.canUpdate  = false;
-    wobjetStamper_tool333.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    EditorMagic.addTool(platy_stamper333);
+
+
+
+
+
+
+
+
     
+    // ----
+    // 
+    // console.warn("TEMPPPPPP    alien3 ");
+    // var wobjetStamper_tool333 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
+    //   wobjetStamper_tool333.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
+    // wobjetStamper_tool333.visualObject.canUpdate  = false;
+    // wobjetStamper_tool333.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
+    // 
     
-      var aa = wobjetStamper_tool333.stampingObject;
+      // var aa = wobjetStamper_tool333.stampingObject;
       
       // for now we need some defaults items to get the bot to walk
       // aa.platform = window.box3;
@@ -135,9 +194,7 @@ export class Editor111 extends Editor {
       // // 
       // // 
 
-    EditorMagic.addTool(wobjetStamper_tool333);
-
-
+    // EditorMagic.addTool(wobjetStamper_tool333);
 
 
 
@@ -234,138 +291,122 @@ export class Editor111 extends Editor {
     // checkbox toggle tools
     // 
     
-    // <<<<
-    // window.toolsssss = wobjetStamper_tool
-     // <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-    var item1Select = document.createElement('input');
-    item1Select.classList.add("item");
-    item1Select.type = "checkbox";
-    // item1Select.style.background = "transparent url('./Cast/Alien1.png') center center/cover no-repeat";
-    item1Select.style.backgroundImage = "url(./Editor/arrow1.png)";
-    item1Select.style.backgroundColor = "#ffffff";
-    panel.appendChild(item1Select);
-    checkboxes.push(item1Select);
-    
-    // This pattern can be ratified
-    item1Select.onclick = function(ev){
-      console.log(ev.target.checked);
-      checkBoxChanged(ev.target);
-      // could emit an event instead and handle teardown
-      // or STATE onExit()
-      if(ev.target.checked){
-        console.log("checked yes");
-        
-        EditorMagic.changeTool(selectTool);
-      }
-      else if( ! ev.target.checked){
-        console.log("checked no");
-        // EditorModeActions.pointerMoving = function(){
-        // 
-        // }
-        EditorMagic.stopTool(selectTool);
-      }
+    // item1Select = new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool, "url(./Cast/Alien1.png)");
+    // Make select tool active first
+    // item1Select.click();
+    // TEMP for some web component
+    // tooo complex to sift through right now
+    function ToolCheckBoxFactory(parent, cache, tool, imageURL){
       
-    }
-    
-    
-    
-    
-    
-    
-    
-    // 
-    // item 2
-    // 
-    
-    // window.toolsssss = wobjetStamper_tool
-     // <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-    var item2 = document.createElement('input');
-    item2.classList.add("item");
-    item2.type = "checkbox";
-    // item2.style.background = "transparent url('./Cast/Alien1.png') center center/cover no-repeat";
-    item2.style.backgroundImage = "url(./Cast/Alien1.png)";
-    panel.appendChild(item2);
-    checkboxes.push(item2);
-    
-    
-    // 
-    item2.onclick = function(ev){
-      console.log(ev.target.checked);
-      checkBoxChanged(ev.target);
-      // could emit an event instead and handle teardown
-      // or STATE onExit()
-      if(ev.target.checked){
-        console.log("checked yes");
-        // EditorModeActions.pointerMoving = function(){
-        // 
-        // }
-        EditorMagic.changeTool(wobjetStamper_tool);
-      }
-      else if( ! ev.target.checked){
-        console.log("checked no");
-        // EditorModeActions.pointerMoving = function(){
-        // 
-        // }
-        EditorMagic.stopTool(wobjetStamper_tool);
-      }
+      this.tool = tool;
       
-    }
-    
-
-
-    // needs more robotting
-    var item3 = document.createElement('input');
-    item3.classList.add("item");
-    item3.type = "checkbox";
-    item3.style.backgroundImage = "url(./Cast/Alien2.png)";
-    panel.appendChild(item3);
-    checkboxes.push(item3);
-    
-    item3.onclick = function(ev){
-      checkBoxChanged(ev.target);
-      console.log(ev.target.checked);
-      if(ev.target.checked){
-        console.log("checked yes");
-        EditorMagic.changeTool(wobjetStamper_tool222);
-      }
-      else if( ! ev.target.checked){
-        console.log("checked no");
-        EditorMagic.stopTool(wobjetStamper_tool222);
-      }
-    }
-
-
-
-
-  
       // needs more robotting
-      var item4 = document.createElement('input');
-      item4.classList.add("item");
-      item4.type = "checkbox";
-      item4.style.backgroundImage = "url(./Cast/Alien2.png)";
-      panel.appendChild(item4);
-      checkboxes.push(item4);
+      this.checkbox = document.createElement('input');
+      this.checkbox.classList.add("item");
+      this.checkbox.type = "checkbox";
+      // item.style.backgroundImage = "url(./Cast/Alien2.png)";
+      this.checkbox.style.backgroundImage = imageURL;
+      this.checkbox.style.backgroundColor = "#000000";
+      parent.appendChild(this.checkbox);
+      cache.push(this.checkbox);
       
-      item4.onclick = function(ev){
+      var _this = this;
+      
+      this.checkbox.onclick = function(ev){
         checkBoxChanged(ev.target);
         console.log(ev.target.checked);
         if(ev.target.checked){
           console.log("checked yes");
-          EditorMagic.changeTool(wobjetStamper_tool333);
+          EditorMagic.changeTool(_this.tool);
         }
         else if( ! ev.target.checked){
           console.log("checked no");
-          EditorMagic.stopTool(wobjetStamper_tool333);
+          EditorMagic.stopTool(_this.tool);
         }
       }
-
+      
+      this.click = function(){
+        this.checkbox.click();
+      }
+      
+    } // ToolCheckBoxFactory
+    
+    var item1Select = new ToolCheckBoxFactory(panel, checkboxes, selectTool, "url(./Editor/arrow1.png)");
+    item1Select.checkbox.style.backgroundColor = "#ffffff";
+    
 
     // Make select tool active first
     item1Select.click();
 
 
+    
+    
+    // // <<<<
+    // // window.toolsssss = wobjetStamper_tool
+    //  // <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+    // var item1Select = document.createElement('input');
+    // item1Select.classList.add("item");
+    // item1Select.type = "checkbox";
+    // // item1Select.style.background = "transparent url('./Cast/Alien1.png') center center/cover no-repeat";
+    // item1Select.style.backgroundImage = "url(./Editor/arrow1.png)";
+    // item1Select.style.backgroundColor = "#ffffff";
+    // panel.appendChild(item1Select);
+    // checkboxes.push(item1Select);
+    // 
+    // // This pattern can be ratified
+    // item1Select.onclick = function(ev){
+    //   console.log(ev.target.checked);
+    //   checkBoxChanged(ev.target);
+    //   // could emit an event instead and handle teardown
+    //   // or STATE onExit()
+    //   if(ev.target.checked){
+    //     console.log("checked yes");
+    // 
+    //     EditorMagic.changeTool(selectTool);
+    //   }
+    //   else if( ! ev.target.checked){
+    //     console.log("checked no");
+    //     // EditorModeActions.pointerMoving = function(){
+    //     // 
+    //     // }
+    //     EditorMagic.stopTool(selectTool);
+    //   }
+    // 
+    // }
+    // 
 
     
+    
+    
+    // 
+    // others
+    // 
+    
+    
+
+    new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool, "url(./Cast/Alien1.png)"); // (parent, cache, tool, imageURL)
+    
+    
+    
+    new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool222, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    
+    // new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool333, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    
+    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    
+    
+    
+    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper222, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    
+    
+    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper333, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    
+    
+    
+
+
+    // 
+    // 
     // map mover
     // this belongs in editor class
     

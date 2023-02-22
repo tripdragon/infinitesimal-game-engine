@@ -91,6 +91,13 @@ export class SelectTool extends Tool {
   pointerUp(){
     this.mode = this.modes.mousing;
     this.isMouseDown = false;
+    
+    if(this.selectedObject){
+      
+      this.selectedObject.deselectState();
+      // this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
+    }
+    
   }
   
   pointerDown(){
@@ -117,6 +124,10 @@ export class SelectTool extends Tool {
 
         this.mSelectedPos.x = this.selectedObject.x;
         this.mSelectedPos.y = this.selectedObject.y;
+        
+        window.selectedsdfkdg = this.selectedObject;
+        
+        this.selectedObject.selectState();
         this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
       }
     }
@@ -157,31 +168,39 @@ export class SelectTool extends Tool {
         // }
         
         if(wall.subType !== "actor"){
-          //wall.color.copy({r:0,g:0.5,b:0,a:1});
-          wall.color.copy(wall.mColor);
+          // wall.color.copy({r:0,g:0.5,b:0,a:1});
+          // wall.color.copy(wall.mColor);
         }
         
         var wasIn = false;
         if(wall instanceof Plane || wall instanceof Platform){
           wasIn = pointInBoundingBoxScreenSpace(pointer, wall);
           // debugger
+          // wall.color.copy({r:0,g:0,b:1,a:1});
+          wall.color.copy({r:0,g:1,b:1,a:1});
         }
         else {
           wasIn = pointInRect(pointer, wall);
         } 
-        // wasIn = pointInRect(pointer, wall);
-        
+
         
         // console.log(wall.width, wall.height);
         // console.log(pointer);
         if(wasIn){
             // wall.color = {r:0,g:0,b:1,a:0};
-            wall.color.copy({r:1,g:1,b:1,a:1});
+            // wall.color.copy({r:1,g:1,b:1,a:1});
             if(wasEverIN == false){
               wasEverIN = true;
               this.selectedObject = wall;
+              this.selectedObject.selectState();
+              this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
             }
+            
+            
             break;
+        }
+        else {
+          
         }
         
         // // do a moving and generative effect

@@ -37,6 +37,8 @@ export class Editor{
   
   system;
   
+  baseGrid = null;
+  
   toolsShelf = {};
   
   toolsController = new _ToolsController();

@@ -13,6 +13,14 @@ export class Tool {
   system = null;
   // editorModeActions = null;
 
+  
+  // these are caches to allow proper scope and proper
+  // removeEvent signature
+  pointerUpEvent = null;
+  pointerDownEvent = null;
+  pointerMoveEvent = null;
+
+
 
 
   constructor(name="tool", displayName, system){
@@ -21,10 +29,8 @@ export class Tool {
     this.system = system;
   }
   
-  // these are caches to allow proper scope and proper
-  // removeEvent signature
-  pointerUpEvent = null;
-  pointerDownEvent = null;
+  
+  // use these to bind as needed, they are not assigned automaticly
   
   bindUpEvent(){
     if( this.pointerUpEvent === null){
@@ -41,6 +47,14 @@ export class Tool {
     // common place for mouse events, otherwise fork this function
     this.system.canvas.addEventListener( 'pointerdown', this.pointerDownEvent );
   }
+
+  bindMoveEvent(){
+    if( this.pointerMoveEvent === null){
+      this.pointerMoveEvent = this.pointerDown.bind(this);
+    }
+    // common place for mouse events, otherwise fork this function
+    this.system.canvas.addEventListener( 'pointermove', this.pointerMoveEvent );
+  }
   
   
   replace(){
@@ -53,12 +67,13 @@ export class Tool {
   stop(){
     this.system.canvas.removeEventListener( 'pointerup', this.pointerUpEvent );
     this.system.canvas.removeEventListener( 'pointerdown', this.pointerDownEvent );
+    this.system.canvas.removeEventListener( 'pointermove', this.pointerMoveEvent );
   }
 
   
   pointerUp(){}
   pointerDown(){}
-  pointerMoving(){}
+  pointerMove(){}
   
   
 }

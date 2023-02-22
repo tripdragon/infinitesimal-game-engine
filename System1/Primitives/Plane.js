@@ -2,10 +2,11 @@
 
 
 /*
-var border1 = new Rectangle("wall", 400, 400, 200, 50, {x:0,y:0.5,z:0,w:0});
-this.system.sceneGrapth.add(border1);
-border1.onCollide = function(){
-  console.log("wap!", border1.name);
+var box = new Plane("boxlike", 400, 400, 0, 10, 10, {r:0,g:0.5,b:1,a:1});
+this.system.add(box);
+
+box.onCollide = function(){
+  console.log("wap!", box.name);
   // soundboard1.play();
   var ss = new Audio("./Discs/Soundeffects/bleep-audiomass-output.wav");
   ss.play();
@@ -21,20 +22,6 @@ import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
 
 
-// 
-// function sdkjfgndf(){
-// 
-//   var ff = [
-//       new Rectangle(gl, 4, 4, 12, 8),
-//       new Rectangle(gl, 12, -12, 12, 8)
-//   ];
-// 
-// 
-//   var box = new Rectangle("box", 500, 140, 20, 20, {r:0,g:0.1,b:0.7,a:1});
-//   this.system.sceneGrapth.add(box);
-//   window.box = box;
-// 
-// }
 
 // its 2D!!!! NOT 3D!!!
 // But it is 3D!!!
@@ -61,11 +48,28 @@ export class Plane extends Quark {
     // the points of the geometry not the buffer positions
     // buffer has 6 points has 4
     points = [new Vector3(),new Vector3(),new Vector3(),new Vector3()];
+    // two of each pointing to points array
+    sides = {
+      left : [this.points[0], this.points[1]],
+      bottom : [this.points[1], this.points[2]],
+      right : [this.points[2], this.points[3]],
+      top : [this.points[3], this.points[0]]
+    }
     
-    u_matrix = new Matrix4().setTranslation(0,0,0);
+    recomputeSides(){
+      this.sides = {
+        left : [this.points[0], this.points[1]],
+        bottom : [this.points[1], this.points[2]],
+        right : [this.points[2], this.points[3]],
+        top : [this.points[3], this.points[0]]
+      }
+    }
+    
+    // are thse caches??? 
+    // u_matrix = new Matrix4().setTranslation(0,0,0);
     // ? not sure yet
     // mvpMatrix
-    translationMatrix = new Matrix4().setTranslation(0,0,0);
+    // translationMatrix = new Matrix4().setTranslation(0,0,0);
     
     // this should be the world coords acording to AABB
     // and since evertything effectly moves this has to be calculated always
@@ -96,10 +100,12 @@ export class Plane extends Quark {
 
       
       this.system = system;
-      // debugger
+
       this.pointsCount = 6;
       this.mHeight = height;
       this.mWidth = width;
+      
+      this.recomputeSides();
       
       // plane has no origin persay
       // its geometry is offset to handle this by default
@@ -107,37 +113,10 @@ export class Plane extends Quark {
       this.centerPositions();
       this.computeBoundingBox();
       this.computeBoundingBoxPadding();
-      
-      // this.setRectangle(this.gl, this.x, this.y, this.width, this.height);
 
     }
     
-    // 
-    // setRectangle(gl, x, y, width, height) {
-    //   var x1 = x;
-    //   var x2 = x + width;
-    //   var y1 = y;
-    //   var y2 = y + height;
-    // 
-    //   // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-    //   // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-    //   // but so far we only have one buffer. If we had more than one
-    //   // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
-    // 
-    //   var positions = [
-    //     x1, y1,
-    //     x1, y2,
-    //     x2, y2,
-    //     x2, y1,
-    //     // other tri
-    //     x1, y1,
-    //     x2, y2
-    //   ];
-    // 
-    //   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-    // }
 
-    
     
     centerPositions(){
       
@@ -147,40 +126,71 @@ export class Plane extends Quark {
       // this could just be dont with a vector half offset calc
       
       // counter clockwise
-      // top left
+      // starts at top left
       
       
       // this should just be a transform and apply
+      // in local space
       var points = this.points;
       
+      // points[0].x = -this.width / 2;
+      // points[0].y = -this.height / 2;
+      // 
+      // points[1].x = -this.width / 2;
+      // points[1].y = this.height / 2;
+      // 
+      // 
+      // points[2].x = this.width / 2;
+      // points[2].y = this.height / 2;
+      // 
+      // 
+      // points[3].x = this.width / 2;
+      // points[3].y = -this.height / 2;
+      
+      /*
+      test pointerMovingrecent.points[0].y += 20
+      recent.points[0].x += 20
+      recent.rebuildDimentions()
+
+      recent.points[1].y += 20
+      recent.points[1].x += 20
+      recent.rebuildDimentions() 
+
+      recent.points[2].y += 20
+      recent.points[2].x += 20
+      recent.rebuildDimentions() 
+
+      recent.points[3].y += 20
+      recent.points[3].x += 20
+      recent.rebuildDimentions() 
+      */
+      
       points[0].x = -this.width / 2;
-      points[0].y = -this.height / 2;
+      points[0].y = this.height / 2;
       
       points[1].x = -this.width / 2;
-      points[1].y = this.height / 2;
+      points[1].y = -this.height / 2;
       
       
       points[2].x = this.width / 2;
-      points[2].y = this.height / 2;
+      points[2].y = -this.height / 2;
       
       
       points[3].x = this.width / 2;
-      points[3].y = -this.height / 2;
+      points[3].y = this.height / 2;
       
+      // debugger
+      this.updatePositions();
+
       
-      // var positions = this.cachePositions;
+    }
+
+
+    updatePositions(){
       var positions = this.positions;
-      
+      var points = this.points;
       // gurgle
-      // positions[0] = points[0].x; positions[1] = points[0].y;
-      // positions[2] = points[1].x; positions[3] = points[1].y;
-      // positions[4] = points[2].x; positions[5] = points[2].y;
-      // // tri 2
-      // positions[6] = points[2].x; positions[7] = points[2].y;
-      // positions[8] = points[3].x; positions[9] = points[3].y;
-      // positions[10] = points[0].x; positions[11] = points[0].y;
-      // 
-      // need Z now
+      
       positions[0] = points[0].x; positions[1] = points[0].y; positions[2] = 0;
       positions[3] = points[1].x; positions[4] = points[1].y; positions[5] = 0;
       positions[6] = points[2].x; positions[7] = points[2].y; positions[8] = 0;
@@ -189,144 +199,76 @@ export class Plane extends Quark {
       positions[12] = points[3].x; positions[13] = points[3].y; positions[14] = 0;
       positions[15] = points[0].x; positions[16] = points[0].y; positions[17] = 0;
       
-      
     }
 
 
+    // we need to change some vertices er the width height
+    // either some kinda grid or multiple
+    // in reguards to the position, if its already dropped on a snap
+    // we dont want the position to change
+    // so now we wonder if it shoudl have an origin
+    // sa~~~
+    
+    addSideScalar(scalar, side){
+      // debugger
+      if(side === "left"){
+        this.sides.left[0].x += -scalar;
+        this.sides.left[1].x += -scalar;
+      }
+      else if(side === "bottom"){
+        this.sides.bottom[0].y += -scalar;
+        this.sides.bottom[1].y += -scalar;
+      }
+      else if(side === "right"){
+        this.sides.right[0].x += scalar;
+        this.sides.right[1].x += scalar;
+      }
+      else if(side === "top"){
+        this.sides.top[0].y += scalar;
+        this.sides.top[1].y += scalar;
+      }
+      
+      this.rebuildDimentions();
+      
+    }
+    
+    
+    rebuildDimentions(){
+      this.width = this.sides.right[0].x - this.sides.left[0].x;
+      this.height = this.sides.top[0].y - this.sides.bottom[0].y;
+      
+      this.computeBoundingBox();
+      this.computeBoundingBoxPadding();
+      
+      this.updatePositions();
+    }
+    
+    
 
     
     clone(){
-
-      var rr = new this.constructor().copy(this);
+      // constructor(name, x, y, z, width, height, color, system)
+      var rr = new this.constructor(this.name, this.x, this.y, this.z, this.width, this.height, this.color.clone(), this.system).copy(this);
       
       return rr;
     }
     
     copy(thing){
       super.copy(thing);
-      
-      // this.cachePositions = thing.cachePositions.slice();
+
       this.positions = thing.positions.slice();
+      this.points = [];
+      for (var i = 0; i < thing.points.length; i++) {
+        this.points[i] = thing.points[i].clone();
+      }
+      this.recomputeSides();
       
       
       return this;
     }
-    
 
-
-    // 
-    // // draws to the buffer
-    // draw(colorUniformLocation, matrixLocation){
-    // 
-    //   // update()
-    //   // checks to todate the matrix
-    //   // but it might belong here
-    // 
-    // 
-    // 
-    //   // this performs the matrix updates for now
-    //   // this one applys the position translation
-    //   // this.u_matrix.setTranslation(0,0,0);
-    // 
-    //   // this is most likely not the right way to do this, but its working for now
-    //   // this.u_matrix.identity().multiply(this.system.projectionMatrix);
-    // 
-    //             // // this.u_matrix.copy(this.system.projectionMatrix);
-    //             // this.localMatrix.copy(this.system.projectionMatrix);
-    //             // // 
-    //             // 
-    //             // this.localMatrix.translate(this.position.x,this.position.y,this.position.z);
-    //             // 
-    //             // // this.u_matrix.setTranslation(this.position.x,this.position.y,this.position.z);
-    //             // // this.translationMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
-    //             // // this.u_matrix.multiply(this.translationMatrix);
-    //             // 
-    // 
-    //   this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);      
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.u_matrix.elements);
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.localMatrix.elements);
-    // 
-    // 
-    // 
-    // 
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
-    // 
-    // 
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMartix.multiplyMatrices(this.system.projectionMatrix, this.worldMatrix).elements);
-    // 
-    //   this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
-    // 
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.multiply(this.system.projectionMatrix).elements);
-    // 
-    //   // this.gl.uniformMatrix4fv(matrixLocation, false, this.translationMatrix.elements);
-    // 
-    // 
-    // 
-    // 
-    // 
-    //   // this.u_matrix.setTranslation(this.position.x,this.position.y,this.position.z);
-    //   // this.u_matrix.setTranslation(0,0,0);
-    //   // this needs to be converted to matrixes
-    //   // this.setPlane();
-    //   // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
-    // 
-    //   // if( !this.hasSetPlane ){
-    //   //   // this.setPlane();
-    //   //   this.hasSetPlane = true;
-    //   // }
-    //   // else {
-    //   // }
-    // 
-    // 
-    //   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
-    // 
-    // }
-    
-    // workMatrix = new Matrix4();
-    // 
-    // updateWorldMatrix(parentWorldMatrix){
-    //   if(parentWorldMatrix){
-    //     // force updates the world Matrix
-    // 
-    //     console.log("parentWorldMatrix",parentWorldMatrix.getPosition());
-    //     // debugger
-    //     console.log("name", this.name);
-    //     this.worldMatrix.narf = "narf111";
-    //     this.worldMatrix.multiplyMatrices(parentWorldMatrix, this.localMatrix);
-    //     // debugger
-    //     console.log("this.worldMatrix", this.worldMatrix.getPosition());
-    // 
-    //     // this.worldMatrix.multiplyMatrices(this.localMatrix, parentWorldMatrix);
-    //     // console.log(this.localMatrix.elements, parentWorldMatrix.elements);
-    //     // this.worldMatrix.multiplyMatrices( parentWorldMatrix, this.localMatrix);
-    //   }
-    //   else {
-    //     // debugger
-    //     this.worldMatrix.copy(this.localMatrix);
-    //   }
-    // 
-    //   // recussion updates chain
-    //   // now process all the children
-    // 
-    //   var worldMatrix = this.worldMatrix;
-    //   if(this.friends.length > 0){
-    //     this.friends.forEach(function(item) {
-    //       item.updateWorldMatrix(worldMatrix);
-    //     });
-    //   }
-    //   if(this.name !== "world"){
-    //     // debugger
-    //   }
-    // }
-    // 
-    
-    // updateWorldMatrix(){
-    //   super.updateWorldMatrix();
-    //   console.log("updateWorldMatrix 2222", this.worldMatrix.getPosition());
-    // }
     draw(colorUniformLocation, matrixLocation){
-      // debugger
-      // super.draw(colorUniformLocation, matrixLocation);
+      
       this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
       
       // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
@@ -336,11 +278,11 @@ export class Plane extends Quark {
 
       // MAYBE handle the projection here
       // its building but not moving
-      // debugger
+      
       // console.log("draw world", this.worldMatrix.getPosition());
       // console.log("draw local", this.localMatrix.getPosition());
       // console.log("draw name", this.name);
-      // debugger
+      
       this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
       // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.worldMatrix, this.system.projectionMatrix).elements);
       

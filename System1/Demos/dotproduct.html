@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bleep bleep</title>
+    <!-- <script src="mission1.js" type="module" defer></script> -->
+    <!-- 
+    python3 -m http.server 8001 
+    
+    this is just a canvas 2d app for pixel painting for now
+    
+    it shows how class Grid works
+    
+    localhost:8001/System1/Demos/paintgrid.html
+    
+    -->
+
+
+    <style media="screen">
+        *{
+          margin: 0;
+          padding: 0;
+        }
+        body{
+          overflow: hidden;
+        }
+        
+        /* ideally canvas gl is the bottom of the stack */
+        #canvassss {
+          z-index: -1;
+          position: absolute;
+        }
+    </style>
+
+    <style media="screen">
+      /* #controls{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        
+        width: 100px;
+        height: 100px;
+        padding: 20px 0 0 20px;
+      }
+
+      #controls .add{
+        
+      } */
+      
+      #canvassss{
+        /* background-color: orange; */
+      }
+      
+      
+      .button{
+        width: 32px;
+        height: 32px;
+      }
+      
+      #controls222 {
+        position: absolute;
+        top: 0px;
+        z-index: 1;
+        
+        width: 100%;
+        height: 35px;
+        padding: 20px 0 0 20px;
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: flex-start;
+      }
+
+      #controls222 .button {
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+        margin: 0 4px;
+        font-size: 20px;
+        
+      }
+      
+      #ksdjfg{
+        position: absolute;
+        z-index: 12;
+        bottom: 100px;
+        left: 100px;
+        background-color: white;
+        width: 1px;
+        height: 1px;
+      }
+      
+      #slider{
+        position: absolute;
+        left: 600px;
+        top: 100px;
+      }
+      
+      #status {
+        position: absolute;
+        left: 600px;
+        top: 100px;
+        color: white;
+        font-size: 1.4em;
+        font-family: sans-serif;
+      }
+      #status span{
+        
+      }
+
+    </style>
+    
+    <!-- idea is to inject here and clear when switching games -->
+    <style id="gamestyles" media="screen">
+      .fish {
+        color: "pwgjpodg";
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
+
+    <canvas id="canvassss" width="512" height="512"></canvas>
+
+    <div id="gamespace"></div>
+    <div id="bodyInjectionPointMain">
+    </div>
+    
+    <div class="" id="status">
+      conf: <span>-1</span>
+    </div>
+    
+    <!-- <div id="slider">
+      <input id="pi_input" type="range" min="0" max="1" step="any" value="0" />
+      <p>Value: <output id="value">0</output></p>
+    </div> -->
+
+
+    <script type="text/javascript">
+        var APPPP;
+
+    </script>
+
+    <script type="module" type="text/javascript">
+      // import AppMain from './AppMain.js';
+      // APPPP = AppMain();
+
+      var resolution = Math.pow(2,10)// 512 or 1024
+
+
+      import {Vector2} from '../Modules/Vector2.js';
+      import {Grid} from '../Modules/Grid.js';
+      import {drawArrow} from '../canvas-parts/drawArrow.js';
+      
+      const canvas = document.getElementById("canvassss");
+      canvas.width = resolution; canvas.height = resolution;
+      
+      // const canvasBuffer = document.createElement('canvas');
+      // canvasBuffer.width = 512;
+      // canvasBuffer.height = 512;
+      const ctx = canvas.getContext("2d");
+      // const ctxBuffer = canvasBuffer.getContext("2d");
+      
+      window.canvasGG = canvas;
+      
+      var mouse = new Vector2();
+      
+      var IS_DOWN = false;
+      
+      var points = [];
+      
+      // // en do paint app clean line later
+      // var mPointDown = new Vector2();
+      // 
+      // 
+      
+      // grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
+      // box2.x = grid.position3D.x;
+      // box2.y = grid.position3D.y;
+      
+      
+      
+      function rColor(){
+        return Math.floor(Math.random()*255);
+      }
+      
+      // clear once
+      function clear(){
+        
+        // ctx.translate(0,0)
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // ctx.translate(512/2,512/2)
+        
+      }
+      
+      
+      // var USE_DEBUGGER_Mouse = true;
+      var USE_DEBUGGER_Mouse = false;
+
+      
+      var centerVector = new Vector2(resolution/2,resolution/2);
+      var leftArrowDir = new Vector2( (resolution/2) + -80 , resolution/2);
+      var rightArrowDir = new Vector2( (resolution/2) + 80 , resolution/2);
+      
+      var startAngle = 0;
+      
+      function draw() {
+        if (canvas.getContext) {
+          
+          // d_start.copy(mouse)
+
+          // clear();
+          // ctx.translate(1,1)
+          
+          clear();
+          
+          // need to custom clear due to offset
+          ctx.fillStyle = "rgba(0, 0, 0, 1)";
+          // ctx.fillRect(-(512/2), -(512/2), canvas.width*2, canvas.height*2);
+          
+          
+        
+          
+          // left
+          drawArrow(ctx, centerVector, leftArrowDir, 1.4, 2, "fbff00");
+          
+          // right
+          drawArrow(ctx, centerVector, rightArrowDir, 1.4, 2, "00a1ff");
+          
+          ctx.fillStyle = "#ffffff";
+          ctx.strokeStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(resolution/2, resolution/2, 14, startAngle, Math.PI, true);
+          ctx.stroke();
+          
+          
+          
+          // wangle += 0.05;
+          
+          // d_stop.x = (d_stop.x - d_start.x) + Math.cos(wangle) + d_start.x;
+          // d_stop.y = (d_stop.y - d_start.y) - Math.sin(wangle) + d_start.y;
+          // d_stop.x = (Math.cos(wangle) * Math.PI * 2) * 14;
+          // d_stop.y = (Math.sin(-wangle) * Math.PI * 2) * 14;
+          
+          // d_stop.x += d_start.x;
+          // d_stop.y += d_start.y;
+          
+          
+          
+          // ctx.translate(0,0)
+          
+          // if(IS_DOWN){
+          // 
+          // 
+          //   // 00d4ff
+          //   ctx.fillStyle = "rgba(0, 255, 100, 1)";
+          //   var size = 8;
+          //   ctx.fillRect(mouse.x - (size/2), mouse.y - (size/2), size, size);
+          //   points.push(mouse.clone());
+          // 
+          //   // drawArrow(points[0], points[points.length-1]);
+          // 
+          // }
+          // 
+          
+          
+        }
+      }
+      
+
+      var loopID;
+      
+      let loop = function(){
+
+        loopID = requestAnimationFrame( loop.bind(this) );
+        // console.log("popcorn");
+        
+        // this.time.now = Date.now();
+        // this.time.delta = this.time.now - this.time.mTime;
+
+        draw();
+        
+        // this.time.mTime = this.time.now;
+      };
+
+      function onPointerMove( event ) {
+        
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        var center = resolution/2;
+        var angle = Math.atan2(mouse.y - center, mouse.x-center);
+        // console.log(-angle);
+        startAngle = angle;
+        var scale = 70;
+        rightArrowDir.x = (Math.cos(angle) * scale) + center;
+        rightArrowDir.y = (Math.sin(angle) * scale) + center;
+        
+        var dotAngle = rightArrowDir.clone().sub(centerVector).normalize().dot(leftArrowDir.clone().sub(centerVector).normalize());
+        // console.log("dot angle", dotAngle + 1 * 0.5);
+        // console.log("dot angle", dotAngle Math.atan2(a,b)/PI*0.5+0.5;);
+        
+        
+        var angleTo2 = rightArrowDir.clone().sub(centerVector).normalize().angleTo(leftArrowDir.clone().sub(centerVector).normalize());
+        console.log("angleTo2", angleTo2);
+        
+        
+        // console.log(mouse);
+
+      }
+      
+      function onPointerDown(ev){
+        // debugger
+        IS_DOWN = true;
+        clear();
+        points = [];
+      }
+      
+    
+      function onPointerUp(ev){
+        IS_DOWN = false;
+        console.log(points.length);
+        
+
+  
+
+      }
+      
+
+
+      
+      // 
+      // 
+      // Setup
+      
+      // console.warn("canvas is offset to debug with");
+
+      
+      clear();
+      
+      // debug with
+      // ctx.translate(512/2, 512/2)
+
+      
+      
+      canvas.addEventListener( 'pointermove', onPointerMove.bind(this), true );
+      canvas.addEventListener( 'pointerdown', onPointerDown.bind(this), true );
+      canvas.addEventListener( 'pointerup', onPointerUp.bind(this), true );
+
+
+
+      loop.call(this);
+    
+
+
+      
+    </script>
+  </body>
+</html>
