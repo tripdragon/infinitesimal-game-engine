@@ -45,6 +45,13 @@ export class Box3{
     return AABBTest3D(this,object);
   }
   
+  containsPoint( point ) {
+
+		return point.x < this.min.x || point.x > this.max.x ||
+			point.y < this.min.y || point.y > this.max.y ? false : true;
+
+	}
+  
   copy(box){
     this.min.copy(box.min);
     this.max.copy(box.max);
@@ -73,5 +80,20 @@ export class Box3{
     console.log(this.min.x, this.max.y, "____", this.max.x, this.max.y);
     console.log(this.min.x, this.min.y, "____", this.max.x, this.min.y);
   }
+  
+
+
+  applyMatrix4( matrix ) {
+
+		// transform of empty box is an empty box.
+		// if ( this.isEmpty() ) return this;
+    
+    this.min.applyMatrix4(matrix);
+    this.max.applyMatrix4(matrix);
+    
+
+		return this;
+
+	}
   
 }

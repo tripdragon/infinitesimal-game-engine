@@ -39,7 +39,8 @@ export class PlatformStampTool extends StampTool {
     this.system.add(ff);
     // debugger
     ff.visible = true;
-    ff.position.copy(this.system.pointer.worldUV);
+    ff.position.copy(this.system.pointer.screenUV);
+    // ff.position.copy(this.system.pointer.worldSpace);
     
     if(this.baseGrid){
       ff.x = this.baseGrid.position3DCenter.x;
@@ -54,7 +55,7 @@ export class PlatformStampTool extends StampTool {
   pointerUp(){
     this.visualObject.visible = true;
     this.IS_DOWN = false;
-    this.currentItem.rebuildDimentions();
+    this.currentItem.rebuildDimensions();
   }
   
   // 
@@ -80,6 +81,10 @@ export class PlatformStampTool extends StampTool {
     if(this.baseGrid){
       
       this.baseGrid.snap().screenTo3D();
+      
+      
+      // this.baseGrid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
+      
       
       // console.log(this.baseGrid.position3D);
       // console.log(this.baseGrid.position3DCenter);
@@ -139,7 +144,7 @@ export class PlatformStampTool extends StampTool {
           this.currentItem.scaleSidePower(1,"top");
         }
         // 
-        this.currentItem.rebuildDimentions();
+        this.currentItem.rebuildDimensions();
         
         
       }
@@ -151,8 +156,8 @@ export class PlatformStampTool extends StampTool {
     // this.visualObject.x = this.system.pointer.client.x;
     // this.visualObject.y = this.system.pointer.client.y;
     
-    // this.visualObject.x = this.system.pointer.worldUV.x;
-    // this.visualObject.y = this.system.pointer.worldUV.y;
+    // this.visualObject.x = this.system.pointer.screenUV.x;
+    // this.visualObject.y = this.system.pointer.screenUV.y;
   }
   
   

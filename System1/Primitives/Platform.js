@@ -69,7 +69,7 @@ export class Platform extends Plane {
         this.sides.left[1].x = -width/2;
         this.sides.right[0].x = width/2;
         this.sides.right[1].x = width/2;
-        this.rebuildDimentions();
+        this.rebuildDimensions();
         return;
       }
       else if(side === "bottom" || side === "top"){
@@ -77,7 +77,7 @@ export class Platform extends Plane {
         this.sides.top[1].y = height/2;
         this.sides.bottom[0].y = -height/2;
         this.sides.bottom[1].y = -height/2;
-        this.rebuildDimentions();
+        this.rebuildDimensions();
         return;
       }
     }
@@ -106,7 +106,7 @@ export class Platform extends Plane {
     }
     
     
-    this.rebuildDimentions();
+    this.rebuildDimensions();
     
   }
 

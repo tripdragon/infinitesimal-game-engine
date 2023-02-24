@@ -150,6 +150,7 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
   // const vertexCount = 6;// 3 for tri, 6 for 2 tris making a square
   
   var primitiveType = gl.TRIANGLES;
+  // var primitiveType = gl.LINES;
   
   for (var i = 0; i < app.sceneGrapth.objects.length; i++) {
     var ff = app.sceneGrapth.objects[i];
@@ -158,38 +159,38 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     }
     ff.gl = gl;
     // 
-    if(ff.subType === "worldsdfsdg"){
-      // debugger
-      
-      // if (ff.x > 400) {
-      //   ff.x -= 20;
-      // }
-      // else {
-      // 
-      // }
-      if (ff.diiir === undefined) {
-        ff.diiir = "r";
-      }
-      if(ff.x <= -400){
-        ff.diiir = "r";
-      }
-      else if(ff.x >= 400){
-        ff.diiir = "l";
-      }
-      
-      var val = 4;
-      if(ff.diiir === "r"){
-          ff.x += val;
-      }
-      else if(ff.diiir === "l"){
-          ff.x -= val;
-      }
-      
-      
-      
-      // ff.x += Math.cos(this.time.delta) * 10 ;
-      
-    }
+    // if(ff.subType === "worldsdfsdg"){
+    //   // debugger
+    // 
+    //   // if (ff.x > 400) {
+    //   //   ff.x -= 20;
+    //   // }
+    //   // else {
+    //   // 
+    //   // }
+    //   if (ff.diiir === undefined) {
+    //     ff.diiir = "r";
+    //   }
+    //   if(ff.x <= -400){
+    //     ff.diiir = "r";
+    //   }
+    //   else if(ff.x >= 400){
+    //     ff.diiir = "l";
+    //   }
+    // 
+    //   var val = 4;
+    //   if(ff.diiir === "r"){
+    //       ff.x += val;
+    //   }
+    //   else if(ff.diiir === "l"){
+    //       ff.x -= val;
+    //   }
+    // 
+    // 
+    // 
+    //   // ff.x += Math.cos(this.time.delta) * 10 ;
+    // 
+    // }
     
     if(ff.name !== "world"){
       // debugger
@@ -215,7 +216,24 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     ff.draw(this.colorUniformLocation, this.matrixUniformLocation);
     
     var vertexCount = ff.pointsCount;
-    gl.drawArrays(primitiveType, offset2, vertexCount);
+    
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
+    if(ff.subType === "wirefornow"){
+
+      // boo no width option
+      // gl.lineWidth(10);
+      // console.log(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE))
+      // gl.drawArrays(gl.LINES, offset2, vertexCount);
+      // gl.drawArrays(gl.LINE_STRIP, offset2, vertexCount);
+      gl.drawArrays(gl.LINE_LOOP, offset2, vertexCount);
+    }
+    else {
+      
+      // gl.drawArrays(primitiveType, offset2, vertexCount);
+      gl.drawArrays(gl.TRIANGLES, offset2, vertexCount);
+      
+    }
+    
   }
 }
 

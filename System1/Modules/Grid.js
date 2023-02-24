@@ -18,6 +18,24 @@ import {Vector3} from '../Modules/Vector3.js';
 // so make many and feed it snap(xy) and reference .position
 // from there you could make a visual layer with div or canvas
 
+// Use:
+// feed ClientXY coords to .snap()
+// you can obmit arguments if it has .system assigned
+
+// once snapped you can access its properties for various .positions
+// as setting a vector and such was exer expanding data out
+
+// The initial .position is in ClientXY mouse space
+// .screenTo3D() uses the same gameHeight - y technique
+// to give a bottom y up .position3D and .position3DCenter
+
+
+// if the parent or world is offset
+// you need to do various offset matrix or position transforms
+// ex:
+// .position3D.applyMatrix4(worldMatrix)
+// or .position3D.add(v)
+
 // Related to Pointer() just dont know how to merge yet
 
 // the .position is flush top left
@@ -59,7 +77,7 @@ export class Grid{
   // in that its implied its client
   // to save from this
   // grid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
-  snap(_x,_y, vectorIn){
+  snap(_x,_y){
     
     if(!_x && !_y && this.system){
       _x = this.system.pointer.client.x;
@@ -98,11 +116,7 @@ export class Grid{
     this.position.y = yy;
     this.position.z = 0;
     
-    if(vectorIn){
-      vectorIn.x = xx;
-      vectorIn.y = yy;
-      // return vectorIn;
-    }
+
     
     // this one waits till mouse enters next tile
     // snapping to center
@@ -146,16 +160,35 @@ export class Grid{
   
   
   // this will at some ponti need a matirx instead
-  screenTo3D(vectorIn){
-    this.position3D.x = this.position.x - this.system.world.position.x;
-    this.position3D.y = this.system.gameHeight - this.position.y - this.system.world.position.x;
+  screenTo3D(){
+    // 
+    // this.position3D.x = this.position.x - this.system.world.position.x;
+    // this.position3D.y = this.system.gameHeight - this.position.y - this.system.world.position.x;
+    // 
+    // this.position3DCenter.x = this.positionCenter.x - this.system.world.position.x;
+    // this.position3DCenter.y = this.system.gameHeight - this.positionCenter.y - this.system.world.position.x;
+    // 
     
-    this.position3DCenter.x = this.positionCenter.x - this.system.world.position.x;
-    this.position3DCenter.y = this.system.gameHeight - this.positionCenter.y - this.system.world.position.x;
     
-    // if(vectorIn){
-    //   vectorIn.copy(this.position3D);
-    // }
+    // 
+    // 
+    // this.position3D.x = this.position.x;
+    // this.position3D.y = this.system.gameHeight - this.position.y;
+    // 
+    // this.position3DCenter.x = this.positionCenter.x;
+    // this.position3DCenter.y = this.system.gameHeight - this.positionCenter.y;
+    // 
+    
+    // change to matrix later
+    this.position3D.x = this.position.x + -this.system.world.position.x;
+    this.position3D.y = this.system.gameHeight - this.position.y + -this.system.world.position.y;
+    
+    this.position3DCenter.x = this.positionCenter.x + -this.system.world.position.x;
+    this.position3DCenter.y = this.system.gameHeight - this.positionCenter.y + -this.system.world.position.y;
+    
+    
+    
+    
     return this;
   }
   

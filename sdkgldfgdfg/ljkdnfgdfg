@@ -1,0 +1,66 @@
+selectedsdfkdg
+
+
+// selectedsdfkdg.boundingBox
+
+system = APPPP
+
+aa = box4.boundingBox.min.clone()
+aa.applyMatrix4(box4.worldMatrix)
+var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:0,g:0.8,b:1,a:1}, system);
+system.add(box);
+box.position.copy(aa)
+
+bb = box4.boundingBox.max.clone()
+bb.applyMatrix4(box4.worldMatrix)
+var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:1,g:0.2,b:0.2,a:1}, system);
+system.add(box);
+box.position.copy(bb)
+
+
+
+// b2.applyMatrix4(box4.worldMatrix)
+b2 = box4.boundingBox.clone()
+p0 = new Vector3(b2.min.x, b2.max.y, 0)
+p1 = b2.min.clone()
+p2 = new Vector3(b2.max.x, b2.min.y, 0)
+p3 = b2.max.clone()
+
+p0.applyMatrix4(box4.worldMatrix)
+p1.applyMatrix4(box4.worldMatrix)
+p2.applyMatrix4(box4.worldMatrix)
+p3.applyMatrix4(box4.worldMatrix)
+
+
+
+system = APPPP
+var points = [
+  // new Vector3(-1,1,0), new Vector3(-1,-1,0), new Vector3(1,-1,0) ,
+  p0,p1,p2,p3
+];
+
+// for (var i = 0; i < points.length; i++) {
+//   var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:1,g:0.2,b:0.2,a:1}, system);
+//   system.add(box);
+//   box.position.copy(points[i])
+// }
+
+var plaoototty = new Polygon("plwoeir", points, 500,300,0,  1, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+system.add(plaoototty);
+window.plaoototty = plaoototty;
+plaoototty.position.set(0,0,0)
+
+
+
+
+
+
+box.parent  = selectedsdfkdg 
+box.position.set(0,0,0)
+
+
+
+
+
+
+aa.applyMatrix4(system.world.worldMatrix)

@@ -1,0 +1,75 @@
+selectedsdfkdg
+
+cc = new Vector3().copy(selectedsdfkdg.points[0])
+
+cc.applyMatrix4(selectedsdfkdg.worldMatrix)
+
+var system = APPPP
+var box = new VisualPlane("boxlike", 400, 400, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+system.add(box);
+box.position.copy(cc)
+box.updateBoundingBox()
+
+// selectedsdfkdg.position.x += 100
+
+
+box.parent  = selectedsdfkdg 
+box.position.set(0,0,0)
+
+
+
+
+
+var system = APPPP
+var box = new VisualPlane("boxlike", 400, 400, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+system.add(box);
+
+selectedsdfkdg.position.x += 100
+
+box.position.copy(selectedsdfkdg.position)
+box.updateBoundingBox()
+
+box.parent  = selectedsdfkdg 
+box.position.set(0,0,0)
+
+
+
+selectedsdfkdg.showCorners()
+
+selectedsdfkdg.showCorners = function(worldAxis = false){
+// showCorners(){
+
+// debugger
+  if(this.visualPoints.corners.length === 0){
+    for (var i = 0; i < 4; i++) {
+      var box = this.mockVisualPlane();
+      this.system.add(box);
+      // FOR SOME reason this has to happen AFTER system.add
+      box.parent = this;
+      this.visualPoints.corners[i] = box;
+    }
+  }
+
+  
+  
+  for (var i = 0; i < this.points.length; i++) {
+    var item = this.visualPoints.corners[i];
+    item.position.copy(this.points[i]);
+    item.refreshMatrixes();
+    if(worldAxis === true){
+      item.parent = null;
+      item.position.applyMatrix4(this.worldMatrix);
+      item.refreshMatrixes();
+    }
+    item.rebuildDimensions();
+    // item.updateWorldMatrix(this.matrixWorld);
+    
+    item.visible = true;
+    
+  }
+  
+}
+
+
+selectedsdfkdg.showCorners()
+// selectedsdfkdg.showCorners(true)

@@ -1,0 +1,50 @@
+
+
+
+geometry point of plane in world space
+box p 4
+p of box -2
+world p 0
+
+4 + 0 = 4
+-2 mul + 4 = 2
+
+w p 2
+4 + 2 = 6
+-2 + 6 = 4
+
+mousescreenUV x 10
+w p 2
+looking for mouse px 12? no on screen, since the camera does not yet move
+its point is more to the left now, so 10 - 2 = 8
+x 10 + wp Invert -2 = 8
+
+cool, so now y
+y is from bottom as is gl
+but 3d is both, bottom up and in the center of screen at start
+the app treats positive x y at bottom left same as UV coords
+the mouse x y is also not transformed
+
+so
+w y = 2 which is up
+mouse y 2 visually should be 0
+invert also works here
+w y 2 invert -2
+y 2 + -2 = 0
+
+NOW grid
+this seeeeems to not matter, it handles coords the same for UV and thus 
+should be transformable the same as above
+
+MousePicking
+Right now we are doing 2d point in box picking. Could upgrade or just swap to 
+Raycasting, but FOR NOW well stick to the simpler technique
+
+Need above transformed world space mouse
+and that point tests if its in an objects bounding box
+
+bounding box : bb
+bb min = points[1] bottom left
+bb max = points[3] top right
+SHOUDLd be the first example
+if not, whats the issue???????¿¿¿¿

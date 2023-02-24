@@ -2,7 +2,7 @@
 
 
 /*
-var box = new Plane("boxlike", 400, 400, 0, 10, 10, {r:0,g:0.5,b:1,a:1});
+var box = new Plane("boxlike", 400, 400, 0, 10, 10, {r:0,g:0.5,b:1,a:1}, this.system);
 this.system.add(box);
 
 box.onCollide = function(){
@@ -20,6 +20,9 @@ import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
 import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
+
+// cant use this in this class cause it extends it
+// import { VisualPlane } from "./VisualPlane.js";
 
 
 
@@ -40,6 +43,24 @@ export class Plane extends Quark {
     // hasSetPlane = false;
     
     positions = [];
+    
+    visualPoints = {
+      // top left count clockwise
+      // cant use visual plane cause it extends it
+      // new VisualPlane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}),
+      corners : [],
+      // left counter clockwise
+      sides : []
+    }
+    
+    // cant use visual plane cause it extends it
+    // so have to just make an internal version
+    mockVisualPlane(){
+      var item = new Plane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+      item.canCollide = false;
+      item.subType = "visualPlane";
+      return item;
+    }
   
     // cachePositions = [];
     // counter clockwise
@@ -150,19 +171,19 @@ export class Plane extends Quark {
       /*
       test pointerMovingrecent.points[0].y += 20
       recent.points[0].x += 20
-      recent.rebuildDimentions()
+      recent.rebuildDimensions()
 
       recent.points[1].y += 20
       recent.points[1].x += 20
-      recent.rebuildDimentions() 
+      recent.rebuildDimensions() 
 
       recent.points[2].y += 20
       recent.points[2].x += 20
-      recent.rebuildDimentions() 
+      recent.rebuildDimensions() 
 
       recent.points[3].y += 20
       recent.points[3].x += 20
-      recent.rebuildDimentions() 
+      recent.rebuildDimensions() 
       */
       
       points[0].x = -this.width / 2;
@@ -228,12 +249,12 @@ export class Plane extends Quark {
         this.sides.top[1].y += scalar;
       }
       
-      this.rebuildDimentions();
+      this.rebuildDimensions();
       
     }
     
     
-    rebuildDimentions(){
+    rebuildDimensions(){
       this.width = this.sides.right[0].x - this.sides.left[0].x;
       this.height = this.sides.top[0].y - this.sides.bottom[0].y;
       
@@ -295,50 +316,152 @@ export class Plane extends Quark {
     }
     
     
-    setPlane() {
-      // var x1 = x;
-      // var x2 = x + width;
-      // var y1 = y;
-      // var y2 = y + height;
-      // 
-      // // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
-      // // whatever buffer is bound to the `ARRAY_BUFFER` bind point
-      // // but so far we only have one buffer. If we had more than one
-      // // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
-      // 
-      // // counter clockwise
-      // var p0;
-      // var p1;
-      // var p2;
-      // var p3;
-      // 
-      // var positions = [
-      //   x1, y1,
-      //   x1, y2,
-      //   x2, y2,
-      //   x2, y1,
-      //   // other tri
-      //   x1, y1,
-      //   x2, y2
-      // ];
+    // setPlane() {
+    //   // var x1 = x;
+    //   // var x2 = x + width;
+    //   // var y1 = y;
+    //   // var y2 = y + height;
+    //   // 
+    //   // // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+    //   // // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+    //   // // but so far we only have one buffer. If we had more than one
+    //   // // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+    //   // 
+    //   // // counter clockwise
+    //   // var p0;
+    //   // var p1;
+    //   // var p2;
+    //   // var p3;
+    //   // 
+    //   // var positions = [
+    //   //   x1, y1,
+    //   //   x1, y2,
+    //   //   x2, y2,
+    //   //   x2, y1,
+    //   //   // other tri
+    //   //   x1, y1,
+    //   //   x2, y2
+    //   // ];
+    // 
+    //   // this.positions = [];
+    //   // 
+    //   // for (var i = 0; i < this.cachePositions.length; i++) {
+    //   // 
+    //   //   // this does not work for z
+    //   //   // if od its y, otherwise x
+    //   //   if(i % 2){
+    //   //     this.positions[i] = this.cachePositions[i] + this.y;
+    //   //   }
+    //   //   else {
+    //   //     this.positions[i] = this.cachePositions[i] + this.x;
+    //   //   }
+    //   // }
+    // 
+    // 
+    // 
+    //   // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+    // }
+    // 
+    
+    
+    // we dont have a full fledged Ray and Raycaster yet
+    raycastCheck(){
       
-      // this.positions = [];
-      // 
-      // for (var i = 0; i < this.cachePositions.length; i++) {
-      // 
-      //   // this does not work for z
-      //   // if od its y, otherwise x
-      //   if(i % 2){
-      //     this.positions[i] = this.cachePositions[i] + this.y;
-      //   }
-      //   else {
-      //     this.positions[i] = this.cachePositions[i] + this.x;
-      //   }
-      // }
-      
-      
-
-      // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
     }
+    
+    
+    // we dont have a full fledged Ray and Raycaster yet
+    // point should be in world space
+    collideVMin = new Vector3();
+    collideVMax = new Vector3();
+    pointCollideCheck(point, usePadding){
+      if(!this.boundingBox){
+        console.log("missing a boundingbox");
+        return false;
+      }
+      // move box to world space
+      // debugger
+      
+      
+      // this.workBox.copy(this.boundingBox).applyMatrix4(this.worldMatrix);
+      this.workBox.copy(this.boundingBox);
+      this.localToEntireWorld( this.workBox.min );
+      this.localToEntireWorld( this.workBox.max );
+      
+      // this.workBox.min.x += -this.system.world.position.x;
+      // this.workBox.min.y += -this.system.world.position.y;
+      // // 
+      // this.workBox.max.x += this.system.world.position.x;
+      // this.workBox.max.y += this.system.world.position.y;
+      
+      return this.workBox.containsPoint(point);
+    }
+    
+    
+    
+    buildCorners(worldAxis = false){
+
+      if(this.visualPoints.corners.length === 0){
+        for (var i = 0; i < 4; i++) {
+          var box = this.mockVisualPlane();
+          this.system.add(box);
+          // FOR SOME reason this has to happen AFTER system.add
+          box.parent = this;
+          this.visualPoints.corners[i] = box;
+        }
+      }
+
+      for (var i = 0; i < this.points.length; i++) {
+        var item = this.visualPoints.corners[i];
+        item.position.copy(this.points[i]);
+        item.refreshMatrixes();
+        if(worldAxis === true){
+          item.parent = null;
+          item.position.applyMatrix4(this.worldMatrix);
+          item.refreshMatrixes();
+        }
+        item.rebuildDimensions();
+        // item.updateWorldMatrix(this.matrixWorld);
+        
+        item.visible = true;
+        
+      }
+      
+    }
+    
+    showCorners(toggle){
+      if(this.visualPoints.corners.length === 0){
+        this.buildCorners();
+      }
+      for (var i = 0; i < this.visualPoints.corners[i].length; i++) {
+        var item = this.visualPoints.corners[i];
+        item.visible = toggle;
+      }
+      
+    }
+    
+    
+    // vvv23423 = new Vector3();
+    computeBoundingBox(){
+      
+      // why does this not have points sometimes??!?!?!
+      if(this.points){
+        // console.log("has points!");
+        // this is a shortcut to performing the .expandByPoint() thats not in yet
+        // var vv = this.points[1].clone();//.applyMatrix4(this.worldMatrix);
+        this.boundingBox.min.copy(this.points[1]);
+      
+        // var vv = this.points[3].clone();//.applyMatrix4(this.worldMatrix);
+        this.boundingBox.max.copy(this.points[3]);
+        
+      }
+      // otherwise just use the default width height
+      else {
+        super.computeBoundingBox();
+      }
+      
+    }
+
+    
 
   }

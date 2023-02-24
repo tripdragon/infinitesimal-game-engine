@@ -123,8 +123,15 @@ export class StampTool extends Tool {
     // console.log(this.system.pointer);
     // this.visualObject.x = this.system.pointer.client.x;
     // this.visualObject.y = this.system.pointer.client.y;
-    this.visualObject.x = this.system.pointer.worldUV.x;
-    this.visualObject.y = this.system.pointer.worldUV.y;
+    
+    
+    // this.visualObject.x = this.system.pointer.screenUV.x;
+    // this.visualObject.y = this.system.pointer.screenUV.y;
+    // 
+    
+    this.visualObject.x = this.system.pointer.screenUVOffset.x;
+    this.visualObject.y = this.system.pointer.screenUVOffset.y;
+    
   }
 
   pointerUp(){

@@ -4,6 +4,7 @@ import { Editor } from "./Editor.js";
 
 import { Rectangle } from "../Primitives/Rectangle.js";
 import { Plane } from "../Primitives/Plane.js";
+import { VisualPlane } from "../Primitives/VisualPlane.js";
 import { Platform } from "../Primitives/Platform.js";
 
 // tools
@@ -12,6 +13,8 @@ import { StampTool } from "../Tools/StampTool.js";
 import { Alien1 } from "../Cast/Alien1.js";
 import { Alien2 } from "../Cast/Alien2.js";
 import { SelectTool } from "../Tools/SelectTool.js";
+import { Vector3 } from "../Modules/Vector3.js";
+import { Polygon } from "../Primitives/Polygon.js";
 
 import { Grid } from "../Modules/Grid.js";
 
@@ -53,6 +56,13 @@ export class Editor111 extends Editor {
     var EditorMagic = this;
     
     var _this = this;
+    
+    
+    // Global_Objects
+        window.VisualPlane = VisualPlane;
+window.Vector3 = Vector3;
+
+    window.Polygon = Polygon;
     
     
     //
@@ -139,9 +149,6 @@ export class Editor111 extends Editor {
     platy_stamper333.editor = EditorMagic;
     
     EditorMagic.addTool(platy_stamper333);
-
-
-
 
 
 

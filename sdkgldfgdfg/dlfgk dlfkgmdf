@@ -1,0 +1,134 @@
+
+
+this.localMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
+
+this.updateWorldMatrix();
+
+
+var system = APPPP
+var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+//box.position.copy(selectedsdfkdg.points[0])
+box.position.copy(selectedsdfkdg.boundingBox.min)
+box.position.applyMatrix4(selectedsdfkdg.worldMatrix)
+box.updateBoundingBox()
+
+system.add(box);
+
+
+
+var system = APPPP
+system.world.x += 20
+system.world.refreshMatrixes()
+// system.world.updateWorldMatrix()
+
+selectedsdfkdg.worldMatrix.getPosition()
+
+
+bb = system.world.worldMatrix.clone()
+
+selectedsdfkdg.refreshMatrixes()
+
+var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+box.position.copy(selectedsdfkdg.points[0])
+
+// vv = selectedsdfkdg.worldMatrix.clone().invert()
+
+box.position.applyMatrix4(selectedsdfkdg.worldMatrix)
+box.refreshMatrixes()
+// should not need this??¿, its pushing the position into the local space of the world
+// box.position.sub(system.world.position)
+ff = system.world.worldMatrix.clone().identity()
+
+box.position.applyMatrix4( ff.copy( system.world.worldMatrix ).invert() );
+// box.position.applyMatrix4( system.world.worldMatrix.copy( box.worldMatrix ).invert() );
+//box.refreshMatrixes()
+// box.updateBoundingBox()
+
+system.add(box);
+box.refreshMatrixes()
+
+
+
+
+box.position
+
+box.parent = selectedsdfkdg
+
+
+localToWorld( vector ) {
+
+  this.updateWorldMatrix( true, false );
+
+  return vector.applyMatrix4( this.matrixWorld );
+
+}
+
+
+worldToLocal( vector ) {
+
+  this.updateWorldMatrix( true, false );
+
+  return vector.applyMatrix4( _m1.copy( this.matrixWorld ).invert() );
+
+}
+
+updateWorldMatrix( updateParents, updateChildren ) {
+
+
+
+
+
+
+
+//box.localMatrix.setTranslation(box.position.x,box.position.y,box.position.z);
+//box.worldMatrix.multiplyMatrices(selectedsdfkdg.worldMatrix, box.localMatrix);
+
+//box.worldMatrix.copy(box.localMatrix).multiply(selectedsdfkdg.worldMatrix);
+
+
+box.name = "narf"
+box.parent  = selectedsdfkdg 
+system.add(box);
+// WHY does this have to get assigned AFTER its added?!?!??!
+// box.parent  = selectedsdfkdg 
+
+
+
+console.log(this.localMatrix.getPosition(), this.worldMatrix.getPosition());
+
+
+//box.refreshMatrixes()
+
+//box.worldMatrix.copy(box.localMatrix);
+
+
+//box.updateWorldMatrix(selectedsdfkdg.worldMatrix)
+
+//selectedsdfkdg.updateWorldMatrix()
+system.add(box);
+
+//system.add(box);
+
+box.worldMatrix.identity();
+box.worldMatrix.getPosition();
+selectedsdfkdg.updateWorldMatrix()
+
+
+
+
+
+
+//selectedsdfkdg.position.x += 100
+
+//box.position.copy(selectedsdfkdg.position)
+
+
+
+//box.position.set(0,0,0)
+
+box.worldMatrix.getPosition()
+[ 443, 667, 0, 1 ]
+
+
+box.localMatrix.getPosition() 
+[ -180, 35, 0, 1 ]
