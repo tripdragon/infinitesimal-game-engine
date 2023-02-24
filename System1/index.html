@@ -126,6 +126,9 @@
         // APPPP.model1 = {
         //   pos.
         // }
+        
+        var onConsole;
+        
     </script>
 
     <script type="module" type="text/javascript">
@@ -136,6 +139,13 @@
       // import { SquareLike } from "./Primitives/squareLike.js";
       
       // import { DRRR_Joysticky } from "./custom-components/DRRR_Joysticky.js";
+      
+      
+      import { OnScreenLogger } from "./Plugins/OnScreenLogger.js";
+      
+      // its in the other script tag
+      onConsole = new OnScreenLogger();
+      // window.onConsole;
       
       
       import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
@@ -290,6 +300,28 @@
         
       }
       
+      
+      // var pointer = APPPP.pointer;
+      
+
+      // var onConsole = new OnScreenLogger();
+      // window.onConsole;
+      
+      // var updateInterval = 1;
+      // 
+      // var ii = 0;
+      // var intervalID = setInterval( () =>{
+      //   onConsole.log("fish", Date.now());
+      //   onConsole.log("narfs", Date.now()+ 234896, "moof", "fipot");
+      // 
+      //   // hrmmmm, trying to figure out how to have a dynamic observer
+      //   // onConsole.wrapLog("pointer", pointer.client.x);
+      //   // setInterval( () =>{
+      //   //   onConsole.log("mouse", pointer.screenUV.x, pointer.screenUV.y );
+      //   // }, 2)
+      // 
+      // }, updateInterval);
+
       
       
     </script>
