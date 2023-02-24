@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bleep bleep</title>
+    <!-- <script src="mission1.js" type="module" defer></script> -->
+    <!-- 
+    python3 -m http.server 8001 
+    
+    this is just a canvas 2d app for pixel painting for now
+    
+    it shows how class Grid works
+    
+    localhost:8001/System1/Demos/paintgrid.html
+    
+    -->
+
+
+    <style media="screen">
+        *{
+          margin: 0;
+          padding: 0;
+        }
+        body{
+          overflow: hidden;
+        }
+        
+        /* ideally canvas gl is the bottom of the stack */
+        #canvassss {
+          z-index: -1;
+          position: absolute;
+        }
+    </style>
+
+    <style media="screen">
+      /* #controls{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        
+        width: 100px;
+        height: 100px;
+        padding: 20px 0 0 20px;
+      }
+
+      #controls .add{
+        
+      } */
+      
+      #canvassss{
+        /* background-color: orange; */
+      }
+      
+      
+      .button{
+        width: 32px;
+        height: 32px;
+      }
+      
+      #controls222 {
+        position: absolute;
+        top: 0px;
+        z-index: 1;
+        
+        width: 100%;
+        height: 35px;
+        padding: 20px 0 0 20px;
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: flex-start;
+      }
+
+      #controls222 .button {
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+        margin: 0 4px;
+        font-size: 20px;
+        
+      }
+      
+      #ksdjfg{
+        position: absolute;
+        z-index: 12;
+        bottom: 100px;
+        left: 100px;
+        background-color: white;
+        width: 1px;
+        height: 1px;
+      }
+      
+
+    </style>
+    
+    <!-- idea is to inject here and clear when switching games -->
+    <style id="gamestyles" media="screen">
+      .fish {
+        color: "pwgjpodg";
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
+
+    <canvas id="canvassss" width="512" height="512"></canvas>
+
+    <div id="gamespace"></div>
+    <div id="bodyInjectionPointMain">
+    </div>
+
+    <script type="text/javascript">
+        var APPPP;
+
+    </script>
+
+    <script type="module" type="text/javascript">
+      // import AppMain from './AppMain.js';
+      // APPPP = AppMain();
+
+      import {Vector2} from '../Modules/Vector2.js';
+      import {Grid} from '../Modules/Grid.js';
+      
+      const canvas = document.getElementById("canvassss");
+      // const canvasBuffer = document.createElement('canvas');
+      // canvasBuffer.width = 512;
+      // canvasBuffer.height = 512;
+      const ctx = canvas.getContext("2d");
+      // const ctxBuffer = canvasBuffer.getContext("2d");
+      
+      window.canvasGG = canvas;
+      
+      var mouse = new Vector2();
+      
+      var IS_DOWN = false;
+      
+      var points = [];
+      
+      // // en do paint app clean line later
+      // var mPointDown = new Vector2();
+      // 
+      // 
+      
+      // grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
+      // box2.x = grid.position3D.x;
+      // box2.y = grid.position3D.y;
+      
+      
+      
+      function rColor(){
+        return Math.floor(Math.random()*255);
+      }
+      
+      // clear once
+      function clear(){
+        
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        ctx.fillRect(0, 0, canvasGG.width, canvasGG.height);
+        
+        
+      }
+      
+      
+      // var USE_DEBUGGER_Mouse = true;
+      var USE_DEBUGGER_Mouse = false;
+      
+      
+      function draw() {
+        if (canvas.getContext) {
+          
+          
+          ctx.fillStyle = "#ffffff";
+          ctx.strokeStyle = "#ffffff11";
+          ctx.beginPath();
+          ctx.arc(0, 0, 4, 0, Math.PI*2);
+          ctx.stroke();
+          
+          
+          
+          drawArrow();
+          
+          if(IS_DOWN){
+            
+            
+            // 00d4ff
+            ctx.fillStyle = "rgba(0, 255, 100, 1)";
+            ctx.fillRect(mouse.x, mouse.y, 4, 4);
+            points.push(mouse.clone());
+            
+            
+          }
+  
+          
+          
+        }
+      }
+      
+
+      var loopID;
+      
+      let loop = function(){
+
+        loopID = requestAnimationFrame( loop.bind(this) );
+        // console.log("popcorn");
+        
+        // this.time.now = Date.now();
+        // this.time.delta = this.time.now - this.time.mTime;
+
+        draw();
+        
+        // this.time.mTime = this.time.now;
+      };
+
+      function onPointerMove( event ) {
+        
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        
+        // console.log(mouse);
+
+      }
+      
+      function onPointerDown(ev){
+        // debugger
+        IS_DOWN = true;
+        clear();
+        points = [];
+      }
+      function onPointerUp(ev){
+        IS_DOWN = false;
+        console.log(points.length);
+        drawLine(points[0], points[points.length-1], 2, "00d4ff");
+        
+      }
+      
+      // https://hslpicker.com/#00d4ff
+      function drawLine(start,stop, width, hexColor = "00d4ff"){
+
+        ctx.strokeStyle = "#"+hexColor;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(stop.x, stop.y);
+        ctx.stroke(); 
+        
+      }
+      
+      var dir = new Vector2();
+      var _start = new Vector2(0,0);
+      var _stop = new Vector2(100,0);
+      var arrow1 = new Vector2(0,0);
+      var arrow2 = new Vector2(0,0);
+      
+      
+      function sideRotate(val, angle){
+        return 
+      }
+      
+      var angle = 0;
+      function drawArrow(start = new Vector2(0,200), stop = new Vector2(0,200), width, hexColor = "00d4ff"){
+        
+        // we cant treat the arrow as a function since its already drawn at that point
+        // so we need to precalculate the coords
+
+        _start.set(0,0);
+        _stop.set(0,0);
+        // _start.add(start);
+        // _stop.add(stop);
+        _start.add( new Vector2(0,0) );
+        // _stop.add( new Vector2(20,140) );
+        _stop.add( new Vector2(100,0) );
+        // _stop.add( new Vector2(100,0) );
+        // _stop.y *= -1; // y is down in canvas
+        
+        dir.copy(_stop).sub(_start).normalize(); 
+        // var angle = Math.atan2(dir.y, dir.x);
+        
+        // angle = Math.PI / 2 * 0.5;
+        angle += 0.1;
+        
+        console.log(angle);
+        
+        var sy = Math.sin(angle);
+        var cx = Math.cos(angle);
+        
+        // 
+        // need to 
+        
+        var tttt = _stop.clone();
+        
+        // _stop.x = _stop.x * cx + _stop.y * sy;
+        // _stop.y = _stop.x * -sy + _stop.y * cx;
+        
+        _stop.rotateAround(_start, angle);
+        drawLine(_start, _stop, 2, "00d4ff");
+        
+        // top
+        // drawLine(_stop, arrow1.copy(_stop).add(new Vector2(-10, -10)), 2, "00d4ff");
+        // // bottom
+        // drawLine(_stop, arrow2.copy(_stop).add(new Vector2(-10, 10)), 2, "00d4ff");
+        
+        // var vv = new Vector2(-40, -40);
+        var vv = new Vector2(0, -40);
+        // var xx = vv.x * cx + vv.y * sy;
+        // var yy = vv.x * -sy + vv.y * cx;
+        // // var xx = vv.x + cx;
+        // // var yy = vv.y + sy;
+        // // xx += cx;
+        // // yy += sy;
+        // vv.set(xx,yy);
+        // 
+        
+        vv.rotateAround(new Vector2(), -angle);
+        
+        
+        // drawLine( tttt, vv , 2, "00d4ff");
+        // drawLine( new Vector2(), vv , 2, "d4ff00");
+        // bottom
+        drawLine(new Vector2(), vv , 2, "d4ff00");
+        // drawLine(_stop, arrow2.copy(_stop).add(new Vector2(-10, 10)), 2, "00d4ff");
+        
+
+        // newX = x *  c + y * s;
+        // newY = x * -s + y * c;
+        
+      }
+      
+      
+      
+      // Setup
+      
+      console.warn("canvas is offset to debug with");
+
+      
+      clear();
+      
+      // debug with
+      ctx.translate(512/2, 512/2)
+
+      
+      
+      canvas.addEventListener( 'pointermove', onPointerMove.bind(this), true );
+      canvas.addEventListener( 'pointerdown', onPointerDown.bind(this), true );
+      canvas.addEventListener( 'pointerup', onPointerUp.bind(this), true );
+
+
+
+      loop.call(this);
+    
+
+      
+    </script>
+  </body>
+</html>
