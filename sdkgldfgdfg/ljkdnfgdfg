@@ -1,18 +1,36 @@
-selectedsdfkdg
 
+
+// APPPP.world.position.set(50,100,0)
+// APPPP.world.refreshMatrixes()
 
 // selectedsdfkdg.boundingBox
 
 system = APPPP
 
+APPPP.world.position.set(10,10,0)
+APPPP.world.refreshMatrixes()
+
+
+inverseWorldMat = system.world.worldMatrix.clone().invert()
+
 aa = box4.boundingBox.min.clone()
-aa.applyMatrix4(box4.worldMatrix)
+
+// here we need to localToWorld and then worldToLocal OF the .world
+// cause we need the position to land with the offset of the .world
+// neeeat
+aa.applyMatrix4(box4.worldMatrix).applyMatrix4(inverseWorldMat)
+
 var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:0,g:0.8,b:1,a:1}, system);
 system.add(box);
 box.position.copy(aa)
 
+
+
 bb = box4.boundingBox.max.clone()
-bb.applyMatrix4(box4.worldMatrix)
+//bb.applyMatrix4(box4.worldMatrix)
+// box4.localToWorld(bb);
+// system.world.worldToLocal(bb);
+box4.localToEntireWorld(bb);
 var box = new VisualPlane("boxlike", 0, 0, 0, 10, 10, {r:1,g:0.2,b:0.2,a:1}, system);
 system.add(box);
 box.position.copy(bb)
@@ -30,6 +48,8 @@ p0.applyMatrix4(box4.worldMatrix)
 p1.applyMatrix4(box4.worldMatrix)
 p2.applyMatrix4(box4.worldMatrix)
 p3.applyMatrix4(box4.worldMatrix)
+
+// p0.x += 20
 
 
 
@@ -52,15 +72,26 @@ plaoototty.position.set(0,0,0)
 
 
 
-
-
-
-box.parent  = selectedsdfkdg 
-box.position.set(0,0,0)
-
-
+// 
+// plaoototty.points[1].x += 24
+// plaoototty.updatePositions()
 
 
 
 
-aa.applyMatrix4(system.world.worldMatrix)
+
+
+
+
+// 
+// 
+// 
+// box.parent  = selectedsdfkdg 
+// box.position.set(0,0,0)
+// 
+// 
+// 
+// 
+// 
+// 
+// aa.applyMatrix4(system.world.worldMatrix)

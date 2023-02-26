@@ -1,7 +1,30 @@
 
 
+// Update things when transforming positions scla rotation etc
+
+/*
+
+
+
+refreshMatrixes()
+  : updateWorldMatrix()
+
+
+
+updateBoundingBox()
+  : computeBoundingBoxes()
+    : computeBoundingBoxPadding()
+    
+Plane has 
+.rebuildDimensions()
+    
+*/
+
+
+
 // import {Layers} from './Layers.js';
 import {Vector3} from '../Modules/Vector3.js';
+import {Position as _Position} from '../Modules/Position.js';
 import {Box3} from '../Modules/Box3.js';
 import {Color} from '../Modules/Color.js';
 import {Matrix4} from '../Modules/GL-Matrix.js';
@@ -67,41 +90,22 @@ export class Quark {
   worldMatrix_changed = false; // dirty flag ?
   workMatrix = new Matrix4();
   
+  // short hand easy to recall for AABB but we update the local and world bounding boxes
+  // and the other types like padding
+  // call this after mutating any transform like .position .rotation .scale .quat .mat
+  // aba() aabb()
+  // bbb(){
+  //   this.computeBoundingBoxes();
+  // }
+  // set it in the constructor
+  bbb(){}
+
+  
   // APPPP.world.updateWorldMatrix()
   // if you call it with a matrix then it will change its world position
   // otherwise will stay the same
   // it then does the same for all down chain
   updateWorldMatrix(parentWorldMatrix){
-    // console.log("?updateWorldMatrix");
-    // if(this.name !== "world"){
-    // 
-    // }
-    
-    
-    //console.log("updateWorldMatrix");
-    
-    // if(this.name === "narf"){
-    // // debugger
-    // console.log("?????");
-    // console.log(this.localMatrix.getPosition(), this.worldMatrix.getPosition(), parentWorldMatrix);
-    // }
-    // if(parentWorldMatrix){
-    //   // force updates the world Matrix
-    // 
-    //   this.worldMatrix.multiplyMatrices(parentWorldMatrix, this.localMatrix);
-    // 
-    // }
-    // else {
-    // 
-    //   // make sure its local!
-    //   if(this.parent === null){
-    //     // if(this.name !== "world"){
-    //     // 
-    //     //   // debugger
-    //     // }
-    //     this.worldMatrix.copy(this.localMatrix);
-    //   }
-    // }
     
     if(parentWorldMatrix){
       this.worldMatrix.multiplyMatrices(parentWorldMatrix, this.localMatrix);
@@ -114,7 +118,7 @@ export class Quark {
     }
     
     // recussion updates chain
-    // now process all the children
+    // now process all the friends
     
     var worldMatrix = this.worldMatrix;
     
@@ -128,11 +132,11 @@ export class Quark {
   // draws to the buffer
   draw(colorUniformLocation, matrixLocation){
     
+    // mesh objects have color
     // this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);      
     
     // if(colorUniformLocation)
     
-    // debugger
     this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
     
     
@@ -239,36 +243,48 @@ export class Quark {
   // NOTE if you mutate this vector directly you must call updateBoundingBox()
   // and maybe update local matrix as well
   // need a wrapper function
-  position = new Vector3();
+  // position = new Vector3();
+  position = new _Position(this);
+  
   mPosition = new Vector3(Infinity, Infinity, Infinity); // not sure of this yet
   // _position = new Vector3();
 
-  get x(){
-    return this.position.x;
-  }
-  get y(){
-    return this.position.y;
-  }
-  get z(){
-    return this.position.z;
-  }
+  // get x(){
+  //   return this.position.x;
+  // }
+  // get y(){
+  //   return this.position.y;
+  // }
+  // get z(){
+  //   return this.position.z;
+  // }
   
   set x(v){
+    console.warn("use .position for now");
+    return;
+    
     this.position.x = v;
-    this.updateBoundingBox();
+    // this.updateBoundingBox();
+    this.computeBoundingBoxes();
   }
   set y(v){
+    console.warn("use .position for now");
+    return;
     this.position.y = v;
-    this.updateBoundingBox();
+    // this.updateBoundingBox();
+    this.computeBoundingBoxes();
   }
   set z(v){
+    console.warn("use .position for now");
+    return;
     this.position.z = v;
-    this.updateBoundingBox();
+    // this.updateBoundingBox();
+    this.computeBoundingBoxes();
   }
   
   updateBoundingBox(){
-    this.computeBoundingBox();
-    this.computeBoundingBoxPadding();
+    this.computeBoundingBoxes();
+    //this.computeBoundingBoxesPadding();
   }
   
 
@@ -450,17 +466,20 @@ export class Quark {
   boxPadding = 0;
   
   boundingBox = new Box3();
+  boundingBoxWorld = new Box3(); // this one is baked world AABB axis 
   // invisible extra AABB testing space for various needs
   // like testing if an actor is standing near enough to a platform
   boundingBoxPadding = new Box3();
+  boundingBoxPaddingWorld = new Box3();
   workBox = new Box3(); // copy into
   
-  get min(){
-    return this.boundingBox.min;
-  }
-  get max(){
-    return this.boundingBox.max;
-  }
+  // Hmmmmmmm this helps and is also deceptive
+  // get min(){
+  //   return this.boundingBox.min;
+  // }
+  // get max(){
+  //   return this.boundingBox.max;
+  // }
   
   // change per subclass
   // HRmmmmm max y is wrong for screenspace
@@ -468,7 +487,7 @@ export class Quark {
   // THIS FAILS if the position is not in the center of the geometry
   // Its wrong anyway, AABB is still a local space coords thing
   // you move it via a matrix when nessesary as expected
-  // computeBoundingBox(){
+  // computeBoundingBoxes(){
   //   this.boundingBox.min.x = (-this.width / 2) + this.x;
   //   // y starts at bottom as it should!
   //   // this.boundingBox.min.y = (this.height / 2) + this.y;
@@ -481,7 +500,7 @@ export class Quark {
   //   this.boundingBox.max.y = (this.height / 2) + this.y; // this should be the correct one
   //   this.boundingBox.max.z = (this.depth / 2) + this.z;
   // }
-  computeBoundingBox(){
+  computeBoundingBoxes(){
     if(this.width === 0 || this.height === 0){
       console.log("flat dimensions");
       return
@@ -499,12 +518,19 @@ export class Quark {
     this.boundingBox.max.y = (this.height / 2); // this should be the correct one
     this.boundingBox.max.z = (this.depth / 2);
 
+    
+    this.boundingBoxWorld.copy(this.boundingBox).applyMatrix4(this.worldMatrix);
+    
+    this.computeBoundingBoxPadding();
 
   }
   
   computeBoundingBoxPadding(){
     this.boundingBoxPadding.copy(this.boundingBox);
     this.boundingBoxPadding.addPaddingScreenSpace(this.boxPadding);
+    
+    this.boundingBoxPaddingWorld.copy(this.boundingBoxWorld);
+    this.boundingBoxPaddingWorld.addPaddingScreenSpace(this.boxPadding);
   }
   
   
@@ -562,10 +588,10 @@ export class Quark {
     this.system = thing.system;
     this.visible = thing.visible;
     this.gl = thing.gl;
-    this.x = thing.x;
-    this.y = thing.y;
-    this.z = thing.z;
-    this.position = thing.position.clone();
+    // this.x = thing.x;
+    // this.y = thing.y;
+    // this.z = thing.z;
+    this.position = thing.position.clone(this);
     this.mPosition.set(Infinity, Infinity, Infinity);
     this.width = thing.width;
     this.height = thing.height;
@@ -575,6 +601,8 @@ export class Quark {
 
     this.boundingBox = thing.boundingBox.clone();
     this.boundingBoxPadding = thing.boundingBoxPadding.clone();
+    this.boundingBoxWorld = thing.boundingBoxWorld.clone();
+    this.boundingBoxPaddingWorld = thing.boundingBoxPaddingWorld.clone();
     
     // this.color = thing.color;
     this.color = thing.color.clone();
@@ -617,8 +645,9 @@ export class Quark {
     this.name = name;
     this.height = height;
     this.width = width;
-    this.x = x;
-    this.y = y;
+    // this.x = x;
+    // this.y = y;
+    this.position.set(x,y,z);
     this.color.copy(color);
     this.mColor.copy(color);
     this.system = system;
@@ -647,6 +676,9 @@ export class Quark {
     else {
       this.worldMatrix.copy(this.localMatrix);
     }
+
+    // see notes
+    this.bbb = this.computeBoundingBoxes;
 
     
   }

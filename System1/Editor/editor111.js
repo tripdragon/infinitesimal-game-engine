@@ -59,8 +59,8 @@ export class Editor111 extends Editor {
     
     
     // Global_Objects
-        window.VisualPlane = VisualPlane;
-window.Vector3 = Vector3;
+    window.VisualPlane = VisualPlane;
+    window.Vector3 = Vector3;
 
     window.Polygon = Polygon;
     
@@ -127,7 +127,7 @@ window.Vector3 = Vector3;
 
 
 
-    var platy222 = new Platform("platy", 0, 0, 0, 160, 140, {r:0,g:1,b:1,a:1});
+    var platy222 = new Platform("platy", 0, 0, 0, 160, 140, {r:0,g:1,b:1,a:1}, this.system);
     var platy_stamper222 = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
     platy_stamper222.visualObject = platy222;
     platy_stamper222.visualObject.canUpdate  = false;
@@ -138,12 +138,12 @@ window.Vector3 = Vector3;
 
     
 
-    var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1});
+    var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1}, this.system);
     var platy_stamper333 = new PlatformStampTool("wobject_stamper_platform", "platform stamper", this.system);
     platy_stamper333.visualObject = platy333;
     platy_stamper333.visualObject.canUpdate  = false;
     // platy_stamper333.stampingObject = platy333.clone();
-    platy_stamper333.stampingObject = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1});
+    platy_stamper333.stampingObject = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1}, this.system);
     platy_stamper333.stampingObject.color.setHex(0x00ff37);
     platy_stamper333.baseGrid = EditorMagic.baseGrid;
     platy_stamper333.editor = EditorMagic;
@@ -451,8 +451,11 @@ window.Vector3 = Vector3;
       var valX = remap(0,1, -1800, 890*2,  nor.x);
       var valY = remap(0,1, -200, 490,  nor.y);
       
-      APPPP.world.x = valX;
-      APPPP.world.y = valY;
+      // APPPP.world.x = valX;
+      // APPPP.world.y = valY;
+      
+      APPPP.world.position.set( valX, valY, 0);
+      
       
       
       // APPPP.cameraDefault.x = -10

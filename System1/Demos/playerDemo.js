@@ -45,79 +45,123 @@ disc.load = function(){
   
   this.system.backgroundColor = {r:0,g:0.05,b:0.05,a:1};
 
-
-  var points = [
-    new Vector3(-1,1,0), new Vector3(-1,-1,0), new Vector3(1,-1,0) ,
-    // new Vector3(-1,1,0), new Vector3(-1,-1,0),
-  ];
-  var plaoototty = new Polygon("plwoeir", points, 400,200,0,  112, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.add(plaoototty);
-  window.plaoototty = plaoototty;
-  
+  // 
+  // var points = [
+  //   new Vector3(-1,1,0), new Vector3(-1,-1,0), new Vector3(1,-1,0) ,
+  //   // new Vector3(-1,1,0), new Vector3(-1,-1,0),
+  // ];
+  // var plaoototty = new Polygon("plwoeir", points, 400,200,0,  112, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // plaoototty.subType = "ksdlnfjdsf"
+  // this.system.add(plaoototty);
+  // window.plaoototty = plaoototty;
+  // 
 
   
   // 
-  // var box3 = new Plane("plane", 440, 400, 260, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  var box3 = new Platform("plane", 0, 0, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  // this.system.sceneGrapth.add(box3);
-  this.system.add(box3);
-  // window.box3 = box3;
+  // var box3 = new Platform("plane", 0, 0, 0, 360, 70, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // // this.system.sceneGrapth.add(box3);
+  // this.system.add(box3);
+  // // window.box3 = box3;
 
   
-                                  // 
-                                  
-                                  var box4 = new Platform("plane magic", 540, 520, 0, 360, 70, {r:0.0,g:0.2,b:0.2,a:1}, this.system);
-                                  this.system.add(box4);
-                                  window.box4 = box4;
-                                  
-                                  // 
-                                  // 
-                                  var box5 = new Platform("plane", 240, 200, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-                                  this.system.add(box5);
-                                  // this.system.add(box5);
-                                  
-                                  
-                                  // 
-                                  
-                                  var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-                                  this.system.add(box5);
-                                  // this.system.add(box5);
-                                  
-                                  // 
-                                  for (var i = 0; i < 20; i++) {
-                                  
-                                    var w = 80;
-                                    var h = 8;
-                                    var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), 0, w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-                                    this.system.add(box);
-                                  
-                                  
-                                  }
-                                  // 
-                                  // 
-                                  // 
-                                  // debugger
-                                  // var aa = new Alien1("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-                                  // this.system.sceneGrapth.add(aa);
-                                  // // aa.canUpdate = false;
-                                  // // for now we need some defaults items to get the bot to walk
-                                  // // aa.platform = box3;
-                                  // // aa.directionVector.x = 1;
-                                  
-                                  // aa.start();
-                                  
-                                  
-                                        // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-                                        var aa = new Player("aa", 470, 300, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-                                        this.system.add(aa);
-                                        window.player__ = aa;
-                                        // aa.canUpdate = false;
-                                        // for now we need some defaults items to get the bot to walk
-                                        // aa.platform = box3;
-                                        // aa.directionVector.x = 1;
-                                  
-                                        aa.start();
-                                  // 
+  // 
+  // 
+  var box4 = new Platform("plane magic", 540, 420, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
+  this.system.add(box4);
+  window.box4 = box4;
+  // debugger
+  // box4.visible = false;
+  
+  var box5 = box4.clone();
+  // box5.visible = true;
+    this.system.add(box5);
+    box5.position.y = 200;
+    box5.refreshMatrixes();
+  box5.bbb();
+  
+  
+  
+  // 
+  // var box4bbb = new Platform("plane magic", 540, 220, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
+  // this.system.add(box4bbb);
+  // window.box4bbb = box4bbb;
+  // // debugger
+  // box4bbb.visible = false;
+  
+  
+  // debugger
+  
+  // 
+  // 
+  // var box5 = new Platform("plane", 240, 200, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // this.system.add(box5);
+  // // this.system.add(box5);
+  // 
+  // 
+  // 
+  // 
+  // var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  // this.system.add(box5);
+  // // this.system.add(box5);
+  
+  // 
+  // for (var i = 0; i < 20; i++) {
+  // 
+  //   var w = 80;
+  //   var h = 8;
+  //   var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), 0, w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  //   this.system.add(box);
+  // 
+  // }
+  
+  
+  // 
+  // 
+  // 
+  // debugger
+  // var aa = new Alien1("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+  // this.system.sceneGrapth.add(aa);
+  // debugger
+  // aa.canUpdate = false;
+  // for now we need some defaults items to get the bot to walk
+  // aa.platform = box3;
+  // aa.directionVector.x = 1;
+  
+  // aa.start();
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // Player
+  
+  
+  
+        // 
+        // 
+        // 
+        // 
+        // // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        // var aa = new Player("aa", 470, 600, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        // this.system.add(aa);
+        // window.player__ = aa;
+        // // aa.canUpdate = false;
+        // // for now we need some defaults items to get the bot to walk
+        // // aa.platform = box3;
+        // // aa.directionVector.x = 1;
+        // 
+        // aa.start();
+        
+        
+        
+        
+        
+        
+  // 
   // aa.platform = box3;
   
   // aa.useGravity = false;

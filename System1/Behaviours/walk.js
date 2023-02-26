@@ -1,13 +1,15 @@
 
 
 import { Behaviour } from './Behaviour.js';
-
+import { Vector3 } from '../Modules/Vector3.js';
 
 
 export function walk(actor, system){
   
   // var bb = new Behaviour("walk", "task", actor, system);
   var bb = new Behaviour("walk", "walk", actor, system);
+  
+  // var pos = Vector3();
   
   bb.update = function() {
     var actor = this.actor;
@@ -23,13 +25,32 @@ export function walk(actor, system){
     
     
     if(platform){
+      
+      // pos.clear(); 
         
       // stick to platform
       //actor.y = platform.max.y + -actor.height + 1;
-      actor.y = platform.max.y + -actor.height/2 + 0;
-
-      // walk from joystick
-      actor.x += actor.walkSpeed * actor.directionVector.x;
+      // actor.y = platform.max.y + actor.height/2 + 0;
+      
+      
+      
+      
+      actor.position.set(actor.position.x + actor.walkSpeed * actor.directionVector.x,
+        platform.boundingBoxWorld.max.y + actor.height/2 + 0,
+        0
+      );
+      
+      // actor.y = platform.boundingBoxWorld.max.y + actor.height/2 + 0;
+      // // walk from joystick
+      // actor.x += actor.walkSpeed * actor.directionVector.x;
+      // // 
+      // 
+      
+      
+      
+      
+      
+      
       // actor.y += actor.walkSpeed * actor.directionVector.y * -1;
 
 

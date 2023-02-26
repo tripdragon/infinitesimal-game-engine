@@ -57,16 +57,36 @@ export class Actor extends Plane {
   // logic was/is in Behaviour > Freefall
   // we need to hide the outColliders but not create it in a loop
   findPlatform(){
+    
+    if(this.visible === false){
+      this.platform = null;
+      return;
+    }
+    
     this.outColliders = [];
     var colliders = this.system.platforms;
     
     this.platform = null;
     
+    
+    // this.refreshMatrixes();
+    // this.bbb();
+    
+    // debugger
     for (var i = 0; i < colliders.length; i++) {
+      
+      // colliders[i].refreshMatrixes();
+      // colliders[i].bbb();
+      
+      
+      if(colliders[i].visible === false){
+        continue;
+      }
       
       var wasIn = this.intersectsScreenSpaceWithPadding(colliders[i]);
       if(wasIn){
         
+        // debugger
         this.outColliders.push(colliders[i]);
       }
     }
@@ -162,7 +182,8 @@ export class Actor extends Plane {
   mGravity = function(){};
   
   gravityForce = function(delta, _gravity){
-    this.y += (delta * 0.01 ) + _gravity;
+    // this.y -= (delta * 0.01 ) + _gravity;
+    this.position.y -= (delta * 0.01 ) + _gravity;
   }
   useGravity = true;
   
@@ -322,96 +343,96 @@ export class Actor extends Plane {
     
   }
   
-  // function overloading for updateWalking
-  updateWalking2(){
-    this.updateWalking(this.system.time.delta, this.gravity);
-  }
-
-  // this.updateWalking(this.system.time.delta, 9);
-  updateWalking(deltaTime, externalGravity = 9.81864){
-    
-              // var keysDown = this.system.keysDown;
-              // // gravity
-              // // player.gravity = function(){
-              // //   player.y += (delta * 0.01 ) + window.gravity;
-              // // }
-              // // wrong formula
-              // // player.y += (delta * 0.01 ) + 9.7;
-              // // player.y += 0.5;
-              // if(this.useGravity){
-              //   this.gravityForce(deltaTime, externalGravity);
-              // }
-              // 
-              // if(this._mode === this.modes.player){
-              //   // console.log("¿¿¿¿¿");
-              //   //if(arrowsDown.left){
-              //   if(keysDown.ArrowLeft){
-              //     this.x += -this.walkSpeed;
-              //   }
-              //   if(keysDown.ArrowRight){
-              //     this.x += this.walkSpeed;
-              //   }
-              //   // in screen space we need to flip y
-              //   if(keysDown.ArrowDown){
-              //     this.y += -this.walkSpeed * -1;
-              //   }
-              //   if(keysDown.ArrowUp){
-              //     this.y += this.walkSpeed * -1;
-              //   }
-              // 
-              // }
-    
-    // this is a yet to figure out "Behaviour"
-    // instead of a direct if item
-    // else if(this._mode === this.modes.bot){
-      
-      // this.useGravity = false;
-      // this could be handled by a simple vector2/3
-      // but would still take impulses in
-
-                  // this.x += this.walkSpeed * this.directionVector.x;
-                  // this.y += this.walkSpeed * this.directionVector.y * -1;
-
-      // console.log("this.x", this.x);
-      // this.y += this.walkSpeed * -1;
-      // this.y += (this.y + this.walkSpeed) * this.directionVector.y * -1;
-      // if(direction === directions.left){
-      //   this.x += -this.walkSpeed;
-      // }
-      // else if(direction === directions.right){
-      //   this.x += this.walkSpeed;
-      // }
-      // // in screen space we need to flip y
-      // else if(direction === directions.down){
-      //   this.y += -this.walkSpeed * -1;
-      // }
-      // else if(direction === directions.up){
-      //   this.y += this.walkSpeed * -1;
-      // }
-      
-      
-    // }
-    
-    // 
-    // // this is an "EDGE" "Behaviour"
-    // // Dont know where to place it yet
-    // // needs an IF
-    // // ASTROIDS!!!! like
-    // if(this.x > window.innerWidth){
-    //   this.x = 0;
-    // }
-    // else if(this.x < 0){
-    //   this.x = window.innerWidth;
-    // }
-    // if(this.y > window.innerHeight){
-    //   this.y = 0;
-    // }
-    // else if(this.y < 0){
-    //   this.y = window.innerHeight;
-    // }
-    // 
-    
-    
-  }
+  // // function overloading for updateWalking
+  // updateWalking2(){
+  //   this.updateWalking(this.system.time.delta, this.gravity);
+  // }
+  // 
+  // // this.updateWalking(this.system.time.delta, 9);
+  // updateWalking(deltaTime, externalGravity = 9.81864){
+  // 
+  //             // var keysDown = this.system.keysDown;
+  //             // // gravity
+  //             // // player.gravity = function(){
+  //             // //   player.y += (delta * 0.01 ) + window.gravity;
+  //             // // }
+  //             // // wrong formula
+  //             // // player.y += (delta * 0.01 ) + 9.7;
+  //             // // player.y += 0.5;
+  //             // if(this.useGravity){
+  //             //   this.gravityForce(deltaTime, externalGravity);
+  //             // }
+  //             // 
+  //             // if(this._mode === this.modes.player){
+  //             //   // console.log("¿¿¿¿¿");
+  //             //   //if(arrowsDown.left){
+  //             //   if(keysDown.ArrowLeft){
+  //             //     this.x += -this.walkSpeed;
+  //             //   }
+  //             //   if(keysDown.ArrowRight){
+  //             //     this.x += this.walkSpeed;
+  //             //   }
+  //             //   // in screen space we need to flip y
+  //             //   if(keysDown.ArrowDown){
+  //             //     this.y += -this.walkSpeed * -1;
+  //             //   }
+  //             //   if(keysDown.ArrowUp){
+  //             //     this.y += this.walkSpeed * -1;
+  //             //   }
+  //             // 
+  //             // }
+  // 
+  //   // this is a yet to figure out "Behaviour"
+  //   // instead of a direct if item
+  //   // else if(this._mode === this.modes.bot){
+  // 
+  //     // this.useGravity = false;
+  //     // this could be handled by a simple vector2/3
+  //     // but would still take impulses in
+  // 
+  //                 // this.x += this.walkSpeed * this.directionVector.x;
+  //                 // this.y += this.walkSpeed * this.directionVector.y * -1;
+  // 
+  //     // console.log("this.x", this.x);
+  //     // this.y += this.walkSpeed * -1;
+  //     // this.y += (this.y + this.walkSpeed) * this.directionVector.y * -1;
+  //     // if(direction === directions.left){
+  //     //   this.x += -this.walkSpeed;
+  //     // }
+  //     // else if(direction === directions.right){
+  //     //   this.x += this.walkSpeed;
+  //     // }
+  //     // // in screen space we need to flip y
+  //     // else if(direction === directions.down){
+  //     //   this.y += -this.walkSpeed * -1;
+  //     // }
+  //     // else if(direction === directions.up){
+  //     //   this.y += this.walkSpeed * -1;
+  //     // }
+  // 
+  // 
+  //   // }
+  // 
+  //   // 
+  //   // // this is an "EDGE" "Behaviour"
+  //   // // Dont know where to place it yet
+  //   // // needs an IF
+  //   // // ASTROIDS!!!! like
+  //   // if(this.x > window.innerWidth){
+  //   //   this.x = 0;
+  //   // }
+  //   // else if(this.x < 0){
+  //   //   this.x = window.innerWidth;
+  //   // }
+  //   // if(this.y > window.innerHeight){
+  //   //   this.y = 0;
+  //   // }
+  //   // else if(this.y < 0){
+  //   //   this.y = window.innerHeight;
+  //   // }
+  //   // 
+  // 
+  // 
+  // }
   
 }

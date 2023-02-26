@@ -78,7 +78,7 @@ export class Pointer {
     
     
     
-    this.inverseMat.copy(this.system.world.worldMatrix).invert();
+    // this.inverseMat.copy(this.system.world.worldMatrix).invert();
     // window.onConsole.log("inverseMat", this.inverseMat.getPosition());
     
     // window.onConsole.log("screenUVoffset", this.screenUV.clone().applyMatrix4(this.system.world.worldMatrix.clone().invert()).toArray());

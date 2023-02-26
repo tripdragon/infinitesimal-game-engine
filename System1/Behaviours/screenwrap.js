@@ -15,23 +15,27 @@ export function screenwrap(actor, system){
     var system = this.system;
     var platform = actor.platform;
     
-    
+    // debugger
     // this is an "EDGE" "Behaviour"
     // Dont know where to place it yet
     // needs an IF
     // ASTROIDS!!!! like
     // NEEDS to change the source of the wrap from window
-    if(actor.x > window.innerWidth){
-      actor.x = 0;
+    if(actor.position.x > window.innerWidth){
+      actor.position.x = 0;
+      
     }
-    else if(actor.x < 0){
-      actor.x = window.innerWidth;
+    else if(actor.position.x < 0){
+      actor.position.x = window.innerWidth;
+      
     }
-    if(actor.y > window.innerHeight){
-      actor.y = 0;
+    if(actor.position.y > window.innerHeight){
+      actor.position.y = 0;
+      
     }
-    else if(actor.y < 0){
-      actor.y = window.innerHeight;
+    else if(actor.position.y < 0){
+      actor.position.y = window.innerHeight;
+      
     }
     
     

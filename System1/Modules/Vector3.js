@@ -12,9 +12,18 @@ export class Vector3{
   // 
   // }
   
+  print(){
+    console.log("v", this.x, this.y, this.z);
+  }
+  
+  toString(){
+    return `x: ${this.x}, y: ${this.y}, z: ${this.z}`;
+  }
+  
   set(x,y,z){
     this.x = x; this.y = y; this.z = z;
   }
+  
   
   clear(){
     this.x = 0; this.y = 0; this.z = 0;

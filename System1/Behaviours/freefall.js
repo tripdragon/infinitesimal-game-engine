@@ -17,7 +17,7 @@ export function freefall(actor, system){
     // console.log("platform", platform);
   
     
-    
+    // debugger
     // console.log("findPlatform");
     actor.findPlatform();
     

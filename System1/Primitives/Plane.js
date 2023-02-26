@@ -1,5 +1,9 @@
 
 
+// Update things
+
+//.rebuildDimensions()
+
 
 /*
 var box = new Plane("boxlike", 400, 400, 0, 10, 10, {r:0,g:0.5,b:1,a:1}, this.system);
@@ -15,6 +19,7 @@ box.onCollide = function(){
 */
 
 import { Matrix4 } from "../Modules/GL-Matrix.js";
+import { Box3 } from "../Modules/Box3.js";
 
 import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
@@ -53,7 +58,7 @@ export class Plane extends Quark {
       sides : []
     }
     
-    // cant use visual plane cause it extends it
+    // cant use VisualPlane() cause it extends it
     // so have to just make an internal version
     mockVisualPlane(){
       var item = new Plane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
@@ -62,6 +67,8 @@ export class Plane extends Quark {
       return item;
     }
   
+  
+    // local space
     // cachePositions = [];
     // counter clockwise
     // +0   +3
@@ -95,13 +102,18 @@ export class Plane extends Quark {
     // this should be the world coords acording to AABB
     // and since evertything effectly moves this has to be calculated always
     // so at a cost we need to compute!!
-    get min(){
-      return this.boundingBox.min;
-    }
-    get max(){
-      return this.boundingBox.max;
-    }
+    // removing for now as internals are sooooo not solid for this much helper class
+    // get min(){
+    //   return this.boundingBox.min;
+    // }
+    // get max(){
+    //   return this.boundingBox.max;
+    // }
     
+    wwBox1 = new Box3();
+    wwMat1 = new Matrix4();
+    wwBox2 = new Box3();
+    wwMat2 = new Matrix4();
     intersects3D(plane){
       return this.boundingBox.AABBTest3D(plane);
     }
@@ -109,8 +121,27 @@ export class Plane extends Quark {
       return this.boundingBox.AABBTestScreenSpace(plane);
     }
     intersectsScreenSpaceWithPadding(plane){
-      return this.boundingBoxPadding.AABBTestScreenSpace(plane);
+      // we need to mutate World space the box before sending to the test function
+      // inverting the worldMatrix should be enough as each is in the same space
+      // not pointer space
+      
+      // wwBox1.copy(this.boundingBoxPadding).applyMatrix4( this.worldMatrix );
+      // wwBox2.copy(plane.boundingBoxPadding).applyMatrix4( plane.worldMatrix );
+      // wwBox1.AABBTestScreenSpace(wwBox2);
+      
+      
+      this.wwBox1.copy(this.boundingBoxPadding).applyMatrix4( this.worldMatrix );
+      this.wwBox2.copy(plane.boundingBoxPadding).applyMatrix4( plane.worldMatrix );
+      return this.wwBox1.AABBTestScreenSpace(this.wwBox2);
+      
+      
+      
+      // debugger
+      
+      // return this.boundingBoxWorld.AABBTestScreenSpace(plane.boundingBoxWorld);
+      
     }
+
 
     // this could use some of that fancy {deconstructor} or ... new stuff
     // Missing Z
@@ -132,8 +163,8 @@ export class Plane extends Quark {
       // its geometry is offset to handle this by default
       // thus we have to calculate and prebake positions
       this.centerPositions();
-      this.computeBoundingBox();
-      this.computeBoundingBoxPadding();
+      this.computeBoundingBoxes();
+      // this.computeBoundingBoxPadding();
 
     }
     
@@ -258,8 +289,8 @@ export class Plane extends Quark {
       this.width = this.sides.right[0].x - this.sides.left[0].x;
       this.height = this.sides.top[0].y - this.sides.bottom[0].y;
       
-      this.computeBoundingBox();
-      this.computeBoundingBoxPadding();
+      this.computeBoundingBoxes();
+      // this.computeBoundingBoxPadding();
       
       this.updatePositions();
     }
@@ -292,11 +323,6 @@ export class Plane extends Quark {
       
       this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
       
-      // this.gl.uniformMatrix4fv(matrixLocation, false, this.worldMatrix.elements);
-      
-      // this.localMatrix.setTranslation(this.position.x,this.position.y,this.position.z);
-
-
       // MAYBE handle the projection here
       // its building but not moving
       
@@ -442,7 +468,7 @@ export class Plane extends Quark {
     
     
     // vvv23423 = new Vector3();
-    computeBoundingBox(){
+    computeBoundingBoxes(){
       
       // why does this not have points sometimes??!?!?!
       if(this.points){
@@ -454,10 +480,15 @@ export class Plane extends Quark {
         // var vv = this.points[3].clone();//.applyMatrix4(this.worldMatrix);
         this.boundingBox.max.copy(this.points[3]);
         
+        // debugger
+        this.boundingBoxWorld.copy(this.boundingBox).applyMatrix4(this.worldMatrix);
+        
+        this.computeBoundingBoxPadding();
+        
       }
       // otherwise just use the default width height
       else {
-        super.computeBoundingBox();
+        super.computeBoundingBoxes();
       }
       
     }

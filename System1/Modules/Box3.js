@@ -24,6 +24,10 @@ pointInBoundingBoxScreenSpace(point, plat)
 */
 
 
+// this is a merger of Box2 and Box3
+// as the start of all things is 2dish but would just like to have z in already
+
+
 // most of this will be copied from THREE.js
 import { Vector3 } from "../Modules/Vector3.js";
 import { AABBTestScreenSpace, AABBTest3D, AABBTestScreenSpace222BackToTopYYY } from "./Colliders/collisions.js";
@@ -35,14 +39,40 @@ export class Box3{
   max = new Vector3(Infinity, Infinity, Infinity);
   
   
-  AABBTestScreenSpace(object){
-    // return AABBTestScreenSpace(this,object);
+  AABBTestScreenSpace(box){
+    // return AABBTestScreenSpace(this,box);
     // y starts at bottom as it should!
-    return AABBTestScreenSpace222BackToTopYYY(this,object);
+    
+    return AABBTestScreenSpace222BackToTopYYY(this,box);
   }
+  
+  // also just
+  // intersectsBox( box ) {
+  // 
+	// 	// using 4 splitting planes to rule out intersections
+  // 
+	// 	return box.max.x < this.min.x || box.min.x > this.max.x ||
+	// 		box.max.y < this.min.y || box.min.y > this.max.y ? false : true;
+  // 
+	// }
+  // and
+  // containsBox( box ) {
+  // 
+	// 	return this.min.x <= box.min.x && box.max.x <= this.max.x &&
+	// 		this.min.y <= box.min.y && box.max.y <= this.max.y;
+  // 
+	// }
+  
+  
   
   AABBTest3D(object){
     return AABBTest3D(this,object);
+  }
+  
+  clear(){
+    this.min.clear();
+    this.max.clear();
+    return this;
   }
   
   containsPoint( point ) {
@@ -76,10 +106,8 @@ export class Box3{
     return this;
   }
   
-  print(){
-    console.log(this.min.x, this.max.y, "____", this.max.x, this.max.y);
-    console.log(this.min.x, this.min.y, "____", this.max.x, this.min.y);
-  }
+  
+  
   
 
 
@@ -95,5 +123,19 @@ export class Box3{
 		return this;
 
 	}
+  
+  print(){
+    
+    // debugger
+    console.log("min",this.min.toString());
+    console.log("max",this.max.toString());
+    
+  }
+  
+  // this was to print points in counter clockwise
+  // print(){
+  //   console.log(this.min.x, this.max.y, "____", this.max.x, this.max.y);
+  //   console.log(this.min.x, this.min.y, "____", this.max.x, this.min.y);
+  // }
   
 }

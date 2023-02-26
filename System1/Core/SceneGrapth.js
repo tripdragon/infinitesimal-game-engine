@@ -28,11 +28,11 @@ export class SceneGrapth{
   objects = [];
   actors = [];
   
-  // borrowing this from unity
+  // 
   layers = {
     main: [],
     colliders : [], // if it collides you can then deicde if it was just a trigger
-    platforms : [],
+    platforms : [], // plane objects
     // triggers : []
   }
   

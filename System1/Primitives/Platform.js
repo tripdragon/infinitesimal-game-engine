@@ -45,6 +45,24 @@ export class Platform extends Plane {
     // debugger
   }
   
+  
+  clone(){
+    var rr = new this.constructor(this.name, this.x, this.y, this.z, this.width, this.height, this.color.clone(), this.system).copy(this);
+    // debugger
+    return rr;
+  }
+  copy(thing){
+    super.copy(thing);
+    this.gridSize.width = thing.gridSize.width;
+    this.gridSize.height = thing.gridSize.height;
+    this.gridSize.scalar = thing.gridSize.scalar;
+    this.gridSize.layer = thing.gridSize.layer;
+    this.gridSize.subType = thing.gridSize.subType;
+    return this;
+  }
+  
+
+  
   /*
   // pops the width and height as a multiple of the grid it retains
   // while it can take fractionals, its not yet designed to handle below 1 properlly

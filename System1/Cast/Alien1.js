@@ -95,6 +95,8 @@ export class Alien1 extends Bot {
     
     // this.behaviours.updateActions();
     
+    // this makes it live BUT its flinchy for now
+    // this.findPlatform();
     
     
     // here we just directly call it
@@ -105,6 +107,7 @@ export class Alien1 extends Bot {
       // this.behaviours.walk.update();
       // debugger
       this.behaviours.walk.walk.update();
+      // this.behaviours.actions.flipdirection.update();
     }
     else {
       // this.behaviours.inSpace.update();
@@ -115,6 +118,12 @@ export class Alien1 extends Bot {
     
     this.behaviours.updateActions();
     
+    if(this.platform){
+      console.log("has" );
+      
+    } else {
+      console.log("DOES NOT!!!");
+    }
 
     // simpler code walk example
     // this delta time will not work with pause for now

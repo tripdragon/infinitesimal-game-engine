@@ -36,15 +36,19 @@ export class PlatformStampTool extends StampTool {
     this.IS_DOWN  = true;
     
     var ff = this.stampingObject.clone();
+    ff.refreshMatrixes();
     this.system.add(ff);
     // debugger
     ff.visible = true;
-    ff.position.copy(this.system.pointer.screenUV);
+    // ff.position.copy(this.system.pointer.screenUV);
+    ff.position.copy(this.system.pointer.worldSpace);
     // ff.position.copy(this.system.pointer.worldSpace);
     
     if(this.baseGrid){
-      ff.x = this.baseGrid.position3DCenter.x;
-      ff.y = this.baseGrid.position3DCenter.y;
+      // ff.x = this.baseGrid.position3DCenter.x;
+      // ff.y = this.baseGrid.position3DCenter.y;
+      ff.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
+      
     }
     ff.start();
     this.currentItem = ff;
@@ -91,8 +95,10 @@ export class PlatformStampTool extends StampTool {
       
       // console.log(this.baseGrid.indexRow, this.baseGrid.indexCol);
       
-      this.visualObject.x = this.baseGrid.position3DCenter.x;
-      this.visualObject.y = this.baseGrid.position3DCenter.y;
+      // this.visualObject.x = this.baseGrid.position3DCenter.x;
+      // this.visualObject.y = this.baseGrid.position3DCenter.y;
+      this.visualObject.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
+      
       
       this.visualObject.visible = true;
       if (this.IS_DOWN) {

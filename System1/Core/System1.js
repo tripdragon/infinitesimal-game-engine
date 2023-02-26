@@ -217,6 +217,8 @@ export class Basestation {
   sceneGrapth = null;
   // made it a getter cause typing that always is a bit much
   // but now its a function .... hrmmmm
+  
+  // also .visible false should be handled
   get colliders(){
     return this.sceneGrapth.layers.colliders;
   }

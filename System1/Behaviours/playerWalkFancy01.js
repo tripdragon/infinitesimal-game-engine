@@ -37,6 +37,7 @@ export function playerWalkFancy01(actor, system){
   
   var bb = new Behaviour("playerWalkFancy01", "walk", actor, system);
   
+  var pos = new Vector3();
   
   var isDown = {
     space : false
@@ -103,51 +104,79 @@ export function playerWalkFancy01(actor, system){
     // 
     // });
     
-    if(keysDown.ArrowLeft || keysDown.a){
-      
-      actor.velocity.x += -actor.walkSpeed * deltaTime;
-      actor.velocity.x = clamp(actor.velocity.x, -actor.maxSpeed.x, 0);
-
-      actor.x += actor.velocity.x;
-    }
     
-    else if(keysDown.ArrowRight || keysDown.d){
+    // check if any nessesary keys are down
+    // and assign pos
+    // and then assign actor so we bounding box only once
+    if(keysDown.ArrowLeft || keysDown.ArrowRight || keysDown.ArrowDown || keysDown.ArrowUp
+    || keysDown.a || keysDown.d){
       
-      actor.velocity.x += actor.walkSpeed * deltaTime;
-      actor.velocity.x = clamp(actor.velocity.x, 0, actor.maxSpeed.x);
+      pos.clear();
+        
+      
+      if(keysDown.ArrowLeft || keysDown.a){
+        
+        actor.velocity.x += -actor.walkSpeed * deltaTime;
+        actor.velocity.x = clamp(actor.velocity.x, -actor.maxSpeed.x, 0);
 
-      actor.x += actor.velocity.x;
+        //actor.x += actor.velocity.x;
+        pos.x = actor.position.x + actor.velocity.x;
+      }
+      
+      else if(keysDown.ArrowRight || keysDown.d){
+        
+        actor.velocity.x += actor.walkSpeed * deltaTime;
+        actor.velocity.x = clamp(actor.velocity.x, 0, actor.maxSpeed.x);
+
+        //actor.x += actor.velocity.x;
+        pos.x = actor.position.x + actor.velocity.x;
+      }
+      
+      actor.position.set(pos.x,pos.y,0);
+      
     }
-
     
     
     // apply friction
     // keysUp is always called once its been pressed once
     // so instead we need to check both as that makes sense
     // walking left
-    if(keysUp.ArrowLeft && keysUp.ArrowRight && keysUp.a && keysUp.d ){
-      if(actor.velocity.x === 0){
-        // do nothing
-      }
-      else if (actor.velocity.x < 0) {
-        actor.velocity.x += actor.frictionSpeed.x * deltaTime;
-        
-        if(actor.velocity.x > 0) {
-          actor.velocity.x = 0;
+    
+    
+    
+    if(keysUp.ArrowLeft || keysUp.ArrowRight || keysUp.a || keysUp.d){
+      
+      pos.clear();
+      
+      if(keysUp.ArrowLeft && keysUp.ArrowRight && keysUp.a && keysUp.d ){
+        if(actor.velocity.x === 0){
+          // do nothing
         }
-        
-        actor.x += actor.velocity.x;
-      }
-      // walking right
-      else if (actor.velocity.x > 0) {
-        actor.velocity.x += -(actor.frictionSpeed.x * deltaTime);
-        
-        if(actor.velocity.x < 0) {
-          actor.velocity.x = 0;
+        else if (actor.velocity.x < 0) {
+          actor.velocity.x += actor.frictionSpeed.x * deltaTime;
+          
+          if(actor.velocity.x > 0) {
+            actor.velocity.x = 0;
+          }
+          
+          //actor.x += actor.velocity.x;
+          pos.x = actor.position.x + actor.velocity.x;
         }
-        
-        actor.x += actor.velocity.x;
+        // walking right
+        else if (actor.velocity.x > 0) {
+          actor.velocity.x += -(actor.frictionSpeed.x * deltaTime);
+          
+          if(actor.velocity.x < 0) {
+            actor.velocity.x = 0;
+          }
+          
+          //actor.x += actor.velocity.x;
+          pos.x = actor.postion.x + actor.velocity.x;
+        }
       }
+      
+      actor.position.x = pos.x;
+      
     }
     
     // Freefall replacement
@@ -157,7 +186,8 @@ export function playerWalkFancy01(actor, system){
       // actor.velocity.y += actor.gravity * deltaTime;
       // actor.y += actor.velocity.y;
       // actor.y += actor.gravity * deltaTime * 4; // 4 is arbitatry here
-      actor.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      //actor.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      actor.position.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
     }
     
     // actor.updateBoundingBox();
@@ -242,7 +272,7 @@ export function playerWalkFancy01(actor, system){
       var yy = easing.easeOutExpo(mPos.y, mPos.y + actor.maxJumpHeight, norTime );
       
       // hard assign
-      actor.y = yy;
+      actor.position.y = yy;
       
       // force drop
       var gHoldTime = (time - m_startTime) * 0.01;
