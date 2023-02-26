@@ -14,10 +14,9 @@ export function freefall(actor, system){
     var actor = this.actor;
     var system = this.system;
     var platform = actor.platform;
-    // console.log("platform", platform);
-  
     
-    // debugger
+    
+    
     // console.log("findPlatform");
     actor.findPlatform();
     
@@ -26,16 +25,15 @@ export function freefall(actor, system){
     // gravity down is in updateWalking for now
     
     
-    // this.updateWalking(this.system.time.delta, this.gravity);
     
-    // if(actor.useGravity){
+    
     if(actor.useGravity && !actor.platform){
-      // debugger
+      
       actor.gravityForce(system.time.delta, actor.gravity);
     }
     
     
-    if(actor.useGravity && !actor.platform){
+    // if(actor.useGravity && !actor.platform){
       
       
         // actor.gravityForce(this.time.delta);
@@ -79,7 +77,7 @@ export function freefall(actor, system){
         // 
         // }
         
-    }
+    // }
   
     
   

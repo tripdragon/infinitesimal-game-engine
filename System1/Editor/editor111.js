@@ -223,7 +223,7 @@ export class Editor111 extends Editor {
     left: 0px;
     z-index: 2;
     background: #000000ba;
-    width: 170px;
+    width: 120px;
     min-height: 600px;
     padding: 20px 0 0 0;
     border-right : 1px #3c3c3c solid;

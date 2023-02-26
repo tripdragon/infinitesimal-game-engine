@@ -17,7 +17,7 @@ export function playerWalk(actor, system){
     var actor = this.actor;
     var system = this.system;
     var platform = actor.platform;
-    // console.log("platform", platform);
+    
     
     
     

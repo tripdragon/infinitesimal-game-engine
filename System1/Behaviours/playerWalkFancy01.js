@@ -37,7 +37,7 @@ export function playerWalkFancy01(actor, system){
   
   var bb = new Behaviour("playerWalkFancy01", "walk", actor, system);
   
-  var pos = new Vector3();
+  // var pos = new Vector3();
   
   var isDown = {
     space : false
@@ -72,55 +72,52 @@ export function playerWalkFancy01(actor, system){
     var keysDown = this.system.keysDown;
     var keysUp = this.system.keysUp;
     
+    // onConsole.log("vel", actor.velocity);
     
     
     // NOTE the actors position does not happen here
     // that is within its update() via updateFromForces()
-    
-    // 
-    // keyboard({
-    //   // space
-    //   " _down" : (ev) => {
-    //     // make a ton!!!
-    //     for (var i = 0; i < 20; i++) {
-    //       addHipToBeSquare();
-    //     }
-    //   },
-    //   // even numbers!!
-    //   1 : (ev) => {
-    //     player.setScaletemp(0.1);
-    //   },
-    // 
-    //   // you can have all 3 events, plain _up and _down
-    //   ArrowDown_down: (ev) => {
-    //     arrowsDown.down = true;
-    //   },
-    //   ArrowDown_up: (ev) => {
-    //     arrowsDown.down = true;
-    //   },
-    //   ArrowDown: (ev) => {
-    //     arrowsDown.down = true;
-    //   },
-    // 
-    // });
-    
+                      
+                      // 
+                      // keyboard({
+                      //   // space
+                      //   " _down" : (ev) => {
+                      //     // make a ton!!!
+                      //     for (var i = 0; i < 20; i++) {
+                      //       addHipToBeSquare();
+                      //     }
+                      //   },
+                      //   // even numbers!!
+                      //   1 : (ev) => {
+                      //     player.setScaletemp(0.1);
+                      //   },
+                      // 
+                      //   // you can have all 3 events, plain _up and _down
+                      //   ArrowDown_down: (ev) => {
+                      //     arrowsDown.down = true;
+                      //   },
+                      //   ArrowDown_up: (ev) => {
+                      //     arrowsDown.down = true;
+                      //   },
+                      //   ArrowDown: (ev) => {
+                      //     arrowsDown.down = true;
+                      //   },
+                      // 
+                      // });
+                      
     
     // check if any nessesary keys are down
     // and assign pos
     // and then assign actor so we bounding box only once
     if(keysDown.ArrowLeft || keysDown.ArrowRight || keysDown.ArrowDown || keysDown.ArrowUp
     || keysDown.a || keysDown.d){
-      
-      pos.clear();
-        
-      
+
       if(keysDown.ArrowLeft || keysDown.a){
         
         actor.velocity.x += -actor.walkSpeed * deltaTime;
         actor.velocity.x = clamp(actor.velocity.x, -actor.maxSpeed.x, 0);
 
-        //actor.x += actor.velocity.x;
-        pos.x = actor.position.x + actor.velocity.x;
+        actor.position.x += actor.velocity.x;
       }
       
       else if(keysDown.ArrowRight || keysDown.d){
@@ -128,11 +125,9 @@ export function playerWalkFancy01(actor, system){
         actor.velocity.x += actor.walkSpeed * deltaTime;
         actor.velocity.x = clamp(actor.velocity.x, 0, actor.maxSpeed.x);
 
-        //actor.x += actor.velocity.x;
-        pos.x = actor.position.x + actor.velocity.x;
+        actor.position.x += actor.velocity.x;
       }
       
-      actor.position.set(pos.x,pos.y,0);
       
     }
     
@@ -146,7 +141,7 @@ export function playerWalkFancy01(actor, system){
     
     if(keysUp.ArrowLeft || keysUp.ArrowRight || keysUp.a || keysUp.d){
       
-      pos.clear();
+      
       
       if(keysUp.ArrowLeft && keysUp.ArrowRight && keysUp.a && keysUp.d ){
         if(actor.velocity.x === 0){
@@ -159,8 +154,8 @@ export function playerWalkFancy01(actor, system){
             actor.velocity.x = 0;
           }
           
-          //actor.x += actor.velocity.x;
-          pos.x = actor.position.x + actor.velocity.x;
+          actor.position.x += actor.velocity.x;
+          
         }
         // walking right
         else if (actor.velocity.x > 0) {
@@ -170,12 +165,10 @@ export function playerWalkFancy01(actor, system){
             actor.velocity.x = 0;
           }
           
-          //actor.x += actor.velocity.x;
-          pos.x = actor.postion.x + actor.velocity.x;
+          actor.position.x += actor.velocity.x;
         }
       }
       
-      actor.position.x = pos.x;
       
     }
     
@@ -187,7 +180,10 @@ export function playerWalkFancy01(actor, system){
       // actor.y += actor.velocity.y;
       // actor.y += actor.gravity * deltaTime * 4; // 4 is arbitatry here
       //actor.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      
+      
       actor.position.y -= actor.gravity * deltaTime * 4; // 4 is arbitatry here
+      
     }
     
     // actor.updateBoundingBox();

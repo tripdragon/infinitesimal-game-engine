@@ -18,8 +18,9 @@ export class Player extends Actor {
   gravity = 9.2;
   
   
-  // walkSpeed = 0.1;
-  walkSpeed = 5;
+  walkSpeed = 0.1;
+  walkSpeed = 2;
+  // walkSpeed = 5;
   floatSpeed = 5;
   jumpSpeed = 48;
   // walkSpeed = 25;
@@ -122,12 +123,20 @@ export class Player extends Actor {
     
     // This might belong in a behaviour
     if(this.platform){
-      if(this.boundingBox.max.x < this.platform.boundingBox.min.x || 
-        this.boundingBox.min.x > this.platform.boundingBox.max.x
-      ){
+      // if(this.boundingBox.max.x < this.platform.boundingBox.min.x || 
+      //   this.boundingBox.min.x > this.platform.boundingBox.max.x
+      // )
+      // debugger
+      
+      // testing if left the platform??
+      if(this.boundingBoxWorld.max.x < this.platform.boundingBoxWorld.min.x || 
+        this.boundingBoxWorld.min.x > this.platform.boundingBoxWorld.max.x
+      )
+      {
         // debugger
         this.platform = null;
-        this.useGravity = false;
+        // this.useGravity = false;
+        this.useGravity = true;
       }
     }
     
@@ -152,12 +161,12 @@ export class Player extends Actor {
     // this.findPlatform();
     if(!this.platform){
       this.findPlatform();
-      // debugger
+      
     }
     
-    if(this.platform){
-      // debugger
-    }
+    // if(this.platform){
+    // 
+    // }
     
 
     if( this.platform ){

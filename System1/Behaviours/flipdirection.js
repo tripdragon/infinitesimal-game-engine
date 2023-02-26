@@ -16,15 +16,7 @@ export function flipdirection(actor, system){
 
     if(platform){  
       // filp direction
-      // debugger
-      // if (actor.x >= platform.max.x){
-      //   actor.directionVector.x *= -1;
-      //   actor.x = platform.max.x;
-      // }
-      // else if (actor.x <= platform.min.x){
-      //   actor.directionVector.x *= -1;
-      //   actor.x = platform.min.x;
-      // }
+      
       if (actor.position.x >= platform.boundingBoxWorld.max.x){
         // debugger
         actor.directionVector.x *= -1;

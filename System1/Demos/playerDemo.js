@@ -72,12 +72,12 @@ disc.load = function(){
   // debugger
   // box4.visible = false;
   
-  var box5 = box4.clone();
-  // box5.visible = true;
-    this.system.add(box5);
-    box5.position.y = 200;
-    box5.refreshMatrixes();
-  box5.bbb();
+  // var box5 = box4.clone();
+  // // box5.visible = true;
+  //   this.system.add(box5);
+  //   box5.position.y = 200;
+  //   box5.refreshMatrixes();
+  // box5.bbb();
   
   
   
@@ -100,19 +100,19 @@ disc.load = function(){
   // 
   // 
   // 
-  // var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+  this.system.add(box5);
   // this.system.add(box5);
-  // // this.system.add(box5);
   
   // 
-  // for (var i = 0; i < 20; i++) {
-  // 
-  //   var w = 80;
-  //   var h = 8;
-  //   var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), 0, w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  //   this.system.add(box);
-  // 
-  // }
+  for (var i = 0; i < 20; i++) {
+  
+    var w = 80;
+    var h = 8;
+    var box = new Platform("plane", (i*(w+10)), ((i*(h+18))), 0, w, h, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
+    this.system.add(box);
+  
+  }
   
   
   // 
@@ -141,20 +141,20 @@ disc.load = function(){
   
   
   
-        // 
-        // 
-        // 
-        // 
-        // // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-        // var aa = new Player("aa", 470, 600, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-        // this.system.add(aa);
-        // window.player__ = aa;
-        // // aa.canUpdate = false;
-        // // for now we need some defaults items to get the bot to walk
-        // // aa.platform = box3;
-        // // aa.directionVector.x = 1;
-        // 
-        // aa.start();
+        
+        
+        
+        
+        // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        var aa = new Player("player aaaa", 470, 600, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
+        this.system.add(aa);
+        window.player__ = aa;
+        // aa.canUpdate = false;
+        // for now we need some defaults items to get the bot to walk
+        // aa.platform = box3;
+        // aa.directionVector.x = 1;
+        
+        aa.start();
         
         
         
