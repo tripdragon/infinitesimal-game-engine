@@ -102,6 +102,10 @@
       .fish {
         color: "pwgjpodg";
       }
+      /* #canvassss{
+        left: 25%;
+        top: 25%;
+      } */
     </style>
     
   </head>
@@ -110,6 +114,8 @@
     <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
 
     <canvas id="canvassss" width="512" height="512"></canvas>
+    
+    
 
     <div id="gamespace"></div>
     <div id="bodyInjectionPointMain">
@@ -127,6 +133,8 @@
       import {Vector2} from '../Modules/Vector2.js';
       import {Grid} from '../Modules/Grid.js';
       
+      import {keyboard} from '../Modules/Input/keyboard.js';
+      
       const canvas = document.getElementById("canvassss");
       const canvasBuffer = document.createElement('canvas');
       canvasBuffer.width = 512;
@@ -136,12 +144,162 @@
       
       window.canvasGG = canvas;
       
+      
+      var gamestyles = document.getElementById("gamestyles");
+      var gg = document.getElementById("gamespace");
+      // gg.innerHTML = "";
+      
+      // quick panel
+      var panel = document.createElement('div');
+      panel.id = "panel";
+      panel.style.cssText = `
+      position: absolute;
+      ___overflow: hidden;
+      top: 0px;
+      right: 0px;
+      z-index: 2;
+      background: #00000022;
+      width: 120px;
+      min-height: 600px;
+      padding: 20px 0 0 0;
+      border-right : 1px #3c3c3c solid;
+      /* flex box */
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-content: stretch;
+      align-items: center;
+      `;
+      gg.appendChild(panel);
+
+      
+      var itemstyle = `
+      #panel .item {
+        background: white;
+        width: 60px;
+        height: 60px;
+        margin-bottom: 12px;
+        ____padding: 20px 0 0 0px;
+        border : 1px white solid;
+        border-radius: 12px;
+        appearance: none;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        overflow: hidden;
+        
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+      }`;
+      gamestyles.innerHTML += itemstyle;
+      
+      var colorPalete = document.createElement('div');
+      colorPalete.classList.add("item");
+      colorPalete.type = "box";
+      // item.style.backgroundImage = "url(./Cast/Alien2.png)";
+      colorPalete.style.backgroundColor = "#aaaaaa";
+      panel.appendChild(colorPalete);
+      // cache.push(colorPalete);
+      
+      
+      
+      
+      
+      
+      
       var mouse = new Vector2();
       
       // var brushSize = 10;
       window.brushSize = 10;
+      // window.brushColor = "c3ff00";
+      window.brushColor = getRandomBrushColorApp();
       
       window.brushSizeUnit = 1;
+      
+      keyboard({
+        
+        "]": (ev) => {
+          window.brushSizeUnit = 2;
+        },
+        "[": (ev) => {
+          window.brushSizeUnit = 1;
+        },
+        
+        "q": (ev) => {
+          saveToFile();
+        },
+        
+        
+        " _up": (ev) => {
+          // window.brushColor = ""+Math.random()*0xffffff;
+          getRandomBrushColorApp();
+        },
+        
+        
+        "i_down": (ev) => {
+          var gg = getColorAtMouse(mouse);
+          setBrushColor(gg);
+          console.log(gg);
+        },
+        
+      
+
+      });
+      
+      
+      // https://stackoverflow.com/questions/6735470/get-pixel-color-from-canvas-on-mousemove
+      function getColorAtMouse(mouse) {
+        var p = ctx.getImageData(mouse.x, mouse.y, 1, 1).data; 
+        var hex = ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+        // $('#status').html(coord + "<br>" + hex);
+        // console.log("hex", hex);
+        return hex;
+      }
+      function rgbToHex(r, g, b) {
+          if (r > 255 || g > 255 || b > 255)
+              throw "Invalid color component";
+          return ((r << 16) | (g << 8) | b).toString(16);
+      }
+      
+      
+      
+      function getRandomBrushColorApp() {
+        window.brushColor = randomHexColor();
+        console.log(window.brushColor);
+        colorPalete.style.backgroundColor = "#"+window.brushColor;
+      }
+      
+      function setBrushColor(color) {
+        window.brushColor = color;
+        console.log(window.brushColor);
+        colorPalete.style.backgroundColor = "#"+window.brushColor;
+      }
+      
+      
+      // https://stackoverflow.com/questions/11112321/how-to-save-canvas-as-png-image
+      function saveToFile() {
+        // // var canvas = document.getElementById("alpha");
+        // var dataURL = canvas.toDataURL("image/png");
+        // var newTab = window.open('about:blank','image from canvas');
+        // newTab.document.write("<img src='" + dataURL + "' alt='from canvas'/>");
+        
+        // canvas.toBlob(function(blob) {
+        //     saveAs(blob, "pretty image.png");
+        // });
+        
+        let downloadLink = document.createElement('a');
+        downloadLink.setAttribute('download', 'CanvasAsImage.png');
+        // let canvas = document.getElementById('myCanvas');
+        let dataURL = canvas.toDataURL('image/png');
+        let url = dataURL.replace(/^data:image\/png/,'data:application/octet-stream');
+        downloadLink.setAttribute('href', url);
+        downloadLink.click();
+        
+      }
+      
       
       var IS_DOWN = false;
       // en do paint app clean line later
@@ -163,6 +321,10 @@
       
       function rColor(){
         return Math.floor(Math.random()*255);
+      }
+      
+      function randomHexColor() {
+        return Math.floor(Math.random()*16777215).toString(16);
       }
       
       // clear once
@@ -212,6 +374,9 @@
       function draw() {
         if (canvas.getContext) {
 
+
+          // getColorAtMouse();
+
           if(USE_DEBUGGER_Mouse){
             // restore canvas
             ctx.drawImage(canvasBuffer, 0,0);
@@ -231,7 +396,8 @@
             
             // ctx.fillRect(mouse.x, mouse.y, brushSize, brushSize);
             // ctx.fillRect(grid.position.x - (grid.size / 2), grid.position.y - (grid.size / 2), grid.size, grid.size);
-            ctx.fillStyle = "rgba(0, 10, 100, 1)";
+            // ctx.fillStyle = "rgba(0, 10, 100, 1)";
+            ctx.fillStyle = "#"+window.brushColor;
             
             // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
             // ctx.fillRect(grid.position.x, grid.position.y, grid.size, grid.size);
