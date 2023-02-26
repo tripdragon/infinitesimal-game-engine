@@ -431,6 +431,24 @@
               ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
             }
             
+            if(brushSizeUnit === 3){
+              var row = grid.indexRow; var col = grid.indexCol;
+              
+              grid.snapAtRowCol(row-1, grid.indexCol);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+
+              grid.snapAtRowCol(row+1, col);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+              
+              grid.snapAtRowCol(row, col+1);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+              
+              grid.snapAtRowCol(row, col-1);
+              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+              
+              
+            }
+            
           }
           
           // showGridTopLeft();

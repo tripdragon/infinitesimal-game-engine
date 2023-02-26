@@ -25,9 +25,9 @@ export class Alien2 extends Bot {
     
     // not much of a behaviour yet
     // so just place in update here
-    this.y -= this.system.time.delta * 0.15;
-    if( (this.y + this.height) < 0){
-      this.y = window.innerHeight;
+    this.position.y -= this.system.time.delta * 0.15;
+    if( (this.position.y + this.height) < 0){
+      this.position.y = window.innerHeight;
     }
 
   }

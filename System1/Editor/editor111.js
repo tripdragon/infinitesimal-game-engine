@@ -338,7 +338,7 @@ export class Editor111 extends Editor {
       
     } // ToolCheckBoxFactory
     
-    var item1Select = new ToolCheckBoxFactory(panel, checkboxes, selectTool, "url(./Editor/arrow1.png)");
+    var item1Select = new ToolCheckBoxFactory(panel, checkboxes, selectTool, "url(./Editor/arrow2.png)");
     item1Select.checkbox.style.backgroundColor = "#ffffff";
     
 
@@ -395,7 +395,7 @@ export class Editor111 extends Editor {
     
     
     
-    new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool222, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool222, "url(./Cast/cat1.png)"); // (parent, cache, tool, imageURL)
     
     // new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool333, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
     
@@ -403,10 +403,10 @@ export class Editor111 extends Editor {
     
     
     
-    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper222, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper222, "url(./Cast/block2.png)"); // (parent, cache, tool, imageURL)
     
     
-    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper333, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper333, "url(./Cast/cwouds.png)"); // (parent, cache, tool, imageURL)
     
     
     
