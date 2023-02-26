@@ -279,6 +279,13 @@
       }
       
       
+      var words = ["fish", "tacos", "the_over_malrg", "within", "upon", "mices", "ourealy", "could_this_be",
+    "well_houdy_then", "gradprix", "apples", "oranges", "cash", "NFT_NFT" ];
+      
+      Array.prototype.random = function () {
+        return this[Math.floor((Math.random()*this.length))];
+      }
+
       // https://stackoverflow.com/questions/11112321/how-to-save-canvas-as-png-image
       function saveToFile() {
         // // var canvas = document.getElementById("alpha");
@@ -291,7 +298,8 @@
         // });
         
         let downloadLink = document.createElement('a');
-        downloadLink.setAttribute('download', 'CanvasAsImage.png');
+        var title = "NFT" + "_" + words.random() + "_" + words.random();
+        downloadLink.setAttribute('download', title+'.png');
         // let canvas = document.getElementById('myCanvas');
         let dataURL = canvas.toDataURL('image/png');
         let url = dataURL.replace(/^data:image\/png/,'data:application/octet-stream');
