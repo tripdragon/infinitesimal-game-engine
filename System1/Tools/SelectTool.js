@@ -23,6 +23,10 @@ pointInBoundingBoxScreenSpace(point, plat)
 */
 
 
+// This needs to become a first class Tool
+// in that its dynamicly available when hovering over something
+// even when not selected
+// so the instant interactive flow continues
 
 
 // It would be nice to be able to use a tool without a ToolsController

@@ -18,6 +18,7 @@ box.onCollide = function(){
 
 */
 
+import { lerp } from "../Modules/mathness.js";
 import { Matrix4 } from "../Modules/GL-Matrix.js";
 import { Box3 } from "../Modules/Box3.js";
 
@@ -58,6 +59,8 @@ export class Plane extends Quark {
       sides : []
     }
     
+    
+    
     // cant use VisualPlane() cause it extends it
     // so have to just make an internal version
     mockVisualPlane(){
@@ -77,21 +80,141 @@ export class Plane extends Quark {
     // buffer has 6 points has 4
     points = [new Vector3(),new Vector3(),new Vector3(),new Vector3()];
     // two of each pointing to points array
-    sides = {
-      left : [this.points[0], this.points[1]],
-      bottom : [this.points[1], this.points[2]],
-      right : [this.points[2], this.points[3]],
-      top : [this.points[3], this.points[0]]
+    // sides = {
+    //   left : [this.points[0], this.points[1]],
+    //   bottom : [this.points[1], this.points[2]],
+    //   right : [this.points[2], this.points[3]],
+    //   top : [this.points[3], this.points[0]]
+    // }
+    // points are in local space
+    // Scope is an annoyance here
+    //sides = { left{prop...}}
+    
+
+    
+    
+    // https://stackoverflow.com/a/36956815/1149855
+    // scope this class into this dictionary
+    sidePoints = {  
+      // parent : null,
+      _this : this,
+      
+      get left(){
+        return [this._this.points[0], this._this.points[1]];
+      },
+      get bottom(){
+        return [this._this.points[1], this._this.points[2]];
+      },
+      get right(){
+        return [this._this.points[2], this._this.points[3]];
+      },
+      get top(){
+        return [this._this.points[3], this._this.points[0]];
+      },
+      // init(parent){
+      //   this.parent = parent;
+      //   return this;
+      // }
+      
+    }//.init(this);
+    
+
+    // this returns the center of the side in local or worldSpace
+    edges = {
+      _this : this,
+      workVector : new Vector3(),
+      
+      process(_points, worldSpace){
+        this.workVector.lerpVectors(_points[0],_points[1],0.5);
+        if(worldSpace){
+          this.workVector.applyMatrix4(this._this.worldMatrix);
+        }
+        return this.workVector;
+      },
+      
+      left(worldSpace){
+        return this.process(this.parent.sidePoints.left, worldSpace);
+      },
+      
+      bottom(worldSpace){
+        return this.process(this.parent.sidePoints.bottom, worldSpace);
+      },
+      right(worldSpace){
+        return this.process(this.parent.sidePoints.right, worldSpace);
+      },
+      top(worldSpace){
+        return this.process(this.parent.sidePoints.top, worldSpace);
+      }
+    
+    }
+    // 
+    // sides = {
+    //   left : {
+    //     points: [this.points[0], this.points[1]],
+    // 
+    //     get center(){
+    //       debugger
+    //       return this.computeCenterLocal(this.points);
+    //     },
+    //     get centerWorld(){
+    //       return this.computeCenterWorld(this.points);
+    //     }
+    //   },
+    //   bottom : { 
+    //     points: [this.points[1], this.points[2]],
+    //     get center(){
+    //       return lerp(this.points[0], this.points[0], 0.5);
+    //     }
+    //   },
+    //   right : {
+    //     points: [this.points[2], this.points[3]],
+    //     get center(){
+    //       return lerp(this.points[0], this.points[0], 0.5);
+    //     }
+    //   },
+    //   top : {
+    //     points: [this.points[3], this.points[0]],
+    //     get center(){
+    //       return lerp(this.points[0], this.points[0], 0.5);
+    //     }
+    //   },
+    // 
+    // }
+    // 
+
+    workVectorSides = new Vector3();
+    
+    sideCenterWorld(_points){
+      return workVector.lerpVectors(_points[0], _points[1], 0.5).applyMatrix4(this.worldMatrix);
+    }
+    sideCenterLocal(_points){
+      return workVector.lerpVectors(_points[0], _points[1], 0.5);
     }
     
+    
     recomputeSides(){
-      this.sides = {
-        left : [this.points[0], this.points[1]],
-        bottom : [this.points[1], this.points[2]],
-        right : [this.points[2], this.points[3]],
-        top : [this.points[3], this.points[0]]
-      }
+      
+      // this.sides.left.points = [this.points[0], this.points[1]];
+      // this.sides.bottom.points = [this.points[1], this.points[2]];
+      // this.sides.right.points = [this.points[2], this.points[3]];
+      // this.sides.top.points = [this.points[3], this.points[0]];
+      // 
+      
+      // this.sidePoints.bind(this)
+      
+      // debugger
+      // this.sides = {
+      //   left : [this.points[0], this.points[1]],
+      //   bottom : [this.points[1], this.points[2]],
+      //   right : [this.points[2], this.points[3]],
+      //   top : [this.points[3], this.points[0]]
+      // }
     }
+    
+    
+    
+    
+  
     
     // are thse caches??? 
     // u_matrix = new Matrix4().setTranslation(0,0,0);
@@ -286,8 +409,12 @@ export class Plane extends Quark {
     
     
     rebuildDimensions(){
-      this.width = this.sides.right[0].x - this.sides.left[0].x;
-      this.height = this.sides.top[0].y - this.sides.bottom[0].y;
+      // this.width = this.sides.right.points[0].x - this.sides.left.points[0].x;
+      // this.height = this.sides.top.points[0].y - this.sides.bottom.points[0].y;
+      // 
+      
+      this.width = this.sidePoints.right[0].x - this.sidePoints.left[0].x;
+      this.height = this.sidePoints.top[0].y - this.sidePoints.bottom[0].y;
       
       this.computeBoundingBoxes();
       // this.computeBoundingBoxPadding();

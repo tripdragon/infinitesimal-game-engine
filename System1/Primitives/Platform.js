@@ -83,18 +83,18 @@ export class Platform extends Plane {
     
     if(scalar === 1){
       if(side === "left" || side === "right"){
-        this.sides.left[0].x = -width/2;
-        this.sides.left[1].x = -width/2;
-        this.sides.right[0].x = width/2;
-        this.sides.right[1].x = width/2;
+        this.sidePoints.left[0].x = -width/2;
+        this.sidePoints.left[1].x = -width/2;
+        this.sidePoints.right[0].x = width/2;
+        this.sidePoints.right[1].x = width/2;
         this.rebuildDimensions();
         return;
       }
       else if(side === "bottom" || side === "top"){
-        this.sides.top[0].y = height/2;
-        this.sides.top[1].y = height/2;
-        this.sides.bottom[0].y = -height/2;
-        this.sides.bottom[1].y = -height/2;
+        this.sidePoints.top[0].y = height/2;
+        this.sidePoints.top[1].y = height/2;
+        this.sidePoints.bottom[0].y = -height/2;
+        this.sidePoints.bottom[1].y = -height/2;
         this.rebuildDimensions();
         return;
       }
@@ -106,21 +106,21 @@ export class Platform extends Plane {
     var valHeight = (height/2) + (height * (scalar-1));
     
     if(side === "left"){
-      this.sides.left[0].x = -valWidth;
-      this.sides.left[1].x = -valWidth;
+      this.sidePoints.left[0].x = -valWidth;
+      this.sidePoints.left[1].x = -valWidth;
     }
     else if(side === "bottom"){
-      this.sides.bottom[0].y = -valHeight;
-      this.sides.bottom[1].y = -valHeight;
+      this.sidePoints.bottom[0].y = -valHeight;
+      this.sidePoints.bottom[1].y = -valHeight;
     }
     else if(side === "right"){
       
-      this.sides.right[0].x = valWidth;
-      this.sides.right[1].x = valWidth;
+      this.sidePoints.right[0].x = valWidth;
+      this.sidePoints.right[1].x = valWidth;
     }
     else if(side === "top"){
-      this.sides.top[0].y = valHeight;
-      this.sides.top[1].y = valHeight;
+      this.sidePoints.top[0].y = valHeight;
+      this.sidePoints.top[1].y = valHeight;
     }
     
     
