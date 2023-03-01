@@ -11,6 +11,13 @@ import {playerWalkPhysics} from "../Behaviours/playerWalkPhysics.js";
 import {playerWalkFancy01} from "../Behaviours/playerWalkFancy01.js";
 import {screenwrap} from "../Behaviours/screenwrap.js";
 
+
+
+import {VisualPlane} from "../Primitives/VisualPlane.js";
+import {freeLoop} from "../Plugins/freeLoop.js";
+
+import {collide} from "../Behaviours/collide.js";
+
 export class Player extends Actor {
 
   // subType = "player";
@@ -75,9 +82,12 @@ export class Player extends Actor {
     this.behaviours.add(playerWalkFancy01(this));
     this.behaviours.add(screenwrap(this));
     
+    this.behaviours.add(collide(this));
     
     // this.behaviours.add(flipdirection(this));
     
+
+    window.playerStreams = [];
 
   }
 
@@ -121,6 +131,92 @@ export class Player extends Actor {
     // this.behaviours.walk.playerWalkPhysics.update();
     this.behaviours.walk.playerWalkFancy01.update();
     
+    
+    // var item = new Plane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+    // item.canCollide = false;
+    // item.subType = "visualPlane";
+    // return item;
+    
+    
+    
+    
+    // 
+    // var gg = new VisualPlane("cc", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+    // gg.position.copy(this.edges.left(true));
+    // this.system.add(gg);
+    // 
+    // 
+    // // this little large block performs waaaaay better than freeLoop()
+    // gg.timeData = {
+    //   time : 0,
+    //   mTime : 0,
+    //   startTime : -1,
+    //   currentTime: 0,
+    //   delta : 0,
+    //   runTime: 0.5,
+    // }
+    // 
+    // gg.update = function(){
+    //   var timeData = this.timeData;
+    //   timeData.time = Date.now();
+    //   if(timeData.startTime === -1){
+  	// 		timeData.startTime = timeData.time;
+  	// 		timeData.mTime = timeData.time;
+  	// 	}
+    //   timeData.delta = (timeData.time - timeData.mTime) / 1000;
+  	// 	// console.log(delta);
+  	// 	timeData.currentTime += timeData.delta;
+    //   timeData.normalizedTime = timeData.currentTime / timeData.runTime;
+    //   timeData.mTime = timeData.time;
+    //   // debugger
+    // 
+    //   if(timeData.normalizedTime >= 1.0){
+    //     // debugger
+    //     this.delete();
+    //     this.update = function(){};
+    //   }
+    // 
+    // }
+    // 
+    // 
+    // 
+    // window.playerStreams.push(gg);
+    
+    // gg.delete();
+    
+    
+    // TOOOOOO hard on its brain
+    // freeLoop(1, function(x){
+    //   if(x.normalizedTime >= 1 && gg){
+    //     gg.delete();
+    //   }
+    //   // if(x.isDone){
+    //   //   debugger
+    //   // }
+    // });
+    
+    // 
+    // var gg = new VisualPlane("cc", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+    // gg.position.copy(this.edges.right(true));
+    // this.system.add(gg);
+    // 
+    // var gg = new VisualPlane("cc", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+    // gg.position.copy(this.edges.bottom(true));
+    // this.system.add(gg);
+    // 
+    // var gg = new VisualPlane("cc", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
+    // gg.position.copy(this.edges.top(true));
+    // this.system.add(gg);
+    // 
+    // 
+    
+    
+    
+    
+    
+    // debugger
+    
+    
     // This might belong in a behaviour
     if(this.platform){
       // if(this.boundingBox.max.x < this.platform.boundingBox.min.x || 
@@ -152,6 +248,10 @@ export class Player extends Actor {
     
     
     this.behaviours.actions.screenwrap.update();
+    
+    
+    this.behaviours.actions.collide.update();
+    
     
     // never used yet
     // this.behaviours.updateTasks();

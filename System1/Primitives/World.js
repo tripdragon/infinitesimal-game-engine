@@ -17,10 +17,12 @@ export class World extends Quark {
 // export class World extends Plane {
 
   subType = "world";
+  canCollide = false;
   
   constructor(system) {
     // name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
     super("world", 0, 0, 0, 0, 0, 0, {r:1.0, g:1.0, b:1.0, a:1.0}, system);
+    this.canCollide = false;
   }
   
   draw(){

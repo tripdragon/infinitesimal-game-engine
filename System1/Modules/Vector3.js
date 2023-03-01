@@ -163,4 +163,27 @@ export class Vector3{
 
 	}
   
+  fromArray(val){
+    this.x = val[0];
+    this.y = val[1];
+    this.z = val[2];
+    return this;
+  }
+  
+  
+  
+	distanceTo( v ) {
+
+		return Math.sqrt( this.distanceToSquared( v ) );
+
+	}
+
+	distanceToSquared( v ) {
+
+		const dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z;
+
+		return dx * dx + dy * dy + dz * dz;
+
+	}
+  
 }

@@ -47,14 +47,14 @@ export class Box3{
   }
   
   // also just
-  // intersectsBox( box ) {
-  // 
-	// 	// using 4 splitting planes to rule out intersections
-  // 
-	// 	return box.max.x < this.min.x || box.min.x > this.max.x ||
-	// 		box.max.y < this.min.y || box.min.y > this.max.y ? false : true;
-  // 
-	// }
+  intersectsBox( box ) {
+  
+		// using 4 splitting planes to rule out intersections
+  
+		return box.max.x < this.min.x || box.min.x > this.max.x ||
+			box.max.y < this.min.y || box.min.y > this.max.y ? false : true;
+  
+	}
   // and
   // containsBox( box ) {
   // 

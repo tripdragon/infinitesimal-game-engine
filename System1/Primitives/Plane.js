@@ -27,6 +27,11 @@ import { Rectangle } from "./Rectangle.js";
 import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
 
+
+
+// import { BehavioursController, Behaviour } from '../Behaviours/Behaviour.js';
+
+
 // cant use this in this class cause it extends it
 // import { VisualPlane } from "./VisualPlane.js";
 
@@ -56,19 +61,22 @@ export class Plane extends Quark {
       // new VisualPlane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}),
       corners : [],
       // left counter clockwise
-      sides : []
+      edges : []
     }
     
     
     
     // cant use VisualPlane() cause it extends it
     // so have to just make an internal version
+    // setToVisualPlane(){
     mockVisualPlane(){
       var item = new Plane("c", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
       item.canCollide = false;
       item.subType = "visualPlane";
       return item;
+      // return new VisualPlane("cc", 0, 0, 0, 10, 10, {r:1,g:1,b:1,a:1}, this.system);
     }
+    
   
   
     // local space
@@ -133,17 +141,17 @@ export class Plane extends Quark {
       },
       
       left(worldSpace){
-        return this.process(this.parent.sidePoints.left, worldSpace);
+        return this.process(this._this.sidePoints.left, worldSpace);
       },
       
       bottom(worldSpace){
-        return this.process(this.parent.sidePoints.bottom, worldSpace);
+        return this.process(this._this.sidePoints.bottom, worldSpace);
       },
       right(worldSpace){
-        return this.process(this.parent.sidePoints.right, worldSpace);
+        return this.process(this._this.sidePoints.right, worldSpace);
       },
       top(worldSpace){
-        return this.process(this.parent.sidePoints.top, worldSpace);
+        return this.process(this._this.sidePoints.top, worldSpace);
       }
     
     }
@@ -551,22 +559,30 @@ export class Plane extends Quark {
     }
     
     
-    
-    buildCorners(worldAxis = false){
-
-      if(this.visualPoints.corners.length === 0){
+    // mode here is a string of "edges" or "corners"
+    buildVisualCornersOrEdges(mode,worldAxis = false){
+      
+      if(this.visualPoints[mode].length === 0){
         for (var i = 0; i < 4; i++) {
           var box = this.mockVisualPlane();
           this.system.add(box);
           // FOR SOME reason this has to happen AFTER system.add
           box.parent = this;
-          this.visualPoints.corners[i] = box;
+          this.visualPoints[mode][i] = box;
         }
       }
-
-      for (var i = 0; i < this.points.length; i++) {
-        var item = this.visualPoints.corners[i];
-        item.position.copy(this.points[i]);
+      
+      var _edges = ["left", "bottom", "right", "top"];
+      
+      for (var i = 0; i < 4; i++) {
+        var item = this.visualPoints[mode][i];
+        if(mode === "corners"){
+          item.position.copy(this.points[i]);
+        }
+        else if(mode === "edges"){
+          // Urgggg this lookup
+          item.position.copy(this.edges[_edges[i]]() );
+        }
         item.refreshMatrixes();
         if(worldAxis === true){
           item.parent = null;
@@ -582,15 +598,26 @@ export class Plane extends Quark {
       
     }
     
+    
+    
     showCorners(toggle){
       if(this.visualPoints.corners.length === 0){
-        this.buildCorners();
+        this.buildVisualCornersOrEdges("corners");
       }
       for (var i = 0; i < this.visualPoints.corners[i].length; i++) {
         var item = this.visualPoints.corners[i];
         item.visible = toggle;
       }
-      
+    }
+    
+    showEdges(toggle){
+      if(this.visualPoints.edges.length === 0){
+        this.buildVisualCornersOrEdges("edges");
+      }
+      for (var i = 0; i < this.visualPoints.edges[i].length; i++) {
+        var item = this.visualPoints.edges[i];
+        item.visible = toggle;
+      }
     }
     
     

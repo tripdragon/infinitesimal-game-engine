@@ -5,6 +5,10 @@ import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
 
 
+import {collide} from "../Behaviours/collide.js";
+
+import { BehavioursController, Behaviour } from '../Behaviours/Behaviour.js';
+
 
 /*
 
@@ -33,9 +37,11 @@ export class Platform extends Plane {
     scalar : 1
   }
   
+  behaviours = new BehavioursController();
+  
   // origin = new Vector3();
   
-  constructor(name, x, y, z, width, height, color, system) {
+  constructor(name, x, y, z, width, height, color, system, autoStart = true) {
     
     super(name, x, y, z, width, height, color, system);
     
@@ -43,6 +49,10 @@ export class Platform extends Plane {
     this.gridSize.height = height;
     // this.origin.copy(this.position);
     // debugger
+    
+    if(autoStart){
+      this.start();
+    }
   }
   
   
@@ -60,6 +70,26 @@ export class Platform extends Plane {
     this.gridSize.subType = thing.gridSize.subType;
     return this;
   }
+  
+  
+  
+  start(){
+    
+    this.behaviours.add(collide(this));
+  }
+  
+  
+  
+  behavioursHook(){
+    // debugger
+    // this.behaviours.actions.collide.update();
+  }
+  
+  update(){
+    super.update();
+    this.behavioursHook();
+  }
+  
   
 
   

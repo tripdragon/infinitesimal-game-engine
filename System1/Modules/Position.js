@@ -51,6 +51,13 @@ export class Position extends Vector3 {
     return this;
   }
   
+  
+  fromArray(val){
+    super.fromArray(val);
+    if(this.owner) this.owner.bbb();
+    return this;
+  }
+  
   clear(){
     super.clear();
     if(this.owner) this.owner.bbb();

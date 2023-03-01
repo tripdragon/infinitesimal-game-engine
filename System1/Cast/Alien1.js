@@ -26,6 +26,9 @@ import {walk} from "../Behaviours/walk.js";
 import {freefall} from "../Behaviours/freefall.js";
 import {flipdirection} from "../Behaviours/flipdirection.js";
 
+import {collide} from "../Behaviours/collide.js";
+
+
 
 // Be sure to assign system
 // this really should be auto handled
@@ -61,6 +64,7 @@ export class Alien1 extends Bot {
     this.behaviours.add(freefall(this));
     
     this.behaviours.add(flipdirection(this));
+    this.behaviours.add(collide(this));
     
     this.directionVector.x = 1;
     
@@ -108,15 +112,20 @@ export class Alien1 extends Bot {
       // debugger
       this.behaviours.walk.walk.update();
       // this.behaviours.actions.flipdirection.update();
+      // this.behaviours.actions.collide.update();
     }
     else {
       // this.behaviours.inSpace.update();
       this.behaviours.inSpace.freefall.update();
       
+      
     }
     
+    // debugger
+    this.behaviours.actions.flipdirection.update();
+    // this.behaviours.updateActions();
     
-    this.behaviours.updateActions();
+    
     
     if(this.platform){
       console.log("has" );

@@ -50,6 +50,12 @@ export class SelectTool extends Tool {
   mPointerPos = new Vector3();
   mSelectedPos = new Vector3();
   
+  previousGoodPosition = new Vector3();
+  workPos = new Vector3();
+  
+  
+  // usePreventCollide = false;
+  usePreventCollide = true;
   
   
   constructor(system){
@@ -108,6 +114,8 @@ export class SelectTool extends Tool {
       // this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
     }
     
+    this.previousGoodPosition.clear();
+    
   }
   
   pointerDown(){
@@ -140,6 +148,9 @@ export class SelectTool extends Tool {
         
         this.selectedObject.selectState();
         // this.selectedObject.color.copy({r:0,g:0,b:1,a:1});
+        
+        this.previousGoodPosition.copy(this.selectedObject.position);
+        
       }
     }
     
@@ -160,10 +171,11 @@ export class SelectTool extends Tool {
     var pointer = this.system.pointer.worldSpace;
     
     
+    
     // this.mouseVisual.position.copy(pointer);//.applyMatrix4(this.mouseVisual.worldMatrix)
     
     
-    // window.onConsole.log("mouse", pointer.x, pointer.y);
+    window.onConsole.log("mouse", pointer.x, pointer.y);
     
     
     if(this.mode === this.modes.mousing){
@@ -179,7 +191,7 @@ export class SelectTool extends Tool {
         
         var wall = this.system.colliders[i];
         
-        // var wall = walls[i];
+
         // cheap for now dont test player collide
         // we dont have a player right now
         // if(wall === player){
@@ -196,14 +208,15 @@ export class SelectTool extends Tool {
           
           wasIn = wall.pointCollideCheck(pointer);
           
+          // hasCollided = true;
+          
           // wall.color.copy({r:0,g:0.2,b:0.5,a:1});
         }
-        // else {
-        //   wasIn = pointInRect(pointer, wall);
-        // } 
+        
+      
 
         
-        
+        // color swapping needs work
         if(wasIn){
             
             if(wasEverIN == false){
@@ -216,36 +229,33 @@ export class SelectTool extends Tool {
             
             break;
         }
-        else {
-          
-        }
-        
-        // // do a moving and generative effect
-        // if(wall.shiftLeft){
-        //   wall.x += wall.shiftLeft * 0.05;
-        //   if (wall.x > window.innerWidth){
-        //     wall.x = -wall.width;
-        //         wall.shiftLeft = randomBetween(1,100);
-        //   }
-        // }
-        // 
-        // isInMuch = AABBTest(player, wall);
-        // 
-        // if(isInMuch){
-        //   // console.log("innnn?");
-        //   wall.color = {x:0,y:0,z:1,w:0};
-        //   wall.onCollide();
-        // }
-        // else {
-        //   // console.log("ouuuut???");
-        //   wall.color = {x:0,y:0.5,z:0,w:0};
-        // }
-        // 
-        // 
-        // if(wasIn == false && isInMuch == true){
-        //   wasIn = true;
-        // }
-            
+                  
+                  // // do a moving and generative effect
+                  // if(wall.shiftLeft){
+                  //   wall.x += wall.shiftLeft * 0.05;
+                  //   if (wall.x > window.innerWidth){
+                  //     wall.x = -wall.width;
+                  //         wall.shiftLeft = randomBetween(1,100);
+                  //   }
+                  // }
+                  // 
+                  // isInMuch = AABBTest(player, wall);
+                  // 
+                  // if(isInMuch){
+                  //   // console.log("innnn?");
+                  //   wall.color = {x:0,y:0,z:1,w:0};
+                  //   wall.onCollide();
+                  // }
+                  // else {
+                  //   // console.log("ouuuut???");
+                  //   wall.color = {x:0,y:0.5,z:0,w:0};
+                  // }
+                  // 
+                  // 
+                  // if(wasIn == false && isInMuch == true){
+                  //   wasIn = true;
+                  // }
+                      
       } // colliders loop
 
     
@@ -253,13 +263,81 @@ export class SelectTool extends Tool {
     }
     
     else if(this.mode === this.modes.canDrag){
+      
+      
+      if( !this.usePreventCollide ){
+        
+        if(this.selectedObject !== null){
+          this.selectedObject.position.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
+          pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
+          0
+          );
+          this.selectedObject.refreshMatrixes();
+          this.selectedObject.bbb();
+          
+          return;
+        }
+        
+      }
+      
+      
+      // else forced collide
+      
+      
+      
       // need to know if the pointer is down on the object
       if(this.selectedObject !== null){
         
-        this.selectedObject.position.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
-        pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
-        0
+        // mouse with offset
+        this.workPos.set(
+          pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
+          pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
+          0
         );
+        
+        
+        // when we copy here we have not yet rendered so its fine to experiment with changing its matrix
+        this.selectedObject.position.copy(this.workPos);
+        this.selectedObject.refreshMatrixes();
+        this.selectedObject.bbb();
+        
+        var hasCollided = false;
+        
+        var mPick;
+        var ii = 0;
+        
+        // test against walls
+        for (var i = 0; i < this.system.colliders.length; i++) {
+          var pick = this.system.colliders[i];
+          
+          // skip our own
+          if(pick === this.selectedObject){
+            continue;
+          }
+          
+          hasCollided = this.selectedObject.boundingBoxWorld.intersectsBox(pick.boundingBoxWorld);
+          if(hasCollided){
+            mPick = pick;
+            ii++;
+            break;
+          }
+        }
+        // console.log("ii", ii);
+        
+        
+        var previous = this.previousGoodPosition;
+        
+        // here we hit a point so lets try going back to previous good point
+        if (hasCollided) {
+          this.selectedObject.position.copy(previous);
+        }
+        // retain the position and save its good point
+        else {
+          previous.copy(this.selectedObject.position);
+        }
+        
+        
+        
         
       }
     }

@@ -68,6 +68,8 @@ export class Quark {
   
   visible = true;
   
+  static = false;
+  
   
   // max = new Vector3();
   

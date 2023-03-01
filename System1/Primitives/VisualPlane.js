@@ -29,10 +29,17 @@ import { Color } from "../Modules/Color.js";
 import { Plane } from "./Plane.js";
 
 
+// need to rework this and Plane as a plane needs to create these but load order issue
+// so for now this is 
+
 
 // This is simply a plane with some settings to make sure its not in the Colliders
 // mainlo used for debugging position points
 export class VisualPlane extends Plane {
+// export var VisualPlane = function(name = "visual", x = 0, y = 0, z = 0, width = 10, height = 10, color = new Color(), system)  {
+  
+  
+  // Plane.call(this, name, x, y, z, width, height, color, system);
   
   canCollide = false;
   subType = "visualPlane";
@@ -62,4 +69,5 @@ export class VisualPlane extends Plane {
     
 
     
-  }
+}
+// VisualPlane.prototype = Object.create(Plane.prototype);
