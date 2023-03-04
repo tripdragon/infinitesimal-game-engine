@@ -100,42 +100,7 @@ export class Basestation {
   // pointerGrid = 1; // ideally there are multiple grids, so its more a function, object dimentions matter
   // pointer = {x:0,y:0};
   // this is for 3d coords
-  // onPointerMove( event ) {
-  //   this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  //   this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-  // }
-  // 
-  // //   window.addEventListener( 'pointermove', onPointerMove, true );
-  // onPointerMoveScreenSpace( event ) {
-  // 
-  //   this.pointer.x = event.clientX;
-  //   this.pointer.y = event.clientY;
-  //   // console.log(that.system.pointer);
-  // 
-  //   // we can add this later in another event
-  //   // EditorModeActions.pointerMoving(); 
-  // }
-  
-  /*
-  function onPointerMove( event ) {
 
-    // calculate pointer position in normalized device coordinates
-    // (-1 to +1) for both components
-    
-    // need for when camera is in 3d
-    // pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    // pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    // pointer.x = ( event.clientX / window.innerWidth );
-    // pointer.y = - ( event.clientY / window.innerHeight ) * -1;
-    pointer.x = event.clientX ;
-    pointer.y = event.clientY;
-    // console.log(pointer);
-  }
-  
-  window.addEventListener( 'pointermove', onPointerMove );
-  */
-  
-  
   
   
   // player.x = system.input.keyboard.isArrowLeftDown
@@ -144,8 +109,7 @@ export class Basestation {
   // var pressedKeys = {};
   // window.onkeyup = function(e) { pressedKeys[e.key] = false; }
   // window.onkeydown = function(e) { pressedKeys[e.key] = true; }
-  // 
-  
+
   // APPPP.keysDown, these CAN get stuck!!!
   // if it loses focus absolutely
   keysDown = {};
@@ -357,6 +321,37 @@ export class Basestation {
     this.bootUp_CM();
   }
   
+  
+  
+  
+  
+  
+  
+  /*
+  
+  https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
+
+  At Init time
+
+      create all shaders and programs and look up locations
+      create buffers and upload vertex data
+      create textures and upload texture data
+
+  At Render Time
+
+      clear and set the viewport and other global state (enable depth testing, turn on culling, etc..)
+      For each thing you want to draw
+          call gl.useProgram for the program needed to draw.
+          setup attributes for the thing you want to draw
+              for each attribute call gl.bindBuffer, gl.vertexAttribPointer, gl.enableVertexAttribArray
+          setup uniforms for the thing you want to draw
+              call gl.uniformXXX for each uniform
+              call gl.activeTexture and gl.bindTexture to assign textures to texture units.
+          call gl.drawArrays or gl.drawElements
+
+  That's basically it. It's up to you how to organize your code to accomplish that task.
+
+  */
   bootUp_CM(){
     
     // this.stopLoop();
@@ -396,36 +391,67 @@ export class Basestation {
     
     // Initialize a shader program; this is where all the lighting
     // for the vertices and so forth is established.
-    var shaderProgram;
+    // var shaderProgram;
     
     // this might not be nessesary unless some other design is added later for a loading screen
     if(this.screenSpaceMode === this.screenModes.screen){
-      shaderProgram = initShaderProgram(gl, vScreen, fScreen);
+      this.shaderProgram = initShaderProgram(gl, vScreen, fScreen);
     }
     else {
-      shaderProgram = initShaderProgram(gl, vertexBasicShader, fragmentBasicShader);
+      this.shaderProgram = initShaderProgram(gl, vertexBasicShader, fragmentBasicShader);
     }
+    
+    
+    
+    // var texcoordLocation = gl.getAttribLocation(program, "a_texCoord");
 
     // Collect all the info needed to use the shader program.
     // Look up which attribute our shader program is using
     // for aVertexPosition and look up uniform locations.
     const programInfo = {
-      program: shaderProgram,
+      program: this.shaderProgram,
       attribLocations: {
-        vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+        // vertexPosition: gl.getAttribLocation(this.shaderProgram, "aVertexPosition"),
+        vertex: gl.getAttribLocation(this.shaderProgram, "aVertexPosition"),
+        // textureLocation : gl.getAttribLocation(this.shaderProgram, "a_texCoord")
+        texture : gl.getAttribLocation(this.shaderProgram, "a_texCoord")
       },
       uniformLocations: {
-        projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
-        modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+        projectionMatrix: gl.getUniformLocation(this.shaderProgram, "uProjectionMatrix"),
+        modelViewMatrix: gl.getUniformLocation(this.shaderProgram, "uModelViewMatrix"),
+        // colorUniformLocation : gl.getUniformLocation(this.shaderProgram, "u_color"),
+        color : gl.getUniformLocation(this.shaderProgram, "u_color"),
+        // 
+        // var matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
+        // matrixUniformLocation : gl.getUniformLocation(this.shaderProgram, "u_matrix")
+        modelMatrix : gl.getUniformLocation(this.shaderProgram, "u_matrix")
+        
       },
     };
     
     if(this.screenSpaceMode === this.screenModes.screen){
-      programInfo.uniformLocations.resolution = gl.getUniformLocation(shaderProgram, "u_resolution");
+      programInfo.uniformLocations.resolution = gl.getUniformLocation(this.shaderProgram, "u_resolution");
     }
+
+    // Pass in the canvas resolution so we can convert from
+    // pixels to clipspace in the shader
+    if(programInfo.uniformLocations.resolution){
+      //console.log("resolution", programInfo.uniformLocations.resolution);
+      gl.uniform2f(programInfo.uniformLocations.resolution, gl.canvas.width, gl.canvas.height);
+    }
+
 
     
     this.programInfo = programInfo;
+    
+    
+    // 
+    this.POSITIONS_BUFFER = gl.createBuffer();
+    // each plane handles this now
+    // gl.bindBuffer(gl.ARRAY_BUFFER, this.POSITIONS_BUFFER);
+    
+    
+    
     
     
     // Here's where we call the routine that builds all the
@@ -449,19 +475,35 @@ export class Basestation {
     
                         
                         // Tell WebGL to use our program when drawing
-                        gl.useProgram(programInfo.program);
+                        // gl.useProgram(programInfo.program);
                         
                         // #GLRWORK does this belong here????
-                        const positionBuffer = gl.createBuffer();
+                        // const positionBuffer = gl.createBuffer();
                         
                         // #GLRWORK
                         // does this belong here????
                         // var colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");
-                        this.colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");
+                        // this.colorUniformLocation = gl.getUniformLocation(programInfo.program, "u_color");
+                        // // 
+                        // // var matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
+                        // this.matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
                         // 
-                        // var matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
-                        this.matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
+                        
+                        // trying this here
+                        // this.textureLocation = gl.getUniformLocation(programInfo.program, "a_texCoord");
 
+
+                      
+                        //gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+                        // gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                        
+                        // THIS ONE breaks it if commeted out
+                        // its not anything, it has to bind the inital ARRAY_BUFFER
+                        // but belongs elsewhere
+                        // var texcoordBuffer = gl.createBuffer();
+                        // gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+                        // 
+                        
 
 // figuring out where to put the projection Matrix and then
 // in the model where to put its com[putation]
@@ -478,44 +520,42 @@ m4.makeOrthographic(left, right, bottom, top, near, far);
 this.projectionMatrix = m4;
 }
 
-                      // var mm = new mat4.create()
+                      
 
-
-                        //gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-                        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-                        
+                        // 
+                        // //gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+                        // gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                        // 
+                        // 
+                        // var texcoordBuffer = this.gl.createBuffer();
+                        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, texcoordBuffer);
+                        // 
+                        // 
                           
                         // Tell WebGL how to pull out the positions from the position
                         // buffer into the vertexPosition attribute.
                         // setPositionAttribute(gl, buffers, programInfo);
-                        // const numComponents = 2; // pull out 2 values per iteration
-                        const numComponents = 3; // pull out 3 values per iteration for xyz
-                        const type = gl.FLOAT; // the data in the buffer is 32bit floats
-                        const normalize = false; // don't normalize
-                        const stride = 0; // how many bytes to get from one set of values to the next
-                        // 0 = use type and numComponents above
-                        const offset = 0; // how many bytes inside the buffer to start from
-                        gl.vertexAttribPointer(
-                          programInfo.attribLocations.vertexPosition,
-                          numComponents,
-                          type,
-                          normalize,
-                          stride,
-                          offset
-                        );
-                        
-                        
+                                      // 
+                                      // const numComponents = 3; // pull out 3 values per iteration for xyz
+                                      // const type = gl.FLOAT; // the data in the buffer is 32bit floats
+                                      // const normalize = false; // don't normalize
+                                      // const stride = 0; // how many bytes to get from one set of values to the next
+                                      // // 0 = use type and numComponents above
+                                      // const offset = 0; // how many bytes inside the buffer to start from
+                                      // gl.vertexAttribPointer(
+                                      //   programInfo.attribLocations.vertexPosition,
+                                      //   numComponents,
+                                      //   type,
+                                      //   normalize,
+                                      //   stride,
+                                      //   offset
+                                      // );
+                                      // 
+                                      // 
+                                      // // this brewaks if commented out
+                                      // gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+                                      // 
 
-                        gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-
-                        // Pass in the canvas resolution so we can convert from
-                        // pixels to clipspace in the shader
-                        if(programInfo.uniformLocations.resolution){
-                          //console.log("resolution", programInfo.uniformLocations.resolution);
-                          gl.uniform2f(programInfo.uniformLocations.resolution, gl.canvas.width, gl.canvas.height);
-                        }
-
-    
     
     
     this.startLoop();

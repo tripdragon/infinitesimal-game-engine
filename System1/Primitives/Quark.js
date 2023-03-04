@@ -70,6 +70,9 @@ export class Quark {
   
   static = false;
   
+  image = null;
+  texture = null;
+  
   
   // max = new Vector3();
   
@@ -82,7 +85,8 @@ export class Quark {
   
   // GL stuff
   gl;
-  program;
+  // program;
+  programInfo = null; // this gets assigned automaticly or is generated per objects need later
   
 
   localMatrix = new Matrix4();
@@ -432,6 +436,10 @@ export class Quark {
   
   play(){}
   start(){}
+  
+  // draw loop calls this
+  hasGLInit = false;
+  glInit(){}
   
   
   

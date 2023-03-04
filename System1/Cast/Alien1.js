@@ -68,6 +68,9 @@ export class Alien1 extends Bot {
     
     this.directionVector.x = 1;
     
+    this.loadImage("./Cast/Alien1.png");
+    
+    
     // debugger
     
   }
@@ -127,12 +130,12 @@ export class Alien1 extends Bot {
     
     
     
-    if(this.platform){
-      console.log("has" );
-      
-    } else {
-      console.log("DOES NOT!!!");
-    }
+    // if(this.platform){
+    //   console.log("has" );
+    // 
+    // } else {
+    //   console.log("DOES NOT!!!");
+    // }
 
     // simpler code walk example
     // this delta time will not work with pause for now

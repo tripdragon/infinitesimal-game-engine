@@ -144,6 +144,12 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
                   //   }
 
 
+
+
+
+
+
+
   // NOW the objects are from the scene grapth!!!
   // tyme for plus button!!!
   const offset2 = 0;
@@ -152,12 +158,27 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
   var primitiveType = gl.TRIANGLES;
   // var primitiveType = gl.LINES;
   
+  
+  
   for (var i = 0; i < app.sceneGrapth.objects.length; i++) {
     var ff = app.sceneGrapth.objects[i];
     if(ff.visible === false){
       continue; // skip this render
     }
     ff.gl = gl;
+    
+    if(ff.programInfo === null){
+      // gl.useProgram(this.programInfo.program);
+    }
+    else {
+      // Tell WebGL to use our program when drawing
+      // gl.useProgram(ff.programInfo.program);
+    }
+    
+    // console.log(this.shaderProgram);
+    // gl.useProgram(this.programInfo.program);
+    gl.useProgram(this.shaderProgram);
+    
     // 
     // if(ff.subType === "worldsdfsdg"){
     //   // debugger
@@ -213,7 +234,16 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     // this handles any transforms in geometry
     // or matrixes
     // not sure if these should be in the objects class instead
-    ff.draw(this.colorUniformLocation, this.matrixUniformLocation);
+    // debugger
+  
+    
+    ff.draw();
+    
+    // ff.draw(this.programInfo.uniformLocations.colorUniformLocation, 
+      // this.programInfo.uniformLocations.matrixUniformLocation, this.textureLocation);
+    // 
+    // ff.draw(this.colorUniformLocation, 
+      // this.matrixUniformLocation, this.textureLocation);
     
     var vertexCount = ff.pointsCount;
     

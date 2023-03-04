@@ -75,7 +75,7 @@ export class Platform extends Plane {
   
   start(){
     
-    this.behaviours.add(collide(this));
+    // this.behaviours.add(collide(this));
   }
   
   

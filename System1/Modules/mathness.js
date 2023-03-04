@@ -47,3 +47,8 @@ export function remapNormal(from0, to0, value) {
 export function remapNegPositiveOne(from0, to0, value) {
     return remapRange(from0, to0, -1, 1, value);
 }
+
+
+export function isPowerOf2(value) {
+  return (value & (value - 1)) === 0;
+}

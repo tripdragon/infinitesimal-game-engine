@@ -25,9 +25,9 @@ export function collide(actor, system){
     
     
     
+    // console.log("collide????");
     
-    
-    
+    // return;
     
       
       // mouse with offset

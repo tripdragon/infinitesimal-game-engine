@@ -11,23 +11,10 @@
 // needs concept of camera next
 
 
-// https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js
-// import { mat4 } from "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 // import { randomBetween } from "../Modules/mathness.js";
 // import { loadSquares } from "../Demos/loadSquares.js";
 // import { SquareLike } from "../Primitives/squareLike.js";
 // import { randomBetween } from "../Modules/mathness.js";
-
-// https://github.com/toji/gl-matrix/issues/371
-// https://www.skypack.dev/view/gl-matrix?from=pika
-// https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js
-// import { mat4 } from "https://unpkg.com/browse/gl-matrix@3.4.3/esm/index.js";
-// import glMatrix from 'https://cdn.skypack.dev/gl-matrix';
-
-// import {mat4} from 'https://cdn.skypack.dev/gl-matrix';
-
-// var mat4 = {};
-
 
 console.warn("This is rendering once and giving errors before the game is ready!!!!¿¿¿");
 //export function drawScene(gl, programInfo, buffers, positionCheap = {x:0, y:0, z:-76.0} ) {

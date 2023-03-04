@@ -1,5 +1,28 @@
 
 
+
+/*
+function onPointerMove( event ) {
+
+  // calculate pointer position in normalized device coordinates
+  // (-1 to +1) for both components
+  
+  // need for when camera is in 3d
+  // pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  // pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  // pointer.x = ( event.clientX / window.innerWidth );
+  // pointer.y = - ( event.clientY / window.innerHeight ) * -1;
+  pointer.x = event.clientX ;
+  pointer.y = event.clientY;
+  // console.log(pointer);
+}
+
+window.addEventListener( 'pointermove', onPointerMove );
+*/
+
+
+
+
 //     window.addEventListener( 'pointermove', this.pointer.onPointerMove.bind(this.pointer), true );
 
 

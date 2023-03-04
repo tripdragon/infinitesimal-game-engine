@@ -1,5 +1,12 @@
 
 
+
+// This file is getting toooo large
+// gonna split out the drawing routine into a file
+// and assign in constructor
+// https://stackoverflow.com/a/42219636/1149855
+
+
 // Update things
 
 //.rebuildDimensions()
@@ -26,6 +33,8 @@ import { Quark } from "../Primitives/Quark.js";
 import { Rectangle } from "./Rectangle.js";
 import { Vector3 } from "../Modules/Vector3.js";
 import { Color } from "../Modules/Color.js";
+
+import { isPowerOf2 } from "../Modules/mathness.js";
 
 
 
@@ -296,7 +305,11 @@ export class Plane extends Quark {
       this.centerPositions();
       this.computeBoundingBoxes();
       // this.computeBoundingBoxPadding();
-
+      
+      // this.startTexture();
+      
+      // this.initGLStuff();
+      
     }
     
 
@@ -454,28 +467,6 @@ export class Plane extends Quark {
       return this;
     }
 
-    draw(colorUniformLocation, matrixLocation){
-      
-      this.gl.uniform4f(colorUniformLocation, this.color.r, this.color.g, this.color.b, 1);
-      
-      // MAYBE handle the projection here
-      // its building but not moving
-      
-      // console.log("draw world", this.worldMatrix.getPosition());
-      // console.log("draw local", this.localMatrix.getPosition());
-      // console.log("draw name", this.name);
-      
-      this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
-      // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.worldMatrix, this.system.projectionMatrix).elements);
-      
-      // debugger
-      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
-      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
-      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.localMatrix.elements);
-
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
-    }
-    
     
     // setPlane() {
     //   // var x1 = x;
@@ -646,6 +637,737 @@ export class Plane extends Quark {
       }
       
     }
+
+
+
+
+
+
+// 
+// 
+// #drawing routines
+// 
+// 
+// 
+// 
+    
+    programInfo = null;
+    loadedTexture = false;
+    // hasInitGL = false;
+    hasSetupdataBuffer = false;
+    positionsBufferLocal = null;
+    textureCoordBuffer = null;
+    cachedImageURL = null;
+    
+    hasLoadedImage = false;
+    hasStartedLoadingImage = false;
+    image = null;
+    shouldLoadImage = false;
+    
+    hasGLInit = false;
+    
+    glInit(){
+      if(this.hasGLInit){
+        return;
+      }
+      this.hasGLInit = true;
+      
+      this.buildProgramInfo();
+      
+      //
+      // building position buffers
+      //
+      console.log("initGLStuff 222");
+      
+      this.positionsBufferLocal = this.gl.createBuffer();
+      
+      // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.system.POSITIONS_BUFFER);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionsBufferLocal);
+
+      const numComponents = 3; // pull out 3 values per iteration for xyz
+      const type = this.gl.FLOAT; // the data in the buffer is 32bit floats
+      const normalize = false; // don't normalize
+      const stride = 0; // how many bytes to get from one set of values to the next
+      // 0 = use type and numComponents above
+      const offset = 0; // how many bytes inside the buffer to start from
+      this.gl.vertexAttribPointer(
+        this.programInfo.attribLocations.vertex,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset
+      );
+      // this brewaks if commented out
+      this.gl.enableVertexAttribArray(this.programInfo.attribLocations.vertex);
+      
+      // this should only be applied once since its reading
+      // UNLESS you change the vertices
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+
+
+
+      //
+      // building initial texture
+      //
+      
+      // Fill the texture with a 1x1 blue pixel.
+      this.texture = this.gl.createTexture();
+      
+      this.textureCoordBuffer = this.gl.createBuffer();
+      
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer);
+      const textureCoordinates = [ 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1 ];
+      
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), this.gl.STATIC_DRAW );
+
+
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+      
+      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
+        new Uint8Array([100, 255, 255, 255]));
+        
+
+
+
+    }
+    
+    
+    
+    buildProgramInfo(){
+      
+      var gl = this.gl;
+      var shaderProgram = this.system.shaderProgram;
+      
+      this.programInfo = {
+        program: shaderProgram,
+        attribLocations: {
+          vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+          // vertex: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+          // textureLocation : gl.getAttribLocation(shaderProgram, "a_texCoord")
+          textureCoord : gl.getAttribLocation(shaderProgram, "a_texCoord")
+        },
+        uniformLocations: {
+          projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+          modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+          // colorUniformLocation : gl.getUniformLocation(shaderProgram, "u_color"),
+          color : gl.getUniformLocation(shaderProgram, "u_color"),
+          // 
+          // var matrixUniformLocation = gl.getUniformLocation(programInfo.program, "u_matrix");
+          // matrixUniformLocation : gl.getUniformLocation(shaderProgram, "u_matrix")
+          modelMatrix : gl.getUniformLocation(shaderProgram, "u_matrix"),
+          // uSampler: gl.getUniformLocation(shaderProgram, "uSampler")
+          uTexture: gl.getUniformLocation(shaderProgram, "uTexture")
+          
+        },
+      };
+
+      if(this.system.screenSpaceMode === this.system.screenModes.screen){
+        this.programInfo.uniformLocations.resolution = gl.getUniformLocation(shaderProgram, "u_resolution");
+      }
+
+      // Pass in the canvas resolution so we can convert from
+      // pixels to clipspace in the shader
+      if(this.programInfo.uniformLocations.resolution){
+        //console.log("resolution", programInfo.uniformLocations.resolution);
+        // this shoudl be gameHeight gameWidth
+        // gl.uniform2f(programInfo.uniformLocations.resolution, gl.canvas.width, gl.canvas.height);
+        gl.uniform2f(this.programInfo.uniformLocations.resolution, gl.canvas.width, gl.canvas.height);
+      }
+
+    }
+
+    // 
+    // waitForGLForImage(){
+    // 
+    // }
+    // 
+    
+    loadImage(url){
+      if(url){
+        this.shouldLoadImage = true;
+      }
+      if(this.gl === undefined){
+        this.cachedImageURL = url;
+        console.log("waiting for gl");
+        return;
+      }
+    }
+    
+    _loadImage(url){
+      
+      if(url === null){
+        console.log("url is null");
+        return;
+      }
+      
+      
+      // when loading at start of game gl is not ready yet
+      // so we will keep looping until then
+      if(this.gl === undefined){
+        this.cachedImageURL = url;
+        console.log("waiting for gl");
+        return;
+      }
+      
+      this.hasStartedLoadingImage = true;
+      
+      
+      // this.image = image;
+      // already have texture created
+      // this.texture = gl.createTexture();
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+
+      // Because images have to be downloaded over the internet
+      // they might take a moment until they are ready.
+      // Until then put a single pixel in the texture so we can
+      // use it immediately. When the image has finished downloading
+      // we'll update the texture with the contents of the image.
+      const level = 0;
+      const internalFormat = this.gl.RGBA;
+      const width = 1;
+      const height = 1;
+      const border = 0;
+      const srcFormat = this.gl.RGBA;
+      const srcType = this.gl.UNSIGNED_BYTE;
+      const pixel = new Uint8Array([0, 255, 0, 255]); // opaque blue
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D,
+        level,
+        internalFormat,
+        width,
+        height,
+        border,
+        srcFormat,
+        srcType,
+        pixel
+      );
+
+      const image = new Image();
+      image.onload = () => {
+        // Flip image pixels into the bottom-to-top order that WebGL expects.
+        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+        this.gl.texImage2D(
+          this.gl.TEXTURE_2D,
+          level,
+          internalFormat,
+          srcFormat,
+          srcType,
+          image
+        );
+        this.image = image;
+        
+        
+
+        // WebGL1 has different requirements for power of 2 images
+        // vs non power of 2 images so check if the image is a
+        // power of 2 in both dimensions.
+        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+          // Yes, it's a power of 2. Generate mips.
+          this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        } else {
+          // No, it's not a power of 2. Turn off mips and set
+          // wrapping to clamp to edge
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        }
+      };
+      image.src = url;
+ 
+    }
+    
+
+
+    
+    // draw(color, matrixLocation, textureLocation){
+    draw(){
+      
+      if(this.hasGLInit === false){
+        this.glInit();
+      }
+      
+      
+      
+      //
+      // setup vertex pos
+      // 
+
+      {
+      const numComponents = 3;
+      const type = this.gl.FLOAT; // the data in the buffer is 32bit floats
+      const normalize = false; // don't normalize
+      const stride = 0; // how many bytes to get from one set of values to the next
+      // 0 = use type and numComponents above
+      const offset = 0; // how many bytes inside the buffer to start from
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+      this.gl.vertexAttribPointer(
+        this.programInfo.attribLocations.vertexPosition,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset
+      );
+      this.gl.enableVertexAttribArray(this.programInfo.attribLocations.vertexPosition);
+      }
+
+      
+      // Set the shader uniforms
+      this.gl.uniform4f(this.programInfo.uniformLocations.color, this.color.r, this.color.g, this.color.b, 1);
+
+      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelMatrix, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
+            
+      
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionsBufferLocal);
+      
+      {
+        const numComponents = 3; // pull out 3 values per iteration for xyz
+        const type = this.gl.FLOAT; // the data in the buffer is 32bit floats
+        const normalize = false; // don't normalize
+        const stride = 0; // how many bytes to get from one set of values to the next
+        // 0 = use type and numComponents above
+        const offset = 0; // how many bytes inside the buffer to start from
+        this.gl.vertexAttribPointer(
+          this.programInfo.attribLocations.vertex,
+          numComponents,
+          type,
+          normalize,
+          stride,
+          offset
+        );
+        // this brewaks if commented out
+        this.gl.enableVertexAttribArray(this.programInfo.attribLocations.vertex);
+      }
+
+      // this should only be applied once since its reading
+      // UNLESS you change the vertices
+      // the order is weird here for now
+      if(this.hasSetupdataBuffer === false){
+        this.hasSetupdataBuffer = true;
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+        //this.hasSetupdataBuffer++;
+        
+      }
+      
+      
+      
+      if(this.shouldLoadImage === true && this.hasStartedLoadingImage === false){
+        console.log("hasStartedLoadingImage 2222");
+        this._loadImage(this.cachedImageURL);
+      }
+      
+      
+      //
+      // set up texcoords
+      //
+      {
+        const num = 2; // every coordinate composed of 2 values
+        const type = this.gl.FLOAT; // the data in the buffer is 32-bit float
+        const normalize = false; // don't normalize
+        const stride = 0; // how many bytes to get from one set to the next
+        const offset = 0; // how many bytes inside the buffer to start from
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer);
+        this.gl.vertexAttribPointer(
+          this.programInfo.attribLocations.textureCoord,
+          num,
+          type,
+          normalize,
+          stride,
+          offset
+        );
+        this.gl.enableVertexAttribArray(this.programInfo.attribLocations.textureCoord);
+      }
+      
+      
+      // sdkjnfgldfg
+      this.gl.uniform4f(this.programInfo.uniformLocations.color, this.color.r, this.color.g, this.color.b, 1);
+      
+      // MAYBE handle the projection here
+      // its building but not moving
+      
+      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelMatrix, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
+
+      
+      
+      
+
+            // Tell WebGL we want to affect texture unit 0
+            this.gl.activeTexture(this.gl.TEXTURE0);
+          
+            // Bind the texture to texture unit 0
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+          
+            // Tell the shader we bound the texture to texture unit 0
+            this.gl.uniform1i(this.programInfo.uniformLocations.uTexture, 0);
+          
+
+            // this should only be applied once since its reading
+            // UNLESS you change the vertices
+            // the order is weird here for now
+            if(this.hasSetupdataBuffer === false){
+              this.hasSetupdataBuffer = true;
+              this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+              //this.hasSetupdataBuffer++;
+              
+            }
+            // console.log("hasSetupdataBuffer", this.hasSetupdataBuffer);
+            // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+
+      
+          
+      
+      
+      
+      
+      
+      return
+      
+      
+      
+      
+      // 
+      // if(this.programInfo === null){
+      //   // this.programInfo = this.system.programInfo;
+      // 
+      // }
+      // 
+      // 
+      // if(this.hasInitGL === false){
+      //   this.hasInitGL = true;
+      //   // debugger
+      //   this.initGLStuff();
+      // }
+      // // debugger
+      // 
+      
+      // we have .gl at this point
+      if(this.texture === null){
+        // debugger
+        this.startTexture();
+        console.log("startTexture");
+      }
+      
+      // // bind image or so
+      if(this.image && this.texture && this.hasLoadedImage === false){
+        this.hasLoadedImage = true;
+        
+        {
+          const level = 0;
+          const internalFormat = this.gl.RGBA;
+          const width = 1;
+          const height = 1;
+          const border = 0;
+          const srcFormat = this.gl.RGBA;
+          const srcType = this.gl.UNSIGNED_BYTE;
+          const pixel = new Uint8Array([0, 255, 0, 255]); // opaque blue
+          
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+          this.gl.texImage2D( this.gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, this.image );
+
+        }
+
+        // WebGL1 has different requirements for power of 2 images
+        // vs non power of 2 images so check if the image is a
+        // power of 2 in both dimensions.
+        if (isPowerOf2(this.image.width) && isPowerOf2(this.image.height)) {
+          // Yes, it's a power of 2. Generate mips.
+          // debugger
+          this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        } else {
+          // No, it's not a power of 2. Turn off mips and set
+          // wrapping to clamp to edge
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+          this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        }
+        
+      }
+      
+
+// //
+// // setup vertex pos
+// // 
+// 
+// {
+// const numComponents = 3;
+// const type = this.gl.FLOAT; // the data in the buffer is 32bit floats
+// const normalize = false; // don't normalize
+// const stride = 0; // how many bytes to get from one set of values to the next
+// // 0 = use type and numComponents above
+// const offset = 0; // how many bytes inside the buffer to start from
+// this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+// this.gl.vertexAttribPointer(
+//   this.programInfo.attribLocations.vertexPosition,
+//   numComponents,
+//   type,
+//   normalize,
+//   stride,
+//   offset
+// );
+// this.gl.enableVertexAttribArray(this.programInfo.attribLocations.vertexPosition);
+// }
+// 
+
+if(this.image && this.texture && this.hasLoadedImage){
+  // console.log("¿¿¿¿?");
+        
+  // // Tell WebGL we want to affect texture unit 0
+  // this.gl.activeTexture(this.gl.TEXTURE0);
+  // 
+  // // Bind the texture to texture unit 0
+  // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+  // 
+  // // Tell the shader we bound the texture to texture unit 0
+  // this.gl.uniform1i(this.programInfo.uniformLocations.uTexture, 0);
+
+{
+  const num = 2; // every coordinate composed of 2 values
+  const type = this.gl.FLOAT; // the data in the buffer is 32-bit float
+  const normalize = false; // don't normalize
+  const stride = 0; // how many bytes to get from one set to the next
+  const offset = 0; // how many bytes inside the buffer to start from
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer);
+  this.gl.vertexAttribPointer(
+    this.programInfo.attribLocations.textureCoord,
+    num,
+    type,
+    normalize,
+    stride,
+    offset
+  );
+  this.gl.enableVertexAttribArray(this.programInfo.attribLocations.textureCoord);
+  // debugger
+  
+  
+  
+  
+  
+  // // this.textureCoordBuffer = this.gl.createBuffer();
+  // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer);
+  // const textureCoordinates = [
+  //   0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+  // ];
+  // 
+  // 
+  // 
+  // // this.texture = this.gl.createTexture();
+  // 
+  // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+  // 
+  // this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
+  //               new Uint8Array([0, 255, 255, 255]));
+  // 
+  //               this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.textureCoordinates), this.gl.STATIC_DRAW );
+  // 
+                
+}
+
+}
+
+
+
+// Set the shader uniforms
+      this.gl.uniform4f(this.programInfo.uniformLocations.color, this.color.r, this.color.g, this.color.b, 1);
+      
+      // MAYBE handle the projection here
+      // its building but not moving
+      
+      // console.log("draw world", this.worldMatrix.getPosition());
+      // console.log("draw local", this.localMatrix.getPosition());
+      // console.log("draw name", this.name);
+      
+      
+      
+      
+      this.gl.uniformMatrix4fv(this.programInfo.uniformLocations.modelMatrix, false, this.workMatrix.multiplyMatrices( this.system.projectionMatrix, this.worldMatrix).elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false, this.workMatrix.multiplyMatrices( this.worldMatrix, this.system.projectionMatrix).elements);
+      
+      
+
+      // 
+      // 
+      if(this.image && this.texture && this.hasLoadedImage){
+      //   // console.log("¿¿¿¿?");
+      
+        // // Tell WebGL we want to affect texture unit 0
+        // this.gl.activeTexture(this.gl.TEXTURE0);
+        // 
+        // // Bind the texture to texture unit 0
+        // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+        // 
+        // // Tell the shader we bound the texture to texture unit 0
+        // this.gl.uniform1i(this.programInfo.uniformLocations.uTexture, 0);
+        // 
+      // 
+      //   const num = 2; // every coordinate composed of 2 values
+      //   const type = this.gl.FLOAT; // the data in the buffer is 32-bit float
+      //   const normalize = false; // don't normalize
+      //   const stride = 0; // how many bytes to get from one set to the next
+      //   const offset = 0; // how many bytes inside the buffer to start from
+      //   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureCoordBuffer);
+      //   this.gl.vertexAttribPointer(
+      //     this.programInfo.attribLocations.textureCoord,
+      //     num,
+      //     type,
+      //     normalize,
+      //     stride,
+      //     offset
+      //   );
+      //   this.gl.enableVertexAttribArray(this.programInfo.attribLocations.textureCoord);
+      }
+      // 
+    
+      
+      
+      
+                                // var programInfo = this.system.programInfo;  
+                                // 
+                                // // Tell WebGL we want to affect texture unit 0
+                                // this.gl.activeTexture(this.gl.TEXTURE0);
+                                // 
+                                // // Bind the texture to texture unit 0
+                                // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+                                // 
+                                // var textureLocationImage = this.gl.getUniformLocation(this.system.shaderProgram, "u_texture");
+                                // // Tell the shader we bound the texture to texture unit 0
+                                // // this.gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
+                                // this.gl.uniform1i(textureLocationImage, 0);
+                                // 
+
+
+      // debugger
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.worldMatrix.elements);
+      // this.gl.uniformMatrix4fv(matrixLocation, false,  this.localMatrix.elements);
+
+
+      // if(textureLocation){
+        // provide texture coordinates for the rectangle.
+        // var texcoordBuffer = this.gl.createBuffer();
+        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, texcoordBuffer);
+        // Upload the image into the texture.
+        
+        // if(this.image){
+        // 
+        //   this.gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+        //   // lookup uniforms
+        // 
+        // 
+        //   // var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+        //   this.gl.uniform2f(textureLocation, 512, 512);
+        // 
+        // }
+
+      // }
+      // else {
+      // 
+      // }
+
+
+      // at this point WHAT is binded here????
+      // guess we can just bind again since its normal in all the readings
+      // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.system.POSITIONS_BUFFER);
+      
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionsBufferLocal);
+      
+      
+      // const numComponents = 3; // pull out 3 values per iteration for xyz
+      // const type = this.gl.FLOAT; // the data in the buffer is 32bit floats
+      // const normalize = false; // don't normalize
+      // const stride = 0; // how many bytes to get from one set of values to the next
+      // // 0 = use type and numComponents above
+      // const offset = 0; // how many bytes inside the buffer to start from
+      // this.gl.vertexAttribPointer(
+      //   this.programInfo.attribLocations.vertex,
+      //   numComponents,
+      //   type,
+      //   normalize,
+      //   stride,
+      //   offset
+      // );
+      // // this brewaks if commented out
+      // this.gl.enableVertexAttribArray(this.programInfo.attribLocations.vertex);
+      // 
+
+
+
+
+      // Tell WebGL we want to affect texture unit 0
+      this.gl.activeTexture(this.gl.TEXTURE0);
+    
+      // Bind the texture to texture unit 0
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    
+      // Tell the shader we bound the texture to texture unit 0
+      this.gl.uniform1i(this.programInfo.uniformLocations.uTexture, 0);
+    
+
+      // this should only be applied once since its reading
+      // UNLESS you change the vertices
+      // the order is weird here for now
+      if(this.hasSetupdataBuffer === false){
+        this.hasSetupdataBuffer = true;
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+        //this.hasSetupdataBuffer++;
+        
+      }
+      // console.log("hasSetupdataBuffer", this.hasSetupdataBuffer);
+      // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+
+    }
+    
+    // 
+    // startTexture(){
+    // 
+    // 
+    //     // 
+    //     // this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array([
+    //     //       // left column front
+    //     //       0, 0,
+    //     //       0, 1,
+    //     //       1, 0,
+    //     //       0, 1,
+    //     //       1, 1,
+    //     //       1, 0]),
+    //     //     this.gl.STATIC_DRAW);
+    //     // 
+    //   // }
+    // 
+    // }
+    
+    
+
+    // // sent when the image has loaded
+    // // should not be in a loop
+    // loadTexture(image){
+    //   // debugger
+    // 
+    // 
+    // 
+    // 
+    // 
+    //   // // // Now that the image has loaded make copy it to the texture.
+    //   // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    //   // this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA,this.gl.UNSIGNED_BYTE, this.image);
+    //   // this.gl.generateMipmap(this.gl.TEXTURE_2D); // this is expenssive in a loop!!
+    //   // 
+    //   // if (isPowerOf2(this.image.width) && isPowerOf2(this.image.height)) {
+    //   //   // Yes, it's a power of 2. Generate mips.
+    //   //   this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    //   // } else {
+    //   //   // No, it's not a power of 2. Turn off mips and set
+    //   //   // wrapping to clamp to edge
+    //   //   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+    //   //   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+    //   //   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+    //   // }
+    // 
+    // 
+    //   // 
+    // }
+    
 
     
 

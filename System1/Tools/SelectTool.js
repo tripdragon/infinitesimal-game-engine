@@ -175,7 +175,7 @@ export class SelectTool extends Tool {
     // this.mouseVisual.position.copy(pointer);//.applyMatrix4(this.mouseVisual.worldMatrix)
     
     
-    window.onConsole.log("mouse", pointer.x, pointer.y);
+    // window.onConsole.log("mouse", pointer.x, pointer.y);
     
     
     if(this.mode === this.modes.mousing){

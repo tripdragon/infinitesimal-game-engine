@@ -45,6 +45,12 @@ disc.load = function(){
   
   this.system.backgroundColor = {r:0,g:0.05,b:0.05,a:1};
 
+
+
+
+
+
+
   // 
   // var points = [
   //   new Vector3(-1,1,0), new Vector3(-1,-1,0), new Vector3(1,-1,0) ,
@@ -69,6 +75,8 @@ disc.load = function(){
   var box4 = new Platform("plane magic", 540, 420, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
   this.system.add(box4);
   window.box4 = box4;
+  
+  
   // debugger
   // box4.visible = false;
   
@@ -100,11 +108,13 @@ disc.load = function(){
   // 
   // 
   // 
-  var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
-  this.system.add(box5);
+  // var box5 = new Platform("plane", 180, 260, 0, 360, 30, {r:0.0,g:0.9,b:0.2,a:1}, this.system);
   // this.system.add(box5);
-  
+  // this.system.add(box5);
   // 
+  // // 
+  
+  
   for (var i = 0; i < 20; i++) {
   
     var w = 80;
@@ -114,6 +124,8 @@ disc.load = function(){
   
   }
   
+  
+  // 
   
   // 
   // 
@@ -146,17 +158,44 @@ disc.load = function(){
         
         
         // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-        var aa = new Player("player aaaa", 470, 600, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-        this.system.add(aa);
-        window.player__ = aa;
+        var size = 160; // 40
+        var playyyer = new Player("playyyyyer", 470, 600, 0, size, size, {r:0,g:1,b:1,a:1}, this.system);
+        this.system.add(playyyer);
+        window.playyyer = playyyer;
         // aa.canUpdate = false;
         // for now we need some defaults items to get the bot to walk
         // aa.platform = box3;
         // aa.directionVector.x = 1;
         
-        aa.start();
+        playyyer.loadImage("./Cast/cat1.png");
+        playyyer.start();
         
         
+        
+          // 
+          // // images like
+          // var image = new Image();
+          // // image.src = "./Cast/cat1.png";  // MUST BE SAME DOMAIN!!!
+          // image.src = "./Cast/cubetexture.png";  // MUST BE SAME DOMAIN!!!
+          // // image.onload = function() {
+          // //   // render(image);
+          // //   // debugger
+          // //   playyyer.image = image;
+          // //   onConsole.log("dfkjng", "NEAT!!!");
+          // // };
+          // 
+          // image.addEventListener('load', function() {
+          //     // playyyer.image = image;
+          //     // debugger
+          //     playyyer.loadTexture(image);
+          //   // // Now that the image has loaded make copy it to the texture.
+          //   // gl.bindTexture(gl.TEXTURE_2D, texture);
+          //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+          //   // gl.generateMipmap(gl.TEXTURE_2D);
+          // });
+          // 
+          // 
+
         
         
         

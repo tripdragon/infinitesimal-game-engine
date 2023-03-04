@@ -19,6 +19,12 @@ export const vScreen = `
     uniform mat4 u_matrix;
     
     
+    attribute vec2 a_texCoord;
+
+    varying vec2 v_texCoord;
+    
+    
+    
     void main() {
       
       // convert the position from pixels to 0.0 to 1.0
@@ -45,8 +51,10 @@ export const vScreen = `
       // no
       // gl_Position = u_matrix * aVertexPosition;
       
+      // Pass the texcoord to the fragment shader.
       
       gl_Position = u_matrix * aVertexPosition;
+      v_texCoord = a_texCoord;
       
     }
   `;
@@ -55,8 +63,16 @@ export const vScreen = `
 export const fScreen = `
     precision mediump float;
     uniform vec4 u_color;
+    
+    // Passed in from the vertex shader.
+    varying vec2 v_texCoord;
+     
+    // The texture.
+    uniform sampler2D u_texture;
+
     void main() {
       // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-      gl_FragColor = u_color;
+      // gl_FragColor = u_color;
+      gl_FragColor = texture2D(u_texture, v_texCoord);
     }
   `;
