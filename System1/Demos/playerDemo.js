@@ -14,6 +14,8 @@ import { Platform } from "../Primitives/Platform.js";
 import { Polygon } from "../Primitives/Polygon.js";
 import { Vector3 } from "../Modules/Vector3.js";
 
+import { VisualPlane } from "../Primitives/VisualPlane.js";
+
 
 
 // import { Editor111 } from "../Editor/editor111.js";
@@ -72,7 +74,18 @@ disc.load = function(){
   
   // 
   // 
-  var box4 = new Platform("plane magic", 540, 420, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
+  var cSize1 = 1200;
+  var notclouds1 = new Plane("not clouds 1", 540, 420, 0, cSize1, cSize1, {r:1,g:1,b:1,a:1}, this.system);
+  notclouds1.canCollide = false;
+  this.system.add(notclouds1);
+  notclouds1.loadImage("./Cast/NFT_could_this_be_ourealy.png");
+  
+  
+  
+  
+  // window.box4 = box4;
+  
+  var box4 = new Platform("plane magic", 540, 220, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
   this.system.add(box4);
   window.box4 = box4;
   
@@ -158,7 +171,7 @@ disc.load = function(){
         
         
         // var aa = new Actor("aa", 320, 320, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
-        var size = 160; // 40
+        var size = 40; // 40
         var playyyer = new Player("playyyyyer", 470, 600, 0, size, size, {r:0,g:1,b:1,a:1}, this.system);
         this.system.add(playyyer);
         window.playyyer = playyyer;

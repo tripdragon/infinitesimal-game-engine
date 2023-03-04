@@ -54,8 +54,8 @@ export class SelectTool extends Tool {
   workPos = new Vector3();
   
   
-  // usePreventCollide = false;
-  usePreventCollide = true;
+  usePreventCollide = false;
+  // usePreventCollide = true;
   
   
   constructor(system){

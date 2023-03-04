@@ -134,11 +134,16 @@
       import {Grid} from '../Modules/Grid.js';
       
       import {keyboard} from '../Modules/input/keyboard.js';
+      import {lerp} from '../Modules/mathness.js';
+      var resolution = Math.pow(2,10); // 512
+      var resolution = 512; // 512
       
       const canvas = document.getElementById("canvassss");
+      canvas.width = resolution;
+      canvas.height = resolution;
       const canvasBuffer = document.createElement('canvas');
-      canvasBuffer.width = 512;
-      canvasBuffer.height = 512;
+      canvasBuffer.width = resolution;
+      canvasBuffer.height = resolution;
       const ctx = canvas.getContext("2d");
       const ctxBuffer = canvasBuffer.getContext("2d");
       
@@ -206,8 +211,114 @@
       
       
       
+      //
+      // Color palete
+      //
+      // const colorPickerView = document.createElement("");
+      const colorPickerView = document.createElement('canvas');
+      colorPickerView.id = "colorPickerView";
+      colorPickerView.width = 256;
+      colorPickerView.height = 256;
+      colorPickerView.style.position = "absolute";
+      colorPickerView.style.right = "100px";
+      // colorPickerView.style.border = "solid 1px black";
+      panel.appendChild(colorPickerView);
+      var ctxPickerIsDown = false;
+      const ctxPicker = colorPickerView.getContext("2d");
+      window.colorPickerView = colorPickerView;
+      var colorPickerMouse = {x:0,y:0};
+      // ctxPicker.fillStyle = "#006eff";
+      function onPointerMoveColorPicker( event ) {
+        
+        if(ctxPickerIsDown === false) return;
+        
+        colorPickerMouse.x = event.clientX;
+        colorPickerMouse.y = event.clientY;
+        console.log(colorPickerMouse);
+        // console.log(mouse);
+        var gg = getColorAtMouse(ctxPicker, colorPickerMouse);
+        setBrushColor(gg);
+        
+      }
+      colorPickerView.addEventListener( 'pointermove', onPointerMoveColorPicker.bind(this), true );
+      colorPickerView.addEventListener( 'pointerdown', function(){
+        ctxPickerIsDown = true;
+      }, true );
+      colorPickerView.addEventListener( 'pointerup', function(){
+        ctxPickerIsDown = false;
+      }, true );
+      
+      // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
+      // ctx.fillRect(grid.position.x, grid.position.y, grid.size, grid.size);
+      
+      /* 
+        https://stackoverflow.com/a/17243070/1149855
+        accepts parameters
+       * h  Object = {h:x, s:y, v:z}
+       * OR 
+       * h, s, v
+       This code expects 0 <= h, s, v <= 1, if you're using degrees or radians, remember to divide them out.
+
+        The returned 0 <= r, g, b <= 255 are rounded to the nearest Integer. 
+        If you don't want this behaviour remove the Math.rounds from the returned object.
+      */
+      var colorVector = {r:0,g:0,b:0};
+      function HSVtoRGB(h, s, v, vector) {
+          var r, g, b, i, f, p, q, t;
+          if (arguments.length === 1) {
+              s = h.s, v = h.v, h = h.h;
+          }
+          i = Math.floor(h * 6);
+          f = h * 6 - i;
+          p = v * (1 - s);
+          q = v * (1 - f * s);
+          t = v * (1 - (1 - f) * s);
+          switch (i % 6) {
+              case 0: r = v, g = t, b = p; break;
+              case 1: r = q, g = v, b = p; break;
+              case 2: r = p, g = v, b = t; break;
+              case 3: r = p, g = q, b = v; break;
+              case 4: r = t, g = p, b = v; break;
+              case 5: r = v, g = p, b = q; break;
+          }
+          vector.r = Math.round(r * 255);
+          vector.g = Math.round(g * 255);
+          vector.b = Math.round(b * 255);
+          // return {
+          //     r: Math.round(r * 255),
+          //     g: Math.round(g * 255),
+          //     b: Math.round(b * 255)
+          // };
+      }
+
+      
+      // this is not fully ready for hsla picker
+      ctxPicker.fillRect(0.5,0,256, 256);
+      
+      HSVtoRGB(0,0.5,0.5, colorVector);
+      console.log("colorVector", colorVector);
+      for (var i = 0; i < 256; i++) {
+        
+        HSVtoRGB(i/256,1,1, colorVector);
+        // HSVtoRGB(0,1,1-(i/256), colorVector);
+        ctxPicker.fillStyle = `rgb(${colorVector.r},${colorVector.g},${colorVector.b})`;
+        // ctxPicker.fillRect(0,0,256, 256);
+        ctxPicker.fillRect(0,i,256, 1);
+        
+        // for (var ww = 0; ww < 256; ww++) {
+        //   ctxPicker.fillRect(0,ww,1, 1);
+        // }
+      }
+      // so for now we will hitch on a gradient picker space as well
+      for (var i = 0; i < 256; i++) {
+        ctxPicker.fillStyle = `rgb(${255-i},${255-i},${255-i})`;
+        ctxPicker.fillRect(0,i,20, 256);
+      }
       
       
+      //
+      // APP stuff
+      //
       
       
       var mouse = new Vector2();
@@ -232,6 +343,15 @@
           saveToFile();
         },
         
+        "r_down": (ev) => {
+          getRandomBrushColorApp();
+        },
+        
+        
+        "f_up": (ev) => {
+          fillCanvas();
+        },
+        
         
         " _up": (ev) => {
           // window.brushColor = ""+Math.random()*0xffffff;
@@ -240,7 +360,7 @@
         
         
         "i_down": (ev) => {
-          var gg = getColorAtMouse(mouse);
+          var gg = getColorAtMouse(ctx, mouse);
           setBrushColor(gg);
           console.log(gg);
         },
@@ -251,8 +371,10 @@
       
       
       // https://stackoverflow.com/questions/6735470/get-pixel-color-from-canvas-on-mousemove
-      function getColorAtMouse(mouse) {
-        var p = ctx.getImageData(mouse.x, mouse.y, 1, 1).data; 
+      function getColorAtMouse(context, mouse) {
+        
+        var rect = context.canvas.getBoundingClientRect();
+        var p = context.getImageData(mouse.x - rect.x, mouse.y - rect.y, 1, 1).data; 
         var hex = ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
         // $('#status').html(coord + "<br>" + hex);
         // console.log("hex", hex);
@@ -268,13 +390,13 @@
       
       function getRandomBrushColorApp() {
         window.brushColor = randomHexColor();
-        console.log(window.brushColor);
+        // console.log(window.brushColor);
         colorPalete.style.backgroundColor = "#"+window.brushColor;
       }
       
       function setBrushColor(color) {
         window.brushColor = color;
-        console.log(window.brushColor);
+        // console.log(window.brushColor);
         colorPalete.style.backgroundColor = "#"+window.brushColor;
       }
       
@@ -317,8 +439,9 @@
       // if you dont get power of 2 numbers it draws borders at times
       // var sizeToFit = 512 / 9; //sizeToFit = Math.floor(sizeToFit);
       // var sizeToFit = 512 / Math.pow(2,4);
-      var sizeToFit = 512 / Math.pow(2,5);
-      var grid = new Grid(sizeToFit,1,1,null).computeRowsColumns(512, 512);
+      // var sizeToFit = 512 / Math.pow(2,5);
+      var sizeToFit = 512/100;
+      var grid = new Grid(sizeToFit,1,1,null).computeRowsColumns(resolution, resolution);
       
       
       // grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
@@ -334,6 +457,15 @@
       function randomHexColor() {
         return Math.floor(Math.random()*16777215).toString(16);
       }
+      
+      function fillCanvas(){
+        
+        ctx.fillStyle = "#"+window.brushColor;
+        ctx.fillRect(0, 0, canvasGG.width, canvasGG.height);
+      
+      }
+      window.fillCanvas = fillCanvas;
+      
       
       // clear once
       function clear(){
@@ -525,6 +657,9 @@
       canvas.addEventListener( 'pointermove', onPointerMove.bind(this), true );
       canvas.addEventListener( 'pointerdown', onPointerDown.bind(this), true );
       canvas.addEventListener( 'pointerup', onPointerUp.bind(this), true );
+
+
+      
 
 
 
