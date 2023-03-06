@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bleep bleep</title>
+    <!-- <script src="mission1.js" type="module" defer></script> -->
+    <!-- 
+    python3 -m http.server 8001 
+    
+    this is just a canvas 2d app for pixel painting for now
+    
+    musaxk
+    
+    localhost:8001/System1/Demos/bittune.html
+    
+    
+    audio api requires mouse clicking to play now
+    
+    
+    -->
+
+
+    <style media="screen">
+        *{
+          margin: 0;
+          padding: 0;
+        }
+        body{
+          overflow: hidden;
+        }
+        
+        /* ideally canvas gl is the bottom of the stack */
+        #canvassss {
+          z-index: -1;
+          position: absolute;
+        }
+    </style>
+
+    <style media="screen">
+      /* #controls{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        
+        width: 100px;
+        height: 100px;
+        padding: 20px 0 0 20px;
+      }
+
+      #controls .add{
+        
+      } */
+      
+      #canvassss{
+        /* background-color: orange; */
+      }
+      
+      
+      .button{
+        width: 32px;
+        height: 32px;
+      }
+      
+    </style>
+    
+    <!-- idea is to inject here and clear when switching games -->
+    <style id="gamestyles" media="screen">
+      .fish {
+        color: "pwgjpodg";
+      }
+      /* #canvassss{
+        left: 25%;
+        top: 25%;
+      } */
+      
+      #gamespace{
+        position: relative;
+        padding: 100px;
+      }
+      #gamespace input[type="range"] {
+        width: 400px;
+        margin: 0;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
+
+    <!-- <canvas id="canvassss" width="512" height="512"></canvas> -->
+    
+    
+
+    <div id="gamespace">
+      <input id="pi_input" type="range" value="200" min="0" max="1000" step="any" />
+      <p>scalarFrequency: <output id="value"></output></p>
+
+
+      <form id="typesradio">
+        <fieldset>
+        <!-- // values are "sine", "square", "sawtooth", "sawtooth" and "custom". The default is "sine". -->
+        <legend>Types</legend>
+        <div>
+          <input type="radio" checked id="sine" name="type" value="sine" onclick="onChangeRadio(this);" />
+          <label for="sine">sine</label>
+
+          <input type="radio" id="square" name="type" value="square" onclick="onChangeRadio(this);" />
+          <label for="square">square</label>
+
+          <input type="radio" id="sawtooth" name="type" value="sawtooth" onclick="onChangeRadio(this);" />
+          <label for="sawtooth">sawtooth</label>
+
+          <input type="radio" id="triangle" name="type" value="triangle" onclick="onChangeRadio(this);" />
+          <label for="triangle">triangle</label>
+          
+          <!-- <input type="radio" id="custom" name="type" value="custom" onclick="onChangeRadio(this);" />
+          <label for="custom">custom</label> -->
+          
+        </div>
+      </fieldset>
+      </form>
+      
+      <input id="octaves_input" type="range" value="5" min="1" max="10" step="1" list="markers" />
+      <p>Octaves: <output id="octvalue"></output></p>
+      <datalist id="markers">
+        <!-- <option value="0"></option> -->
+        <option value="1"></option>
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+        <option value="5"></option>
+        <option value="6"></option>
+        <option value="7"></option>
+        <option value="8"></option>
+        <option value="9"></option>
+        <option value="10"></option>
+      </datalist>
+      
+
+    </div>
+    <div id="bodyInjectionPointMain">
+    </div>
+
+    <script type="text/javascript">
+        var APPPP;
+
+    </script>
+
+    <script type="module" type="text/javascript">
+      // import AppMain from './AppMain.js';
+      // APPPP = AppMain();
+
+      import {Vector2} from '../Modules/Vector2.js';
+      
+      import {keyboard} from '../Modules/input/keyboard.js';
+      import {lerp, clamp} from '../Modules/mathness.js';
+      
+      
+      
+      var IS_DOWN = false;
+      
+      var oo;
+      // var _frequency = 261.63; // 261.63;
+      var scalarFrequency = 661.63; // 261.63;
+      var audioType = "sine";
+      var currectOctave = 5;
+      
+      
+      const value = document.querySelector("#value")
+      const input = document.querySelector("#pi_input")
+      // input.style.width = 1000;
+      pi_input.max = 5000
+      value.textContent = input.value
+      input.addEventListener("input", (event) => {
+        value.textContent = event.target.value;
+        scalarFrequency = +event.target.value;
+        console.log("scalarFrequency", scalarFrequency);
+      })
+      
+      var currentValue = 0;
+      function onChangeRadio(myRadio) {
+          // alert('Old value: ' + currentValue);
+          // alert('New value: ' + myRadio.value);
+          // currentValue = myRadio.value;
+          
+          audioType = myRadio.value;
+      }
+      window.onChangeRadio = onChangeRadio;
+
+
+
+      const octValue = document.querySelector("#octvalue")
+      const inputOct = document.querySelector("#octaves_input")
+      octValue.textContent = inputOct.value;
+      inputOct.addEventListener("input", (event) => {
+        octValue.textContent = event.target.value;
+        currectOctave = event.target.value;
+      })
+      
+      
+      //
+      // APP stuff
+      //
+      
+      
+      var mouse = new Vector2();
+    
+      keyboard({
+        
+
+        // "q": (ev) => {
+        //   saveToFile();
+        // },
+        // 
+
+        // 
+        // 
+        // " _up": (ev) => {
+        //   // window.brushColor = ""+Math.random()*0xffffff;
+        //   getRandomBrushColorApp();
+        // },
+        
+        // "q_down": (ev) => {
+        //   IS_DOWN = true;
+        // },
+        // "q_down": (ev) => {
+        //   console.log("qqqqq");
+        //   if(IS_DOWN === false){
+        //     IS_DOWN = true;
+        //     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        //     var ctx = new AudioContext();
+        //     oo = ctx.createOscillator();
+        //     // oo.type = ev.currentTarget.id;
+        //     oo.type = audioType;
+        //     oo.frequency.value = _frequency;
+        //     oo.start(0);
+        //     oo.connect(ctx.destination);
+        //   }
+        // 
+        // },
+        // 
+        // "q_up": (ev) => {
+        //   IS_DOWN = false;
+        //   oo.stop(0);
+        // },
+        // 
+        // 
+        // "w_up": (ev) => {
+        //   playFor(0.2, ev);
+        // },
+        // "e_up": (ev) => {
+        //   playFor(0.4, ev);
+        // },
+        // "r_up": (ev) => {
+        //   playFor(0.6, ev);
+        // },
+        // "t_up": (ev) => {
+        //   playFor(0.8, ev);
+        // },
+        // 
+        // "a_down": (ev) => {
+        //   playFor(0.4, ev, 20);
+        // },
+        // "s_down": (ev) => {
+        //   playFor(0.4, ev, 20*3);
+        // },
+        // "d_down": (ev) => {
+        //   playFor(0.4, ev, 20*4);
+        // },
+        // "f_down": (ev) => {
+        //   playFor(0.4, ev, 20*5);
+        // },
+        // "g_down": (ev) => {
+        //   playFor(0.4, ev, 20*6);
+        // },
+        // "h_down": (ev) => {
+        //   playFor(0.4, ev, 20*7);
+        // },
+        // 
+        
+        // a ´w s é  d f ´t g ´y h ú  j k
+        // C C# D D# E F F# G G# A A# B C
+        // C
+        "a_down": (ev) => {
+          //console.log("a down");
+          startNote("a", "C", currectOctave, audioType);
+        },
+        "a_up": (ev) => {
+          stopNote("a");
+        },
+        
+        // C#
+        "w_down": (ev) => {
+          //console.log("a down");
+          startNote("w", "C#", currectOctave, audioType);
+        },
+        "w_up": (ev) => {
+          stopNote("w");
+        },
+        
+        // D
+        "s_down": (ev) => {
+          //console.log("a down");
+          startNote("s", "D", currectOctave, audioType);
+        },
+        "s_up": (ev) => {
+          stopNote("s");
+        },
+        
+        // D#
+        "e_down": (ev) => {
+          //console.log("a down");
+          startNote("e", "D#", currectOctave, audioType);
+        },
+        "e_up": (ev) => {
+          stopNote("e");
+        },
+        
+        // E
+        "d_down": (ev) => {
+          //console.log("a down");
+          startNote("d", "E", currectOctave, audioType);
+        },
+        "d_up": (ev) => {
+          stopNote("d");
+        },
+
+        // F
+        "f_down": (ev) => {
+          startNote("f", "F", currectOctave, audioType);
+        },
+        "f_up": (ev) => {
+          stopNote("f");
+        },
+        
+        // F#
+        "t_down": (ev) => {
+          startNote("t", "F#", currectOctave, audioType);
+        },
+        "t_up": (ev) => {
+          stopNote("t");
+        },
+        
+        // G
+        "g_down": (ev) => {
+          startNote("g", "G", currectOctave, audioType);
+        },
+        "g_up": (ev) => {
+          stopNote("g");
+        },
+        
+        // G#
+        "y_down": (ev) => {
+          startNote("y", "G#", currectOctave, audioType);
+        },
+        "y_up": (ev) => {
+          stopNote("y");
+        },
+
+        // A
+        "h_down": (ev) => {
+          startNote("h", "A", currectOctave, audioType);
+        },
+        "h_up": (ev) => {
+          stopNote("h");
+        },
+
+        // A#
+        "u_down": (ev) => {
+          startNote("u", "A", currectOctave, audioType);
+        },
+        "u_up": (ev) => {
+          stopNote("u");
+        },
+
+        // B
+        "j_down": (ev) => {
+          startNote("j", "B", currectOctave, audioType);
+        },
+        "j_up": (ev) => {
+          stopNote("j");
+        },
+
+        // C+1
+        "k_down": (ev) => {
+          // currectOctave comes in as text so convert to int
+          startNote("k", "C", +currectOctave+1, audioType);
+        },
+        "k_up": (ev) => {
+          stopNote("k");
+        },
+        
+        // change octaves
+        "]_down": (ev) => {
+          clamp(1,10,currectOctave++);
+          octValue.textContent = currectOctave;
+          inputOct.value = currectOctave;
+        },
+        "[_down": (ev) => {
+          clamp(1,10,currectOctave--);
+          octValue.textContent = currectOctave;
+          inputOct.value = currectOctave;
+        },
+        
+        // var audioType = "sine";
+        //         // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+
+        "1_down": (ev) => {
+          audioType = "sine";
+          document.getElementById("sine").checked = true;
+        },
+        "2_down": (ev) => {
+          audioType = "square";
+          document.getElementById("square").checked = true;
+        },
+        "3_down": (ev) => {
+          audioType = "sawtooth";
+          document.getElementById("sawtooth").checked = true;
+        },
+        "4_down": (ev) => {
+          audioType = "triangle";
+          document.getElementById("triangle").checked = true;
+        },
+        
+        
+        
+        
+        
+        
+        
+        "x_down": (ev) => {
+          console.log("x down");
+          startNote("x", "g", audioType);
+        },
+        // "x": (ev) => {
+        //   console.log("x constant");
+        // },
+        "x_up": (ev) => {
+          console.log("x up");
+          stopNote("x");
+        },
+        
+        
+        
+        
+      });
+      
+      
+      
+      // https://codepen.io/sophiekoonin/pen/JjEJowB
+      const SemitoneDistances = {
+        C: -9,
+        "C#": -8, "D♭": -8,
+        D: -7,
+        "D#": -6, "E♭": -6,
+        E: -5,
+        F: -4,
+        "F#": -3, "G♭": -3,
+        G: -2,
+        "G#": -1, "A♭": -1,
+        A: 0,
+        "A#": 1, "B♭": 1,
+        B: 2
+      };
+      
+      // The equation to calculate frequency is 𝑓 = 440Hz × 2𝑛/12, 
+      // where 𝑛 is the number of semitones between A4 and the input note.
+      // https://codepen.io/sophiekoonin/pen/JjEJowB
+      function calcFrequency(note, octave) {
+        const distanceFromA = SemitoneDistances[note];
+        // Get the number of steps between the notes
+        const steps = (octave - 4) * 12 + distanceFromA;
+
+        const powResult = Math.pow(2, steps / 12);
+
+        // f = 440Hz * 2^n/12.2
+        const freq = 440 * powResult;
+
+        // round to 1 d.p.
+        return Math.round(freq * 10) / 10;
+      }
+      
+      window.calcFrequency = calcFrequency;
+      
+      var Octaves = {
+        
+      }
+      
+      
+      
+      var CompKeysPlaying = {
+        // down: {},
+        // up: {},
+        
+      }
+      
+      
+      // some logic wrapper over createOscillator
+      // to store state
+      function Note(musicKey){
+        this.isDown = false;
+        this.tone;
+        this.octave = 5;
+        this.type = "sine";
+        this.frequency = 0;
+        if(musicKey){
+          this.start(musicKey);
+        }
+        this.start = (musicKey, octave, type) => {
+          if(type) this.type = type;
+          if(octave) this.octave = octave;
+          // if ( ! keysPlaying.down[key] ) keysPlaying.down[key] = new Note();
+          // keysPlaying.down[key].isDown = true;
+          // keysPlaying.down[key].note = generateNote(key, "sine");
+          if (this.isDown === false) {
+            this.isDown = true;
+            this.frequency = calcFrequency(musicKey, this.octave );
+            console.log("this.frequency", this.frequency);
+            this.tone = generateTone(this.frequency, this.type);
+          }
+        }
+        this.stop = () => {
+          if(this.tone){
+            this.tone.stop(0);
+            this.tone = null;
+            this.isDown = false;
+          }
+        }
+      }
+      
+      
+      function startNote(key, musicKey, octave, type) {
+        // this one sets up an Oscillator
+        // and retains on state untill release
+        
+        if ( ! CompKeysPlaying[key] ) CompKeysPlaying[key] = new Note();
+        if(CompKeysPlaying[key].isDown === false){
+          CompKeysPlaying[key].start(musicKey, octave, type);
+        }
+        
+        
+      }
+      
+      function stopNote(key) {
+        if ( CompKeysPlaying[key] ) CompKeysPlaying[key].stop();
+      }
+      
+      // 
+      // function sNote(key) {
+      //   if ( ! KeysPlaying.down[key] ) KeysPlaying.down[key] = new Note();
+      //   KeysPlaying.down[key].isDown = true;
+      //   KeysPlaying.down[key].note = generateNote(key, "sine");
+      // }
+      // 
+      
+      
+      // to do more control stuff
+      // https://stackoverflow.com/a/40295452/1149855
+      // 
+      
+      function generateTone(frequency, type){
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var ctx = new AudioContext();
+        var oo = ctx.createOscillator();
+        // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+        oo.type = type;
+        // var octaveScalar = 1;
+        // oo.frequency.value = _frequency + octaveScalar;
+        oo.frequency.value = frequency + scalarFrequency;
+        
+        // var now = ctx.currentTime;
+        // oo.frequency.setValueAtTime(frequency + scalarFrequency, now+0.5);
+        // oo.frequency.setValueAtTime(frequency + 1000, now+0.5);
+        
+        // console.log("oo.frequency.value", oo.frequency.value);
+        //console.log("octaveScalar", octaveScalar);
+            oo.start(0);
+            oo.connect(ctx.destination);
+        
+        
+//         const real = new Float32Array(2);
+// const imag = new Float32Array(2);
+// // const ac = new AudioContext();
+// // const osc = ac.createOscillator();
+// 
+// real[0] = 2;
+// imag[0] = 0;
+// real[1] = 1;
+// imag[1] = 4;
+// real[2] = 2;
+// imag[2] = 8;
+// real[3] = 1;
+// imag[3] = 2;
+// 
+// const wave = ctx.createPeriodicWave(real, imag, { disableNormalization: true });
+// 
+// oo.setPeriodicWave(wave);
+
+// oo.start(0);
+// oo.connect(ctx.destination);
+        
+// var now = ctx.currentTime;
+// // Frequency in Hz.
+// // Set initial value. (you can use .value=freq if you want)
+// oo.frequency.setValueAtTime(frequency, now);
+// // set a "checkpoint" in 3 seconds - that will be the starting point of the ramp.
+// oo.frequency.setValueAtTime(frequency + scalarFrequency, now+3);
+// // set a ramp to freq+100Hz over the next 4 seconds.
+// oo.frequency.linearRampToValueAtTime(frequency+100 + scalarFrequency,now+7)
+// oo.connect(ctx.destination); 
+// oo.start(now);
+// var duration = 2;
+// oo.stop(now + duration);
+// 
+        return oo;
+      }
+      
+      // function playForAtOctaveScalar(sec, scalar, ev ){
+      //   playFor();
+      // }
+      
+      function playFor(sec, ev, octaveScalar = 0){
+        console.log("_frequency", _frequency);
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var ctx = new AudioContext();
+        var oo = ctx.createOscillator();
+        // oo.type = ev.currentTarget.id;
+        // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+        oo.type = audioType;
+        var octaveScalar = 1;
+        // oo.frequency.value = _frequency + octaveScalar;
+        oo.frequency.value = _frequency + octaveScalar;
+        // console.log("oo.frequency.value", oo.frequency.value);
+        console.log("octaveScalar", octaveScalar);
+        oo.start(0);
+        oo.connect(ctx.destination);
+        
+        setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+      
+          // setTimeout(function(){console.log("fish");}, 1000);
+          // setInterval(function(){console.log("fish");}, 1000);
+          // 
+          // 
+          // 
+          // // ____
+          // 
+          // var ii = 0;
+          // intervalID = setInterval(function(){console.log("fish", ii++);}, 1);
+      
+      }
+      
+      
+
+      var loopID;
+      
+      let loop = function(){
+
+        loopID = requestAnimationFrame( loop.bind(this) );
+        // console.log("popcorn");
+        
+        // this.time.now = Date.now();
+        // this.time.delta = this.time.now - this.time.mTime;
+
+        // draw();
+        
+        // this.time.mTime = this.time.now;
+      };
+
+      function onPointerMove( event ) {
+        
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        
+        // console.log(mouse);
+
+      }
+
+      function onPointerDown(ev){
+        // debugger
+        console.log("??¿¿¿");
+        
+
+
+      }
+      function onPointerUp(ev){
+        IS_DOWN = false;
+        // oo.stop(0);
+      }
+      
+      
+      
+
+      
+      
+      
+      document.addEventListener( 'pointermove', onPointerMove.bind(this), true );
+      document.addEventListener( 'pointerdown', onPointerDown.bind(this), true );
+      document.addEventListener( 'pointerup', onPointerUp.bind(this), true );
+
+
+      
+
+
+
+      // loop.call(this);
+    
+
+      
+    </script>
+  </body>
+</html>
