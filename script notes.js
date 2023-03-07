@@ -17,7 +17,7 @@ bb = aa.replace( /\n/g, " " ).split( " " )
 
 
 [
-  "", "direction", "is", "left", "and", "speed", "is", "2", "walkPlatform", 
+  "", "direction", "is", "left", "and", "speed", "is", "2", "walkPlatform",
   "until", "atEdge", "flip", "walk", "platform", "repeat", ""
 ]
 
@@ -31,13 +31,13 @@ wobject = {
   direction : { x: 0, y: 0 },
   platform : object,
   walkRoutine : function(){},
-  
+
   // this seems to be like such a common task
   // that it should be ratifed into the player object here
   // event
   atEdge : function(){},
   isAtEdge : false,
-  
+
   update: function(){
     walkRoutine()
     atEdge()
@@ -83,7 +83,7 @@ function until(thing){
 var ww = walkPlatform(...){}
 
 function until(func){
-...  
+...
 }
 
 
@@ -94,23 +94,23 @@ function until(func){
 
 
 function at(){
-  
+
 }
 
 function edge(){
-  
+
 }
 
 function atEdge(thingy, func){
-  
+
   thing.atEdge = function(){
-      
+
     if( ! inbetween(thing.x, platform.x, platform.width) ){
       func(thingy) // func being flip() in this example
     }
-    
+
   }
-  
+
 }
 
 
@@ -124,5 +124,5 @@ walkPlatform(thingy)
 // thus stop() is always implied?
 // or is loop repeat?????
 repeat(){
-  
+
 }

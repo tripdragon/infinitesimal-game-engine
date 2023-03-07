@@ -26,6 +26,8 @@ export class WordsAdder {
 
   element;
   lv = 1;
+  parsedScripts = {};
+  scriptsControlledObject = null;
 
   _setStyles(element) {
     setStyles({ element, styles: {
@@ -94,8 +96,7 @@ export class WordsAdder {
       Enter: () => {
         // text = text+"\n";
         console.log("¿¿ enter 222 ¿¿");
-        _renderWords(`${_text()}
-`);// why u be trailing left flush??? // My zude I thought this was more accurate and we can manage indentation later
+        _renderWords(`${_text()}\n`);
       },
       " ": () => {
         _renderWords(_text() + SPACE);
@@ -109,5 +110,9 @@ export class WordsAdder {
         }
       }
     }));
+  }
+
+  controlWithScripts(obj) {
+    //
   }
 }

@@ -1,8 +1,5 @@
 import { addListener } from './listeners.js';
 
-// TODO 
-// add debug arg
-
 /*
 docs:
 
@@ -27,7 +24,7 @@ keyboard({
   1 : (ev) => {
     player.setScaletemp(0.1);
   },
-  
+
   // you can have all 3 events, plain _up and _down
   ArrowDown_down: (ev) => {
     arrowsDown.down = true;
@@ -47,15 +44,12 @@ keyboard({
 
 // function Container(){
 //   var canUpdate = true;
-//   var keyboard = 
+//   var keyboard =
 // }
 
+// 2nd arg is additional options, named args
+export function keyboard(config, { debug } = {}) {
 
-// NEEDS: debug for turning on console logs
-export function keyboard(config, debug) {
-  
-  
-  
   addListener({ event: 'keydown', func: function(evt) {
     if (typeof config[evt.key] === 'function') {
       config[evt.key](evt);
@@ -68,7 +62,7 @@ export function keyboard(config, debug) {
     if (typeof config.any === 'function') {
       config.any(evt);
     }
-    
+
     if(evt && debug){
       console.log("keyboard ev", evt, evt.key);
     }

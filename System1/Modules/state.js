@@ -17,4 +17,6 @@ export function getState({ key, type }) {
   switch (type) {
     // case STATE_TYPES.
   }
+
+  return {};
 }

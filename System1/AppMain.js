@@ -16,27 +16,26 @@ export default function AppMain() {
 
   // words module lv 1
   // do these go in the game???
-  // Concept of game UI 
-  const words = document.createElement('div');
+  // Concept of game UI
+  const wordsContainer = document.createElement('div');
   const injectionPoint = document.getElementById("bodyInjectionPointMain");
-  injectionPoint.appendChild(words);
+  injectionPoint.appendChild(wordsContainer);
 
   // Init words with an element
-  APPPP.words1 = new WordsAdder(words);
+  APPPP.words1 = new WordsAdder(wordsContainer);
 
   console.log('APPPP');
-  
-  // 
+
+  //
   // // Should have some stupid function like insertDisc ...
   // // moving Game setup into its class
   // APPPP.insertDisc(squaresATron_I);
-  // 
-  // 
-  // 
-  
-  
+  //
+  //
+  //
+
   // Need a scene grapth
-  
+
   /*
   // Base charactor objects!!
   // here we have a wordy but very direct example of custom scripting for each object square
@@ -64,13 +63,12 @@ export default function AppMain() {
     obj.color.y = Math.random();
     obj.color.z = Math.random();
   }}`;
-  
+
   // APPPP.sceneGrapth.addActor();
   APPPP.sceneGrapth.add(sq1);
   APPPP.sceneGrapth.add(sq2);
   APPPP.sceneGrapth.add(sq3);
   */
 
-  return APPPP;  
-  
+  return APPPP;
 }
