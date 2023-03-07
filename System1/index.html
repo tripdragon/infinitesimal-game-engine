@@ -83,6 +83,25 @@
         height: 1px;
       }
       
+      
+      #legend{
+        position: absolute;
+        right : 0px;
+        top: 20px;
+        color: white;
+        font-size: 12px;
+        font-family: sans-serif;
+        background-color: rgba(0,0,0,0.8);
+        padding: 20px;
+        max-width: 200px;
+        opacity: 0.2;
+      }
+      #legend:hover{
+        opacity: 0.9;
+      }
+      #legend p{
+        margin-top: 8px;
+      }
 
     </style>
     
@@ -96,6 +115,25 @@
   </head>
 
   <body>
+    
+    <div id="legend">
+      <h1>Legend</h1>
+      <p>Left most tools:</p>
+      <p>[Arrow left, right keys move Player cat]</p>
+      <p>[Space makes Player cat jump]</p>
+      <p>[arrow] selector with mouse, click and draw objects</p>
+      <p>[blue Alien] click anywhere to drop pacing alien</p>
+      <p>[Cat] click anywhere have block rain, does nothing else</p>
+      <p>[green Alien] its actually a mini platform, click to place</p>
+      <p>Drop a [blue Alien] onto for effect, or make player jump to</p>
+      <p>[Big Block] click anywhere, does nothing</p>
+      <p>[City Block] click and drag to produce varible box size</p>
+      <p>[Map Navigator] click drag to move world around</p>
+      
+    </div>
+    
+    
+    
     <canvas id="canvassss" width="400" height="400"></canvas>
 <!-- <div id="ksdjfg"></div> -->
 
