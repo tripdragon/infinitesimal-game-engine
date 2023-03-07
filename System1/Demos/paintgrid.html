@@ -106,12 +106,37 @@
         left: 25%;
         top: 25%;
       } */
+      
+      #legend{
+        position: absolute;
+        left : 540px;
+        top: 20px;
+        color: black;
+        font-size: 16px;
+        font-family: sans-serif;
+      }
+      #legend p{
+        margin-top: 8px;
+      }
     </style>
     
   </head>
 
   <body>
     <!-- <canvas id="canvassss" width="400" height="400"></canvas> -->
+
+    <div id="legend">
+      <h1>Keys</h1>
+      <p>Space up: new color</p>
+      <p>r down: live painting random color</p>
+      <p>[ : brushsize 1</p>
+      <p>] : brushsize 2</p>
+      <p>f : fill canvas</p>
+      <p>i down : hover for color picker</p>
+      <p>q down : save to file</p>
+      <p>Color palette: mouse down to pick</p>
+      
+    </div>
 
     <canvas id="canvassss" width="512" height="512"></canvas>
     

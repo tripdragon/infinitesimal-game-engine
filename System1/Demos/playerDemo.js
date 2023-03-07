@@ -85,7 +85,7 @@ disc.load = function(){
   
   // window.box4 = box4;
   
-  var box4 = new Platform("plane magic", 540, 220, 0, 360, 70, {r:0.5,g:0.7,b:0.2,a:1}, this.system);
+  var box4 = new Platform("plane magic", 540, 420, 0, 360, 70, {r:0.9,g:0.9,b:0.2,a:1}, this.system);
   this.system.add(box4);
   window.box4 = box4;
   

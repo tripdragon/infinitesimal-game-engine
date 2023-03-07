@@ -82,6 +82,73 @@
         width: 400px;
         margin: 0;
       }
+      
+      #legend{
+        position: absolute;
+        left : 20px;
+        top: 400px;
+        color: black;
+        font-size: 16px;
+        font-family: sans-serif;
+      }
+      #legend p{
+        margin-top: 8px;
+      }
+      
+      #visualkeys{
+        position: absolute;
+        left : 200px;
+        top: 300px;
+        color: black;
+        font-size: 16px;
+        font-family: sans-serif;
+        
+        
+
+      }
+      
+      .visualkeysgroup {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-content: stretch;
+      }
+      
+      
+      #visualkeys span{
+        display: block;
+        /* position: absolute; */
+        box-sizing: border-box;
+        width: 80px;
+        height: 200px;
+        border: solid 1px black;
+        text-align: center;
+        padding: 120px 10px 0 10px;
+        
+        order: 0;
+        flex: 0 1 auto;
+        align-self: auto;
+        margin-right: 4px;
+      }
+      
+      #sharpnotes{
+        margin-left: 40px;
+        margin-bottom: -80px;
+        z-index: 12;
+        position: relative;
+      }
+      #sharpnotes .black{
+        color: white;
+        background-color: black;
+      }
+      #sharpnotes span:nth-child(3) {
+        margin-left: 80px;
+      }
+      #fullnotes{
+        z-index: 10;
+        position: relative;
+      }
     </style>
     
   </head>
@@ -91,6 +158,32 @@
 
     <!-- <canvas id="canvassss" width="512" height="512"></canvas> -->
     
+    <!-- <div id="legend">
+      <h1>Keys</h1>
+      <p>a ´w s é  d f ´t g ´y h ú  j k</p>
+      <p>C C# D D# E F F# G G# A A# B C</p>
+    </div> -->
+    
+    <div id="visualkeys">
+      <div id="sharpnotes" class="visualkeysgroup">
+        <span class="black">w / C#</span>
+        <span class="black">e / D#</span>
+        <span class="black">t / F#</span>
+        <span class="black">y / G#</span>
+        <span class="black">u / A#</span>
+      </div>
+      <div id="fullnotes" class="visualkeysgroup">
+        <span class="white">a / C</span>
+        <span class="white">s / D</span>
+        <span class="white">d / E</span>
+        <span class="white">f / F</span>
+        <span class="white">g / G</span>
+        <span class="white">h / A</span>
+        <span class="white">j / B</span>
+        <span class="white">k / C2</span>
+      </div>
+      <!-- <span class="black">w / C#</span> -->
+    </div>
     
 
     <div id="gamespace">

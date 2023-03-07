@@ -117,12 +117,12 @@ export class Editor111 extends Editor {
     //   ss.play();
     // }
 
-    var platy_stamper = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
-    platy_stamper.visualObject = platy;
-    platy_stamper.visualObject.canUpdate  = false;
-    platy_stamper.stampingObject = new Platform("platy", 0, 0, 0, 10, 10, {r:0,g:0,b:1,a:1});
+    var mini_platy_stamper = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
+    mini_platy_stamper.visualObject = platy;
+    mini_platy_stamper.visualObject.canUpdate  = false;
+    mini_platy_stamper.stampingObject = new Platform("platy", 0, 0, 0, 10, 10, {r:0.5,g:0.5,b:1,a:1});
     
-    EditorMagic.addTool(platy_stamper);
+    EditorMagic.addTool(mini_platy_stamper);
 
 
 
@@ -399,7 +399,7 @@ export class Editor111 extends Editor {
     
     // new ToolCheckBoxFactory(panel, checkboxes, wobjetStamper_tool333, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
     
-    new ToolCheckBoxFactory(panel, checkboxes, platy_stamper, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
+    new ToolCheckBoxFactory(panel, checkboxes, mini_platy_stamper, "url(./Cast/Alien2.png)"); // (parent, cache, tool, imageURL)
     
     
     
