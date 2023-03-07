@@ -888,6 +888,12 @@ export class Plane extends Quark {
       
       if(this.hasGLInit === false){
         this.glInit();
+        
+        console.warn("WE NEED TO FIGURE OUT WHY this is needed");
+        console.log("see #annnsnhwyer63");
+        console.log("to handle the square tool to work");
+        console.log("techaniicllcllcy this is quite expenssive to constatly run");
+        console.log("so we just need a width !+= mWidth etc");
       }
       
       
@@ -948,11 +954,17 @@ export class Plane extends Quark {
       // the order is weird here for now
       if(this.hasSetupdataBuffer === false){
         this.hasSetupdataBuffer = true;
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
+        // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
         //this.hasSetupdataBuffer++;
         
       }
       
+      // console.warn("WE NEED TO FIGURE OUT WHY this is needed");
+      // console.log("to handle the square tool to work");
+      // console.log("techaniicllcllcy this is quite expenssive to constatly run");
+      // console.log("so we just need a width !+= mWidth etc");
+      // #annnsnhwyer63
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
       
       
       if(this.shouldLoadImage === true && this.hasStartedLoadingImage === false){
@@ -1020,7 +1032,7 @@ export class Plane extends Quark {
       
           
       
-      
+      // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
       
       
       
