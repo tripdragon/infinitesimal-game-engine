@@ -25,6 +25,7 @@ https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=s
 https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=bocky
 https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=pianoclassical
 https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=squaresATron_I
+https://tripdragon.github.io/infinitesimal-game-engine/System1/index.html?game=networking_test
 
 
 ## Things to do like

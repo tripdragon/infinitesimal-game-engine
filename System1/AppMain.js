@@ -1,12 +1,10 @@
 import { Basestation } from './Core/System1.js';
 import { WordsAdder } from './Plugins/wordsAdder.js';
-
-import { SquareLike } from "./Primitives/squareLike.js";
-
+// import { SquareLike } from "./Primitives/squareLike.js";
+import { initState } from "./State/state.js";
+initState();
 
 // import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
-
-
 
 // dont like this pattern
 

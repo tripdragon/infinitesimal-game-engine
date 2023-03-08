@@ -5,11 +5,11 @@
 // start(system) makes it all beep and boop
 
 export class Game {
-  
+
   levels = [];
-  
+
   camera; // hrrrrmmm ???
-  
+
   //constructor(system = null){
     // this.system = system;
   // }
@@ -17,20 +17,20 @@ export class Game {
     this.name = name;
     this.system = system;
   }
-  
-  
+
+
   load(){
     console.log("load???");
   }
-  
+
   unload(){
-    
+
   }
-  
+
   start(system){
     this.system = system;
     this.load();
   }
-  
-  
+
+
 }

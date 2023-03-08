@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <title>Bleep bleep</title>
     <!-- <script src="mission1.js" type="module" defer></script> -->
-    <!-- 
-    python3 -m http.server 8001 
+    <!--
+    python3 -m http.server 8001
     -->
 
     <style media="screen">
@@ -16,7 +16,7 @@
         body{
           overflow: hidden;
         }
-        
+
         /* ideally canvas gl is the bottom of the stack */
         #canvassss {
           z-index: -1;
@@ -30,30 +30,30 @@
         top: 0px;
         left: 0px;
         z-index: 2;
-        
+
         width: 100px;
         height: 100px;
         padding: 20px 0 0 20px;
       }
 
       #controls .add{
-        
+
       } */
-      
+
       .button{
         width: 32px;
         height: 32px;
       }
-      
+
       #controls222 {
         position: absolute;
         top: 0px;
         z-index: 1;
-        
+
         width: 100%;
         height: 35px;
         padding: 20px 0 0 20px;
-        
+
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -68,9 +68,9 @@
         align-self: auto;
         margin: 0 4px;
         font-size: 20px;
-        
+
       }
-      
+
       #ksdjfg{
         position: absolute;
         z-index: 12;
@@ -80,17 +80,17 @@
         width: 1px;
         height: 1px;
       }
-      
+
 
     </style>
-    
+
     <!-- idea is to inject here and clear when switching games -->
     <style id="gamestyles" media="screen">
       .fish {
         color: "pwgjpodg";
       }
     </style>
-    
+
   </head>
 
   <body>
@@ -100,13 +100,13 @@
     <!-- <div id="controls">
       <button class="add button">+</button>
     </div> -->
-    
+
     <div id="controls222">
       <button class="pause button">ℼ</button>
       <button class="play button">☃</button>
       <button class="step button">☂</button>
     </div>
-    
+
 
     <div id="gamespace"></div>
     <div id="bodyInjectionPointMain">
@@ -116,7 +116,7 @@
 
     <script type="text/javascript">
         var APPPP;
-        
+
         // these are needed here for now cause the gl-matrix plugin is not import type module
         // todo: swap out
         // const { vec2, vec3, mat3, mat4 } = glMatrix;
@@ -129,11 +129,10 @@
     <script type="module" type="text/javascript">
       import AppMain from './AppMain.js';
       APPPP = AppMain();
-      
+
       // import { randomBetween } from "./Modules/mathness.js";
       // import { SquareLike } from "./Primitives/squareLike.js";
-      
-      
+
       import { disc as squaresATron_I } from  "./Discs/square_a_tron.js";
       import { disc as bocky } from  "./Discs/bocky.js";
       import { disc as soundboard } from  "./Discs/soundboard.js";
@@ -142,20 +141,20 @@
       import { disc as mousetest } from  "./Discs/mousetest.js";
       import { disc as bots1 } from  "./Discs/bots1.js";
       import { disc as starter } from  "./Discs/starter.js";
-            
+      import { disc as networking_test } from "./Discs/networking_test.js";
+
       // Should have some stupid function like insertDisc ...
       // moving Game setup into its class
-      
+
       APPPP.addGameToCatalog(bocky);
       APPPP.addGameToCatalog(squaresATron_I);
       APPPP.addGameToCatalog(soundboard);
       APPPP.addGameToCatalog(pianoclassical);
       APPPP.addGameToCatalog(superjumpybocky);
       APPPP.addGameToCatalog(mousetest);
+      APPPP.addGameToCatalog(networking_test);
       APPPP.addGameToCatalog(bots1);
-      
-      
-      
+
       // just debugging doc demos
       import { disc as griddemo } from  "./Demos/griddemo.js";
       import { disc as platformwalker } from  "./Demos/platform-walker.js";
@@ -167,20 +166,19 @@
       APPPP.addGameToCatalog(platformwalker);
       APPPP.addGameToCatalog(loadEditor111);
       APPPP.addGameToCatalog(playerDemo);
-      
-      
+
       // APPPP.insertDisc(squaresATron_I);
       // APPPP.insertDisc(soundboard);
       // APPPP.insertDisc(bocky);
       // APPPP.insertDisc(superjumpybocky);
       // APPPP.insertDisc(mousetest);
-      // 
+      // APPPP.insertDisc(networking_test);
       // APPPP.insertDisc(bots1);
-      
-      // for now we need a starter empty game cause swaping discs 
+
+      // for now we need a starter empty game cause swaping discs
       // via url is not fully clearing the starting game
-      APPPP.insertDisc(starter);
-      
+      APPPP.insertDisc(networking_test);
+
       // block for games loadering
       // http://localhost:8001/System1/index.html?game=squaresATron_I
       // http://localhost:8001/System1/index.html?game=bocky
@@ -203,33 +201,30 @@
           console.log("gaaame", gg);
           if(gg){
             // var gg = document.getElementById("bodyInjectionPointMain");
-            
+
             console.log("??¿¿¿");
             // APPPP.reboot();
-            
+
             APPPP.insertDisc(gg);
           }
         }
-
       }
-      
-      
-      
-      // 
+
+      //
       // //
       // // Editor UI stuff, figure out where else to put
       // //
-      // 
+      //
       // // block for : add button for making squares
       // {
       //   function addHipToBeSquare(ev){
       //     // console.log(ev, "fish");
-      // 
+      //
       //     const xx = randomBetween(-40,40);
       //     const xy = randomBetween(-40,40);
       //     const ww = randomBetween(2,8);
       //     const wh = randomBetween(2,8);
-      // 
+      //
       //     var sq1 = new SquareLike(null, -xx, xy, ww, wh);
       //     sq1.playCode = `return { do : function(obj, helpers){
       //       obj.x = helpers.randomBetween(${-xx},${xy});
@@ -237,16 +232,16 @@
       //       obj.color.y = Math.random();
       //       obj.color.z = Math.random();
       //     }}`;
-      // 
+      //
       //     APPPP.sceneGrapth.add(sq1);
-      // 
+      //
       //     if(APPPP.runtimeState !== "play"){
       //       // should have a draw command
       //       APPPP.loop();
       //     }
-      // 
+      //
       //   }
-      // 
+      //
       //   // let controls = document.getElementById('controls');
       //   let add = document.querySelector("#controls .add");
       //   if(add){
@@ -255,10 +250,10 @@
       //   // for (var i = 0; i < 1000; i++) {
       //   //   add.click()
       //   // }
-      // 
+      //
       // }
-      // 
-      
+      //
+
       // block for pause play buttons
       {
         let pause = document.querySelector("#controls222 .pause");
@@ -267,7 +262,7 @@
               APPPP.runtimeState = "pause";
             }, false );
         }
-        
+
         let play = document.querySelector("#controls222 .play");
         if(play){
             play.addEventListener( "click", function(){
@@ -275,7 +270,7 @@
               APPPP.loop();
             }, false );
         }
-        
+
         let step = document.querySelector("#controls222 .step");
         if(step){
             step.addEventListener( "click", function(){
@@ -283,13 +278,13 @@
               APPPP.loop();
             }, false );
         }
-        
+
       }
-      
-      
-      
-      
-      
+
+
+
+
+
     </script>
   </body>
 </html>
