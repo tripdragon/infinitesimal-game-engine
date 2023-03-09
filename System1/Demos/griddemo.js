@@ -81,7 +81,7 @@ disc.load = function(){
   //   rows : 20,
   //   columns : 40  
   // }
-  var grid = new Grid(40,20,40, this.system);
+  var grid = new Grid(40,40,20,40, this.system);
   
   for (var ii = 0; ii < grid.rows; ii++) {
     for (var mm = 0; mm < grid.columns; mm++) {

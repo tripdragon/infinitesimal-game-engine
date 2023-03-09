@@ -466,7 +466,10 @@
       // var sizeToFit = 512 / Math.pow(2,4);
       // var sizeToFit = 512 / Math.pow(2,5);
       var sizeToFit = 512/100; // values here to change grid size
-      var grid = new Grid(sizeToFit,1,1,null).computeRowsColumns(resolution, resolution);
+      // var grid = new Grid(sizeToFit,1,1,null).computeRowsColumns(resolution, resolution);
+      
+      var grid = new Grid(sizeToFit, sizeToFit,1,1,null).computeRowsColumns(resolution, resolution);
+      // var grid = new Grid(sizeToFit + 40, sizeToFit,1,1,null).computeRowsColumns(resolution, resolution);
       
       
       // grid.snap(_this.system.pointer.x, _this.system.pointer.y).screenTo3D();
@@ -501,7 +504,8 @@
         for (var ii = 0; ii < grid.rows; ii++) {
           for (var mm = 0; mm < grid.columns; mm++) {
             ctx.fillStyle = `rgba(${rColor()}, ${rColor()}, ${rColor()}, 1)`;
-            ctx.fillRect(ii*grid.size, mm*grid.size, grid.size, grid.size);
+            // ctx.fillRect(ii*grid.size, mm*grid.size, grid.size, grid.size);
+            ctx.fillRect(ii*grid.width, mm*grid.height, grid.width, grid.height);
           }
         }
       }
@@ -512,7 +516,8 @@
           for (var mm = 0; mm < grid.columns; mm++) {
             ctx.fillStyle = `rgba(255,255,255, 1)`;
             var ssb = 10;
-            ctx.fillRect(ii*grid.size, mm*grid.size, ssb, ssb);
+            // ctx.fillRect(ii*grid.size, mm*grid.size, ssb, ssb);
+            ctx.fillRect(ii*grid.width, mm*grid.height, ssb, ssb);
           }
         }
       }
@@ -558,6 +563,7 @@
             
             // if brushsize 1
             grid.snap(mouse.x, mouse.y);
+            // console.log("mouse", mouse);
             
             // ctx.fillRect(mouse.x, mouse.y, brushSize, brushSize);
             // ctx.fillRect(grid.position.x - (grid.size / 2), grid.position.y - (grid.size / 2), grid.size, grid.size);
@@ -567,44 +573,46 @@
             // ctx.fillRect(grid.positionCenter.x, grid.positionCenter.y, grid.size, grid.size);
             // ctx.fillRect(grid.position.x, grid.position.y, grid.size, grid.size);
             
-            ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            console.log("grid.positionCenter", grid.positionCenter);
+            // ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            ctx.fillRect(grid.positionCenter.x - (grid.width/2), grid.positionCenter.y - (grid.height/2), grid.width, grid.height);
             
             // 
             // additional brushes, though a bit computational its narry much to recall
             // 
             if(brushSizeUnit === 2){
               var row = grid.indexRow; var col = grid.indexCol;
-              
-              grid.snapAtRowCol(row-1, grid.indexCol);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-
-              grid.snapAtRowCol(row+1, col);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-              
-              grid.snapAtRowCol(row, col+1);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-              
-              grid.snapAtRowCol(row, col-1);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-            }
             
-            if(brushSizeUnit === 3){
-              var row = grid.indexRow; var col = grid.indexCol;
-              
               grid.snapAtRowCol(row-1, grid.indexCol);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-
+              ctx.fillRect(grid.positionCenter.x - (grid.width/2), grid.positionCenter.y - (grid.height/2), grid.width, grid.height);
+            
               grid.snapAtRowCol(row+1, col);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-              
+              ctx.fillRect(grid.positionCenter.x - (grid.width/2), grid.positionCenter.y - (grid.height/2), grid.width, grid.height);
+            
               grid.snapAtRowCol(row, col+1);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-              
+              ctx.fillRect(grid.positionCenter.x - (grid.width/2), grid.positionCenter.y - (grid.height/2), grid.width, grid.height);
+            
               grid.snapAtRowCol(row, col-1);
-              ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
-              
-              
+              ctx.fillRect(grid.positionCenter.x - (grid.width/2), grid.positionCenter.y - (grid.height/2), grid.width, grid.height);
             }
+            // 
+            // if(brushSizeUnit === 3){
+            //   var row = grid.indexRow; var col = grid.indexCol;
+            // 
+            //   grid.snapAtRowCol(row-1, grid.indexCol);
+            //   ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            // 
+            //   grid.snapAtRowCol(row+1, col);
+            //   ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            // 
+            //   grid.snapAtRowCol(row, col+1);
+            //   ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            // 
+            //   grid.snapAtRowCol(row, col-1);
+            //   ctx.fillRect(grid.positionCenter.x - (grid.size/2), grid.positionCenter.y - (grid.size/2), grid.size, grid.size);
+            // 
+            // 
+            // }
             
           }
           

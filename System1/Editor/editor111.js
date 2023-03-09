@@ -12,7 +12,10 @@ import { StampTool } from "../Tools/StampTool.js";
 // import { Bot } from "../Primitives/Bot.js";
 import { Alien1 } from "../Cast/Alien1.js";
 import { Alien2 } from "../Cast/Alien2.js";
+
 import { SelectTool } from "../Tools/SelectTool.js";
+import { SelectToolMusic } from "../Tools/SelectToolMusic.js";
+
 import { Vector3 } from "../Modules/Vector3.js";
 import { Polygon } from "../Primitives/Polygon.js";
 
@@ -70,11 +73,13 @@ export class Editor111 extends Editor {
     //
     
     var selectTool = new SelectTool(this.system);
+    var selectToolMusic = new SelectToolMusic(this.system);
 
     EditorMagic.addTool(selectTool);
+    EditorMagic.addTool(selectToolMusic);
     
     
-    EditorMagic.baseGrid = new Grid(40,20,40, this.system);
+    EditorMagic.baseGrid = new Grid(40, 40,20,40, this.system);
     
     
     
@@ -138,12 +143,12 @@ export class Editor111 extends Editor {
 
     
 
-    var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1}, this.system);
+    var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
     var platy_stamper333 = new PlatformStampTool("wobject_stamper_platform", "platform stamper", this.system);
     platy_stamper333.visualObject = platy333;
     platy_stamper333.visualObject.canUpdate  = false;
     // platy_stamper333.stampingObject = platy333.clone();
-    platy_stamper333.stampingObject = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.size, EditorMagic.baseGrid.size, {r:0,g:1,b:1,a:1}, this.system);
+    platy_stamper333.stampingObject = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height,0, {r:0,g:1,b:1,a:1}, this.system);
     platy_stamper333.stampingObject.color.setHex(0x00ff37);
     platy_stamper333.baseGrid = EditorMagic.baseGrid;
     platy_stamper333.editor = EditorMagic;
@@ -346,6 +351,9 @@ export class Editor111 extends Editor {
     item1Select.click();
 
 
+    var item1SelectMusic = new ToolCheckBoxFactory(panel, checkboxes, selectToolMusic, "url(./Editor/arrow2.png)");
+    item1SelectMusic.checkbox.style.backgroundColor = "#ffffff";
+    
     
     
     // // <<<<
