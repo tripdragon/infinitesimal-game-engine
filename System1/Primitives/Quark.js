@@ -18,6 +18,15 @@ updateBoundingBox()
 Plane has 
 .rebuildDimensions()
     
+Events
+  onTap()
+  onHover()
+  
+  onSelect(){}
+  
+  onDeselect(){}
+
+
 */
 
 
@@ -73,6 +82,10 @@ export class Quark {
   image = null;
   texture = null;
   
+  // maybe for selection tools
+  // orignally for music tools piano
+  // maybe should be position scale rotation locks insteadb
+  moveable = true;
   
   // max = new Vector3();
   
@@ -692,6 +705,27 @@ export class Quark {
 
     
   }
+  
+  
+  
+  //
+  //
+  // Events!!!!
+  //
+  //
+  //
+  onTap(){}
+  onDown(){}
+  onUp(){}
+  
+  onHover(){}
+  onHoverIn(){}
+  onHoverOut(){}
+  
+  onSelect(){}
+  
+  onDeselect(){}
+  
   
   
 }

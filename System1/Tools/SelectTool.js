@@ -57,6 +57,28 @@ export class SelectTool extends Tool {
   usePreventCollide = false;
   // usePreventCollide = true;
   
+  tapTimer = 0;
+  // tapTimer = Date.now();
+  tapLimit = 0.2;
+  
+  
+  useGrid = false;
+  grid = null;
+
+  // need a grid
+  // so its .snap()
+  // 
+  // var grid = new Grid(40,20,40, this.system);
+  // // grid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
+  // // 
+  // // box2.x = grid.position3D.x;
+  // // box2.y = grid.position3D.y;
+  // 
+  // 
+
+
+
+  
   
   constructor(system){
     super("SelectTool", "Select Tool", system);
@@ -95,6 +117,7 @@ export class SelectTool extends Tool {
   
   update(){
     this.mouseSelecting();
+    this.pointerMoving();
   }
   
   // replace(){}
@@ -116,6 +139,16 @@ export class SelectTool extends Tool {
     
     this.previousGoodPosition.clear();
     
+    const tt = Date.now();
+    const delta = (tt - this.tapTimer) / 1000;
+    // debugger
+    if( delta <= this.tapLimit){
+      onConsole.log("tap timer", "yeah!", delta);
+      this.onTap();
+    }
+    else {
+      onConsole.log("tap timer", "boo", delta);
+    }
   }
   
   pointerDown(){
@@ -156,11 +189,16 @@ export class SelectTool extends Tool {
     
     this.isMouseDown = true;
     
+    this.tapTimer = Date.now();
     
   }
   
   
-  pointerMoving(){}
+  pointerMoving(){
+    if(this.selectedObject){
+      this.selectedObject.onHover();
+    }
+  }
   
 
   mouseSelecting(){
@@ -184,6 +222,7 @@ export class SelectTool extends Tool {
       var wasEverIN = false;
       this.selectedObject = null;
   
+  // console.log("mousing");
       
       for (var i = 0; i < this.system.colliders.length; i++) {
         // break;
@@ -224,6 +263,8 @@ export class SelectTool extends Tool {
               this.selectedObject = wall;
               this.selectedObject.selectState();
               // this.selectedObject.color.copy({r:0,g:0.4,b:1,a:1});
+              
+              onConsole.log("this.selectedObject", this.selectedObject);
             }
             
             
@@ -284,7 +325,7 @@ export class SelectTool extends Tool {
       // else forced collide
       
       
-      
+      // VERY rough box testing 
       // need to know if the pointer is down on the object
       if(this.selectedObject !== null){
         
@@ -346,6 +387,13 @@ export class SelectTool extends Tool {
   } // mouseSelecting
   
   
+  
+  onTap(){
+    // send some arguments data down
+    if (this.selectedObject) {
+      this.selectedObject.onTap();
+    }
+  }
   
 
 }
