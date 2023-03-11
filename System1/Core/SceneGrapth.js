@@ -39,6 +39,7 @@ export class SceneGrapth{
   // need to add compare istype etc
   add(thingy){
     // debugger
+    // need to compare if is already added
     if(thingy instanceof Quark){
       
       this.objects.push(thingy);

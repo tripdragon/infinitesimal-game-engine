@@ -65,6 +65,8 @@ export class SelectTool extends Tool {
   useGrid = false;
   grid = null;
 
+  posWorkVectorToMegas = new Vector3();
+
   // need a grid
   // so its .snap()
   // 
@@ -80,9 +82,16 @@ export class SelectTool extends Tool {
 
   
   
-  constructor(system){
-    super("SelectTool", "Select Tool", system);
+  // constructor(system){
+  //   super("SelectTool", "Select Tool", system);
+  // }
+  
+  constructor(system, name = "SelectTool", displayName = "Select Tool"){
+    
+    // super(name, displayName, system);
+    super(system, name, displayName);
   }
+  
   
   modes = {
     mousing : "mousing",
@@ -308,11 +317,21 @@ export class SelectTool extends Tool {
       
       if( !this.usePreventCollide ){
         
+        this.posWorkVectorToMegas.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
+        pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
+        0);
+        if(this.useGrid && this.grid){
+          // this.grid.snap(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
+          this.grid.snap3d(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
+          this.posWorkVectorToMegas.copy(this.grid.position3DCenter);
+        }
+                
         if(this.selectedObject !== null){
-          this.selectedObject.position.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
-          pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
-          0
-          );
+          // this.selectedObject.position.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
+          // pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
+          // 0
+          // );
+          this.selectedObject.position.copy(this.posWorkVectorToMegas);
           this.selectedObject.refreshMatrixes();
           this.selectedObject.bbb();
           

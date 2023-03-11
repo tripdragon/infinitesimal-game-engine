@@ -47,7 +47,11 @@ import { Grid } from "../Modules/Grid.js";
 
 export class SelectToolMusic extends SelectTool {
   
-  
+  constructor(system, name = "SelectToolMusic", displayName = "SelectToolMusic"){
+    
+    // super(name, displayName, system);
+    super(system, name, displayName);
+  }
   
     // need a grid
     // so its .snap()

@@ -28,7 +28,7 @@ import { Editor111 } from "../Editor/editor111.js";
 import { Grid } from "../Modules/Grid.js";
 
 
-export let disc = new Game("mixerBittunes");
+export let disc = new Game("gridDemoTwo");
 
 disc.load = function(){
 
@@ -143,7 +143,7 @@ disc.load = function(){
   }
   
   
-  var cursor = new VisualPlane("cursor like", 500, 500, 0, 18, 18, {r:0.9,g:1,b:1,a:1});
+  var cursor = new VisualPlane("cursor like", 500, 500, 0, 14, 14, {r:0.9,g:1,b:1,a:1});
   this.system.add(cursor);
   
   cursor.updatesdfsdf = function(){
@@ -155,7 +155,45 @@ disc.load = function(){
     // grid.snapAtRowCol(pointer3d.x,pointer3d.y,"3d");
     
     this.position.copy(grid.position3DCenter);
-                
+    
+    
+                        // grid.origin.copy(gg.sidePointsWorld.bottomLeft);
+                        // grid.snapAtRowCol(1,0,"3d");
+                        // // var vv = grid.position3DCenter.clone()
+                        // // console.log("vvvvvv", grid.position3DCenter.x, grid.position3DCenter.y);
+                        // // onConsole.log("vvvvvv", grid.position3DCenter.x, grid.position3DCenter.y);
+                        // onConsole.log("vvvvvv", grid.position3D.x, grid.position3D.y);
+                        // // onConsole.log("grid", vv);
+                        // 
+                        // var pointer3d = this.system.pointer.worldSpace;
+                        // this.position.copy(pointer3d);
+                        // 
+                        // gg.worldToLocal(this.position)
+                        // 
+                        // 
+                        // // onConsole.log("pos", this.position);
+                        // 
+                        // this.position.add(gg.position);
+                        // 
+                        // // onConsole.log("pos", this.position);
+                        // // grid.snap3d(this.position.x, this.position.y);
+                        // 
+                        // // onConsole.log("pos", grid.position3DCenter);
+                        // 
+                        // // this.position.copy(grid.position3DCenter);
+                        // this.position.copy(grid.position3D);
+                        // 
+                        // // onConsole.log("pos", this.position);
+                        // 
+    
+    // this.position.copy(grid.position3DCenter).sub(gg.position)
+    // this.position.copy(grid.position3DCenter).applyMatrix4(gg.worldMatrix)
+
+    // grid.snap(this.position.x, this.position.y);
+// this.position.copy( gg.worldToLocal(pointer3d) ).add(gg.position);
+    // grid.snap(this.position.x, this.position.y);
+    // this.position.copy(grid.position3DCenter).add(gg.position)
+
   }
   
 

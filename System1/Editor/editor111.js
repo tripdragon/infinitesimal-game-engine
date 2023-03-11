@@ -72,8 +72,8 @@ export class Editor111 extends Editor {
     // Select tool
     //
     
-    var selectTool = new SelectTool(this.system);
-    var selectToolMusic = new SelectToolMusic(this.system);
+    var selectTool = new SelectTool(this.system, "selectTool", "selectTool");
+    var selectToolMusic = new SelectToolMusic(this.system, "selectToolMusic", "selectToolMusic");
 
     EditorMagic.addTool(selectTool);
     EditorMagic.addTool(selectToolMusic);
@@ -90,7 +90,7 @@ export class Editor111 extends Editor {
     
     // ----
     console.warn("Note we still need .visible = false instead of drawing offscreen -40");
-    var wobjetStamper_tool = new StampTool("wobject_stamper", "wobject stamper", this.system);
+    var wobjetStamper_tool = new StampTool(this.system, "wobject_stamper", "wobject stamper");
     wobjetStamper_tool.visualObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:1,a:1}, this.system);
     wobjetStamper_tool.visualObject.canUpdate = false;
     wobjetStamper_tool.stampingObject = new Alien1("newRect", -40, -40, 0, 40, 40, {r:0,g:0,b:1,a:1}, this.system);
@@ -102,7 +102,7 @@ export class Editor111 extends Editor {
     
     
     // ----
-    var wobjetStamper_tool222 = new StampTool("wobject_stamper222", "wobject stamper222", this.system);
+    var wobjetStamper_tool222 = new StampTool( this.system, "wobject_stamper222", "wobject stamper222");
     wobjetStamper_tool222.visualObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:1,g:0,b:1,a:1}, this.system);
     wobjetStamper_tool222.visualObject.canUpdate  = false;
     wobjetStamper_tool222.stampingObject = new Alien2("newRect", -40, -40, 0, 40, 40, {r:0,g:1,b:0,a:1}, this.system);
@@ -122,7 +122,7 @@ export class Editor111 extends Editor {
     //   ss.play();
     // }
 
-    var mini_platy_stamper = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
+    var mini_platy_stamper = new StampTool(this.system, "wobject_stamper_platform", "platform stamper");
     mini_platy_stamper.visualObject = platy;
     mini_platy_stamper.visualObject.canUpdate  = false;
     mini_platy_stamper.stampingObject = new Platform("platy", 0, 0, 0, 10, 10, {r:0.5,g:0.5,b:1,a:1});
@@ -133,7 +133,7 @@ export class Editor111 extends Editor {
 
 
     var platy222 = new Platform("platy", 0, 0, 0, 160, 140, {r:0,g:1,b:1,a:1}, this.system);
-    var platy_stamper222 = new StampTool("wobject_stamper_platform", "platform stamper", this.system);
+    var platy_stamper222 = new StampTool(this.system, "wobject_stamper_platform", "platform stamper");
     platy_stamper222.visualObject = platy222;
     platy_stamper222.visualObject.canUpdate  = false;
     platy_stamper222.stampingObject = platy222.clone();
@@ -144,7 +144,7 @@ export class Editor111 extends Editor {
     
 
     var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
-    var platy_stamper333 = new PlatformStampTool("wobject_stamper_platform", "platform stamper", this.system);
+    var platy_stamper333 = new PlatformStampTool(this.system, "wobject_stamper_platform", "platform stamper");
     platy_stamper333.visualObject = platy333;
     platy_stamper333.visualObject.canUpdate  = false;
     // platy_stamper333.stampingObject = platy333.clone();

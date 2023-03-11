@@ -135,6 +135,23 @@ export class Plane extends Quark {
       
     }//.init(this);
     
+    
+    sidePointsWorld = {
+      _this : this,
+      get topLeft(){
+        return new Vector3().copy(this._this.points[0]).applyMatrix4(this._this.worldMatrix);
+      },
+      get bottomLeft(){
+        return new Vector3().copy(this._this.points[1]).applyMatrix4(this._this.worldMatrix);
+      },
+      get bottomRight(){
+        return new Vector3().copy(this._this.points[2]).applyMatrix4(this._this.worldMatrix);
+      },
+      get topRight(){
+        return new Vector3().copy(this._this.points[3]).applyMatrix4(this._this.worldMatrix);
+      },
+    }
+    
 
     // this returns the center of the side in local or worldSpace
     edges = {
@@ -164,41 +181,10 @@ export class Plane extends Quark {
       }
     
     }
-    // 
-    // sides = {
-    //   left : {
-    //     points: [this.points[0], this.points[1]],
-    // 
-    //     get center(){
-    //       debugger
-    //       return this.computeCenterLocal(this.points);
-    //     },
-    //     get centerWorld(){
-    //       return this.computeCenterWorld(this.points);
-    //     }
-    //   },
-    //   bottom : { 
-    //     points: [this.points[1], this.points[2]],
-    //     get center(){
-    //       return lerp(this.points[0], this.points[0], 0.5);
-    //     }
-    //   },
-    //   right : {
-    //     points: [this.points[2], this.points[3]],
-    //     get center(){
-    //       return lerp(this.points[0], this.points[0], 0.5);
-    //     }
-    //   },
-    //   top : {
-    //     points: [this.points[3], this.points[0]],
-    //     get center(){
-    //       return lerp(this.points[0], this.points[0], 0.5);
-    //     }
-    //   },
-    // 
-    // }
-    // 
-
+    
+    
+    
+  
     workVectorSides = new Vector3();
     
     sideCenterWorld(_points){
@@ -302,8 +288,10 @@ export class Plane extends Quark {
       // plane has no origin persay
       // its geometry is offset to handle this by default
       // thus we have to calculate and prebake positions
+      
       this.centerPositions();
       this.computeBoundingBoxes();
+      
       // this.computeBoundingBoxPadding();
       
       // this.startTexture();
@@ -329,38 +317,6 @@ export class Plane extends Quark {
       // in local space
       var points = this.points;
       
-      // points[0].x = -this.width / 2;
-      // points[0].y = -this.height / 2;
-      // 
-      // points[1].x = -this.width / 2;
-      // points[1].y = this.height / 2;
-      // 
-      // 
-      // points[2].x = this.width / 2;
-      // points[2].y = this.height / 2;
-      // 
-      // 
-      // points[3].x = this.width / 2;
-      // points[3].y = -this.height / 2;
-      
-      /*
-      test pointerMovingrecent.points[0].y += 20
-      recent.points[0].x += 20
-      recent.rebuildDimensions()
-
-      recent.points[1].y += 20
-      recent.points[1].x += 20
-      recent.rebuildDimensions() 
-
-      recent.points[2].y += 20
-      recent.points[2].x += 20
-      recent.rebuildDimensions() 
-
-      recent.points[3].y += 20
-      recent.points[3].x += 20
-      recent.rebuildDimensions() 
-      */
-      
       points[0].x = -this.width / 2;
       points[0].y = this.height / 2;
       
@@ -379,6 +335,49 @@ export class Plane extends Quark {
       this.updatePositions();
 
       
+    }
+    
+    setOriginAndGeometry(side){
+      var points = this.points;
+        
+      if(side === "center"){
+        this.centerPositions();
+      }
+      else if(side === "leftBottom"){
+        
+        points[0].x = 0; points[0].y = this.height;
+        points[1].x = 0; points[1].y = 0;
+        points[2].x = this.width; points[2].y = 0;
+        points[3].x = this.width; points[3].y = this.height;
+        
+      }
+      else if(side === "rightBottom"){
+        
+        points[0].x = -this.width; points[0].y = this.height;
+        points[1].x = -this.width; points[1].y = 0;
+        points[2].x = 0; points[2].y = 0;
+        points[3].x = 0; points[3].y = this.height;
+        
+      }
+      else if(side === "rightTop"){
+        
+        points[0].x = -this.width; points[0].y = 0;
+        points[1].x = -this.width; points[1].y = -this.height;
+        points[2].x = 0; points[2].y = -this.height;
+        points[3].x = 0; points[3].y = 0;
+        
+      }
+      else if(side === "leftTop"){
+        
+        points[0].x = 0; points[0].y = 0;
+        points[1].x = 0; points[1].y = -this.height;
+        points[2].x = this.width; points[2].y = -this.height;
+        points[3].x = this.width; points[3].y = 0;
+        
+      }
+      
+      this.updatePositions();
+      this.computeBoundingBoxes();
     }
 
 
@@ -884,16 +883,20 @@ export class Plane extends Quark {
     // Draw
     // 
     // draw(color, matrixLocation, textureLocation){
+    // annoyannnsnhwyer63Once = false;
     draw(){
       
       if(this.hasGLInit === false){
         this.glInit();
         
-        console.warn("WE NEED TO FIGURE OUT WHY this is needed");
-        console.log("see #annnsnhwyer63");
-        console.log("to handle the square tool to work");
-        console.log("techaniicllcllcy this is quite expenssive to constatly run");
-        console.log("so we just need a width !+= mWidth etc");
+        if( !this.system.annoyannnsnhwyer63Once ){
+          this.system.annoyannnsnhwyer63Once = true;
+          console.warn("WE NEED TO FIGURE OUT WHY this is needed");
+          console.log("see #annnsnhwyer63");
+          console.log("to handle the square tool to work");
+          console.log("techaniicllcllcy this is quite expenssive to constatly run");
+          console.log("so we just need a width !+= mWidth etc");
+        }
       }
       
       

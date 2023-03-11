@@ -17,6 +17,8 @@
         }
         body{
           overflow: hidden;
+          /* https://blog.logrocket.com/creating-custom-mouse-cursor-css/ */
+          /* cursor: crosshair; */
         }
         
         /* ideally canvas gl is the bottom of the stack */
@@ -102,6 +104,10 @@
       #legend p{
         margin-top: 8px;
       }
+      
+      .shownone {
+        display: none !important;
+      }
 
     </style>
     
@@ -116,7 +122,7 @@
 
   <body>
     
-    <div id="legend">
+    <div id="legend" class ="shownone">
       <h1>Legend</h1>
       <p>Left most tools:</p>
       <p>[Arrow left, right keys move Player cat]</p>
@@ -216,6 +222,7 @@
       import { disc as playerDemo } from  "./Demos/playerDemo.js";
       import { disc as boxHitTest } from  "./Demos/boxHitTest.js";
       import { disc as mixerBittunes } from  "./Demos/mixer-bittunes.js";
+      import { disc as gridDemoTwo } from  "./Demos/grid-demo-2.js";
       APPPP.addGameToCatalog(panels);
       APPPP.addGameToCatalog(griddemo);
       APPPP.addGameToCatalog(platformwalker);
@@ -223,6 +230,7 @@
       APPPP.addGameToCatalog(playerDemo);
       APPPP.addGameToCatalog(boxHitTest);
       APPPP.addGameToCatalog(mixerBittunes);
+      APPPP.addGameToCatalog(gridDemoTwo);
       
       
       // APPPP.insertDisc(squaresATron_I);

@@ -26,6 +26,25 @@ Events
   
   onDeselect(){}
 
+.isSelectableAlways = true
+to get an instant hover option
+
+then set the events
+gg.onHover = function() {
+  console.log("hovery");
+}
+gg.onHoverIn = function() {
+  console.log("hovery iiiinnn");
+}
+gg.onHoverOut = function() {
+  console.log("hovery outttttt");
+}
+
+it gets run in .update()
+so call super.update() when sub classing
+
+
+
 
 */
 
@@ -85,7 +104,22 @@ export class Quark {
   // maybe for selection tools
   // orignally for music tools piano
   // maybe should be position scale rotation locks insteadb
-  moveable = true;
+  // moveable = true;
+  lockPosition = new Vector3(0,0,0); // 0 1
+  lockRotation = new Vector3(0,0,0);
+  lockScale = new Vector3(0,0,0);
+  setLockPosition(val){
+    if(val === true){
+      this.lockPosition.set(1,1,1);
+    }
+    else {
+      this.lockPosition.set(0,0,0);
+    }
+  }
+  
+  // idea here is in the loop its default always avaiable to be selected
+  // THOUGH .update() could just be that
+  isSelectableAlways = false;
   
   // max = new Vector3();
   
@@ -373,7 +407,7 @@ export class Quark {
   //friends = new Set();
   friends = [];
   
-  add(friend){
+  add(friend, isNew){
       // if typeOf is needed
       if(friend instanceof Quark){
         var index = this.friends.indexOf(friend);
@@ -392,6 +426,10 @@ export class Quark {
       else {
         console.warn("not instanceof Quark");
       }
+      // this SHOULD be automatic later on
+      // if(isNew){
+      // 
+      // }
   }
   remove(friend, shouldDelete){
     // console.warn("need to check if this REEAAAALLLY clears the buffers and such");
@@ -648,8 +686,45 @@ export class Quark {
     this.worldMatrix.copy(thing.worldMatrix);
   }
 
+  hasHovered = false;
   // not sure yet this placement
   update(){
+    
+    if(this.isSelectableAlways){
+      
+      
+      var pointer3d = this.system.pointer.worldSpace;
+      
+      var wasIn = this.pointCollideCheck(pointer3d);
+      
+      if(wasIn){
+        // console.log("is in");
+        if(this.hasHovered === false){
+          this.hasHovered = true;
+          this.onHoverIn();
+        }
+        else{
+          this.onHover();
+        }
+      }
+      else {
+        // console.log("is nottttt");
+        if(this.hasHovered === true){
+          this.hasHovered = false;
+          this.onHoverOut();
+        }
+      }
+      
+      
+    }
+    
+    // this.onTap(){}
+    // this.onDown(){}
+    // this.onUp(){}
+
+    // this.onSelect(){}
+    
+    // this.onDeselect(){}
 
   }
   
@@ -661,9 +736,8 @@ export class Quark {
   // we never have the gl available yet on start of game....
   // maaaaybe we should, but for now just make it name
   // also arguments shoudl become an object
-  //constructor(gl, x, y, width, height, depth, color = {x:1.0, y:1.0, z:1.0, w:1.0}) {
-  // constructor(name, x, y, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
-  constructor(name, x, y, z, width, height, depth, color = {r:1.0, g:1.0, b:1.0, a:1.0}, system) {
+  
+  constructor(name = "name", x = 0, y = 0, z = 0, width = 0, height = 0, depth = 0, color = new Color(1,1,1,1), system) {
     // this.gl = gl;
     this.name = name;
     this.height = height;

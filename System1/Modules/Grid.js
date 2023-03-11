@@ -12,7 +12,9 @@ box2.y = grid.position3D.y;
 
 import {Vector3} from '../Modules/Vector3.js';
 import {VisualPlane} from '../Primitives/VisualPlane.js';
+import {Plane} from '../Primitives/Plane.js';
 import {Quark} from '../Primitives/Quark.js';
+import {Color} from '../Modules/Color.js';
 
 // this produces a numeric grid
 // not a physical object based grid
@@ -22,7 +24,7 @@ import {Quark} from '../Primitives/Quark.js';
 
 // Use:
 // feed ClientXY coords to .snap()
-// you can obmit arguments if it has .system assigned
+// you can omit arguments if it has .system assigned
 
 // once snapped you can access its properties for various .positions
 // as setting a vector and such was exer expanding data out
@@ -47,6 +49,9 @@ export class Grid{
   // size = 40;
   rows = 20;
   columns = 40;
+  
+  // these are unit size not the total of the points
+  // there is no concept of that
   width = 40;
   height = 40;
   
@@ -88,8 +93,19 @@ export class Grid{
   // in that its implied its client
   // to save from this
   // grid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
-  snap(_x,_y){
+  
+  snap(_x,_y, type = "client"){
+    if(type === "3d"){
+      
+    }
+    this.snapClient(_x,_y);
+    return this;
+  }
+  
+  // this looks to handle 
+  snapClient(_x,_y){
     
+    // hrrrrmmmm the triggers if x and y are 0,0 as the evalueate to true #sufuFUEIef
     if(!_x && !_y && this.system){
       _x = this.system.pointer.client.x;
       _y = this.system.pointer.client.y;
@@ -107,28 +123,24 @@ export class Grid{
     
     var ix = Math.floor( _x / this.width);
     var iy = Math.floor( _y / this.height);
-    // var ix = Math.floor( _x / this.size);
-    // var iy = Math.floor( _y / this.size);
+    
     
     this.indexRow = ix;
     this.indexCol = iy;
     
-    // var minX = ix * this.size;
-    // var maxX = (ix+1) * this.size;
+    
     var minX = ix * this.width;
     var maxX = (ix+1) * this.width;
     
-    // var minY = iy * this.size;
-    // var maxY = (iy+1) * this.size;
+    
     var minY = iy * this.height;
     var maxY = (iy+1) * this.height;
     
     // this snaps to the next as the mouse reaches over the middle point
-    var xx = minX;
-    // if ( _x > minX + (this.size/2) ) { xx = maxX };
+    var xx = minX;  
     if ( _x > minX + (this.width/2) ) { xx = maxX };
+    
     var yy = minY;
-    // if ( _y > minY + (this.size/2) ) { yy = maxY };
     if ( _y > minY + (this.height/2) ) { yy = maxY };
     
     this.position.x = xx;
@@ -143,16 +155,14 @@ export class Grid{
     // this one waits till mouse enters next tile
     // snapping to center
     
-    // var minX = (ix+1) * this.size;    
-    // var minY = (iy+1) * this.size;
+    
     var minX = (ix+1) * this.width;    
     var minY = (iy+1) * this.height;
     
     var xx = minX;
     var yy = minY;
     
-    // this.positionCenter.x = xx - this.size / 2;
-    // this.positionCenter.y = yy - this.size / 2;
+
     this.positionCenter.x = xx - this.width / 2;
     this.positionCenter.y = yy - this.height / 2;
     
@@ -226,6 +236,29 @@ export class Grid{
     return this;
   }
   
+  // this time we have y up
+  // this is also based on the origin as its the thing
+  
+  // WHAT is this for??
+  // IF world, then is it not already in world?
+  // If screen to world, when what of the previous snap()???
+  // if a loop grid, then it will need an origin
+  // should a grid not always be in a Quark to begin with??? thereby having an offset by logic
+  // 
+  snap3d(_x,_y){
+    // dskfjbkdfg
+    this.snapClient(_x,_y); // this denotes its the wrong name know
+    
+    this.position3D.x = this.position.x + this.origin.x + -this.system.world.position.x;
+    this.position3D.y = this.position.y + this.origin.y + -this.system.world.position.y;
+    
+    this.position3DCenter.x = this.positionCenter.x + this.origin.x + -this.system.world.position.x;
+    this.position3DCenter.y = this.positionCenter.y + this.origin.y + -this.system.world.position.y;
+    
+    
+    return this;
+  }
+  
 
   
   computeRowsColumns(width, height){
@@ -236,29 +269,81 @@ export class Grid{
     return this;
   }
   
-  
-  snapAtRowCol(row,col){
+  // mouse triggers if the values are 0,0, see snap note #sufuFUEIef
+  snapAtRowCol(row,col, type = "client"){
     // this.snap(row*this.size, col*this.size);
-    this.snap(row*this.width, col*this.height);
+    if(type === "client"){
+      
+      this.snap(row*this.width, col*this.height);
+    }
+    else if(type === "3d" || type === "3D"){
+      // debugger
+      this.snap3d(row*this.width, col*this.height);
+      
+    }
     return this;
   }
   
   // 
-  // buildDebugger(){
-  //   if(this.debuggerGroup === null){
-  //     this.debuggerGroup = new Quark();
-  //     this.system.add(this.debuggerGroup);
-  //     this.debuggerGroup.position.copy(this.origin);
-  //   }
-  //   for (var ii = 0; ii < this.columns; ii++) {
-  //     for (var mm = 0; mm < this.rows; mm++) {
-  // 
-  //       this.snapAtRowCol(this.rows * mm, this.columns * ii);
-  //       var gg = new VisualPlane("gridpoint", this.position3DCenter.x, this.position3DCenter.y, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
-  //       this.debuggerGroup.add(gg);
-  //     }
-  //   }
-  // }
+  buildDebuggerScreenSpace(){
+    if(this.debuggerGroup === null){
+      this.debuggerGroup = new Quark();
+      this.system.add(this.debuggerGroup);
+      this.debuggerGroup.position.copy(this.origin);
+      
+    }
+    for (var ii = 0; ii < this.columns; ii++) {
+      for (var mm = 0; mm < this.rows; mm++) {
+  
+        this.snapAtRowCol(mm, ii);
+        console.log("this.position3DCenter", this.position3DCenter);
+        var gg = new VisualPlane("gridpoint", this.position3DCenter.x, this.position3DCenter.y, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+        // var gg = new Plane("gridpoint", this.position3DCenter.x, this.position3DCenter.y, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+        this.system.add(gg);
+        this.debuggerGroup.add(gg);
+      }
+    }
+  }
+  
+  
+  // WELL first we need to flip the y of the snap() to take in 3d coords
+  buildDebugger3D(left = true, center = true, color = new Color(1,0.5,1,1), parent = null){
+    if(this.debuggerGroup === null){
+      this.debuggerGroup = new Quark();
+      this.system.add(this.debuggerGroup);
+      // this.debuggerGroup.position.copy(this.origin);
+      
+    }
+    for (var ii = 0; ii < this.columns; ii++) {
+      for (var mm = 0; mm < this.rows; mm++) {
+        
+        this.snapAtRowCol(mm, ii, "3d");
+        
+            // console.log("this.position3DCenter.y", this.position3D.y);
+            // console.log("this.position3DCenter.y", this.position3DCenter.y);
+            // console.log("this.position3DCenter", this.position3DCenter);
+        
+        if(left){
+          var gg = new VisualPlane("gridpoint", this.position3D.x, this.position3D.y, 0, 10, 10, color);
+          // var gg = new Plane("gridpoint", this.position3DCenter.x, this.position3DCenter.y, 0, 10, 10, {r:1,g:0.5,b:1,a:1});
+          this.system.add(gg);
+          this.debuggerGroup.add(gg);
+          if(parent){
+            parent.add(this.debuggerGroup);
+          }
+          
+        }
+        if(center){
+          var gg2 = new VisualPlane("gridpoint", this.position3DCenter.x, this.position3DCenter.y, 0, 10, 10, {r:0,g:0.5,b:1,a:1});
+          this.system.add(gg2);
+          this.debuggerGroup.add(gg2);
+          if(parent){
+            parent.add(this.debuggerGroup);
+          }
+        }
+      }
+    }
+  }
   
   
 }

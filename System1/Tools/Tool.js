@@ -4,6 +4,12 @@
 // It would be nice to be able to use a tool without a ToolsController
 // well we have Stop()
 
+/*
+
+should be as simplke as .start() .stop()
+
+*/
+
 // 
 // 
 // 
@@ -23,7 +29,8 @@ export class Tool {
 
 
 
-  constructor(name="tool", displayName, system){
+  // constructor(name="tool", displayName, system){
+  constructor(system, name="tool", displayName){
     this.name = name;
     this.displayName = displayName;
     this.system = system;

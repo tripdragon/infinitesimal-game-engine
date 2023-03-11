@@ -167,6 +167,11 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     }
     ff.gl = gl;
     
+    // here we could interject dirty flags
+    // so check things like .isSelectable = true
+    // then add back into the scenegrapth
+    
+    
     if(ff.programInfo === null){
       // gl.useProgram(this.programInfo.program);
     }
