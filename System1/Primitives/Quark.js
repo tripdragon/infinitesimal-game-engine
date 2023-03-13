@@ -4,6 +4,8 @@
 
 /*
 
+this will be most likely the most important field you will use for box testing
+boundingBoxWorld = new Box3(); // this one is baked world AABB axis 
 
 
 refreshMatrixes()
@@ -122,6 +124,14 @@ export class Quark {
   // idea here is in the loop its default always avaiable to be selected
   // THOUGH .update() could just be that
   isSelectableAlways = false;
+  isSelectable = true;
+  
+  boxLimit = false;
+  // limitX = false;
+  // limitY = false;
+  // limitZ = false;
+
+
   
   // max = new Vector3();
   
@@ -472,6 +482,7 @@ export class Quark {
   // instead well just do a bool check
   // keeping in mind "art" texture things should not collide
   canCollide = true;
+  
   // canTrigger = true;
   
 

@@ -275,7 +275,11 @@ export class SelectTool extends Tool {
       
       var pick = this.system.colliders[i];
       // if(pick.isType !== "Quark"){
-
+      
+      // skip this one is not
+      if(pick.isSelectable === false){
+        continue;
+      }
       
       var wasIn = false;
       // if(pick instanceof Plane || pick instanceof Platform){

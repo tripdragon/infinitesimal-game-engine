@@ -49,6 +49,12 @@ export class MoveyThingTool extends Tool {
   grid = null;
 
   posWorkVectorToMegas = new Vector3();
+  
+  // boxLimit = false;
+  // limitX = false;
+  // limitY = false;
+  // limitZ = false;
+  // 
 
   // need a grid
   // so its .snap()
@@ -140,11 +146,11 @@ export class MoveyThingTool extends Tool {
     const delta = (tt - this.tapTimer) / 1000;
     
     if( delta <= this.tapLimit){
-      onConsole.log("tap timer", "yeah!", delta);
+      // onConsole.log("tap timer", "yeah!", delta);
       this.onTap();
     }
     else {
-      onConsole.log("tap timer", "boo", delta);
+      // onConsole.log("tap timer", "boo", delta);
     }
   }
   
@@ -157,7 +163,7 @@ export class MoveyThingTool extends Tool {
       
       var pointer3d = this.system.pointer.worldSpace;
       // debugger
-      console.log("pointer b", pointer3d.clone());
+      // console.log("pointer b", pointer3d.clone());
       
       wasIn = this.attached.pointCollideCheck(pointer3d);
       
@@ -326,12 +332,50 @@ export class MoveyThingTool extends Tool {
         this.grid.snap3d(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
         this.posWorkVectorToMegas.copy(this.grid.position3DCenter);
       }
-              
       
+
       
       this.attached.position.copy(this.posWorkVectorToMegas);
       this.attached.refreshMatrixes();
       this.attached.bbb();
+      
+      
+      // now limit the position to a parent box space
+      // a pan scroll space really
+      // we need to have updated bounds first
+      
+      // This only works well if the box is larger
+      // otherwise it flips
+      if(this.attached.boxLimit && this.attached.parent){
+        
+        const b0 = this.attached.boundingBoxWorld;
+        const b1 = this.attached.parent.boundingBoxWorld;
+
+        if(b0.min.x < b1.min.x && b0.max.x < b1.max.x){
+          this.posWorkVectorToMegas.x = this.posWorkVectorToMegas.x + (b1.max.x - b0.max.x);
+        }
+        else if(b0.min.x > b1.min.x && b0.max.x > b1.max.x){
+          this.posWorkVectorToMegas.x = this.posWorkVectorToMegas.x + (b1.min.x - b0.min.x);
+        }
+        
+        if(b0.min.y < b1.min.y && b0.max.y < b1.max.y){
+          this.posWorkVectorToMegas.y = this.posWorkVectorToMegas.y + (b1.max.y - b0.max.y);
+        }
+        else if(b0.min.y > b1.min.y && b0.max.y > b1.max.y){
+          this.posWorkVectorToMegas.y = this.posWorkVectorToMegas.y + (b1.min.y - b0.min.y);
+        }
+
+        // reupdate 
+        this.attached.position.copy(this.posWorkVectorToMegas);
+        this.attached.refreshMatrixes();
+        this.attached.bbb();
+        
+      }
+      
+      
+
+      
+      
       
       return;
     

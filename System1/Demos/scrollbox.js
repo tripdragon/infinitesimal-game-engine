@@ -36,7 +36,7 @@ disc.load = function(){
 
   var EditorMagic = new Editor111(this.system);
   
-  // EditorMagic.launch_CM();
+  EditorMagic.launch_CM();
   
 
   // changing the screen space mode for a platformer game
@@ -65,6 +65,7 @@ disc.load = function(){
   // so its .snap()
   // 
   
+  // var bb = new Plane("scroll space", 280, 100, 0, 80, 80, {r:0.1,g:0.3,b:0.8,a:1});
   var bb = new Plane("scroll space", 280, 100, 0, 600, 500, {r:0.1,g:0.3,b:0.8,a:1});
   bb.setOriginAndGeometry("leftBottom");
   // gg.setOriginAndGeometry("rightBottom");
@@ -72,12 +73,14 @@ disc.load = function(){
   // gg.setOriginAndGeometry("leftTop");
   this.system.add(bb);
   bb.isSelectableAlways = true;
+  bb.boxLimit = true;
   
   
   var gg = new Plane("big thingy", 280, 100, 0, 400, 300, {r:0.1,g:1,b:0,a:1});
   gg.setOriginAndGeometry("leftBottom");
   this.system.add(gg);
   gg.isSelectableAlways = false;
+  gg.isSelectable = false;
   
   bb.parent = gg;
   bb.position.set(0,0,0);
@@ -90,7 +93,9 @@ disc.load = function(){
     console.log("????");
   }
 
-
+//   this.system.add(gg);
+// this.system.add(bb);
+// bb.parent = gg;
 
 
 };
