@@ -1,0 +1,26 @@
+
+// // do a moving and generative effect
+// if(wall.shiftLeft){
+//   wall.x += wall.shiftLeft * 0.05;
+//   if (wall.x > window.innerWidth){
+//     wall.x = -wall.width;
+//         wall.shiftLeft = randomBetween(1,100);
+//   }
+// }
+// 
+// isInMuch = AABBTest(player, wall);
+// 
+// if(isInMuch){
+//   // console.log("innnn?");
+//   wall.color = {x:0,y:0,z:1,w:0};
+//   wall.onCollide();
+// }
+// else {
+//   // console.log("ouuuut???");
+//   wall.color = {x:0,y:0.5,z:0,w:0};
+// }
+// 
+// 
+// if(wasIn == false && isInMuch == true){
+//   wasIn = true;
+// }

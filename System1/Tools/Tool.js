@@ -25,7 +25,8 @@ export class Tool {
   pointerUpEvent = null;
   pointerDownEvent = null;
   pointerMoveEvent = null;
-
+  
+  hasStarted = false;
 
 
 
@@ -75,6 +76,7 @@ export class Tool {
     this.system.canvas.removeEventListener( 'pointerup', this.pointerUpEvent );
     this.system.canvas.removeEventListener( 'pointerdown', this.pointerDownEvent );
     this.system.canvas.removeEventListener( 'pointermove', this.pointerMoveEvent );
+    this.hasStarted = false;
   }
 
   

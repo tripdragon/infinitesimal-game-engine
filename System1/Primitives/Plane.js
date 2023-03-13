@@ -62,6 +62,8 @@ export class Plane extends Quark {
   
     // hasSetPlane = false;
     
+    isGeometry = true;
+    
     positions = [];
     
     visualPoints = {

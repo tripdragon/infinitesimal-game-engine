@@ -101,6 +101,8 @@ export class Quark {
   image = null;
   texture = null;
   
+  moveyThingTool = null;
+  
   // maybe for selection tools
   // orignally for music tools piano
   // maybe should be position scale rotation locks insteadb
@@ -129,6 +131,8 @@ export class Quark {
   // console.assert(mypoint instanceof Point)
   isType = "Quark";
   subType = "anything";
+  isGeometry = false;
+  
   
   // GL stuff
   gl;
@@ -686,51 +690,6 @@ export class Quark {
     this.worldMatrix.copy(thing.worldMatrix);
   }
 
-  hasHovered = false;
-  // not sure yet this placement
-  update(){
-    
-    if(this.isSelectableAlways){
-      
-      
-      var pointer3d = this.system.pointer.worldSpace;
-      
-      var wasIn = this.pointCollideCheck(pointer3d);
-      
-      if(wasIn){
-        // console.log("is in");
-        if(this.hasHovered === false){
-          this.hasHovered = true;
-          this.onHoverIn();
-        }
-        else{
-          this.onHover();
-        }
-      }
-      else {
-        // console.log("is nottttt");
-        if(this.hasHovered === true){
-          this.hasHovered = false;
-          this.onHoverOut();
-        }
-      }
-      
-      
-    }
-    
-    // this.onTap(){}
-    // this.onDown(){}
-    // this.onUp(){}
-
-    // this.onSelect(){}
-    
-    // this.onDeselect(){}
-
-  }
-  
-
-  
-
 
 
   // we never have the gl available yet on start of game....
@@ -781,13 +740,56 @@ export class Quark {
   }
   
   
-  
+
+  hasHovered = false;
+  // not sure yet this placement
+  update(){
+    
+    if(this.isSelectableAlways){
+      
+      
+      var pointer3d = this.system.pointer.worldSpace;
+      
+      var wasIn = this.pointCollideCheck(pointer3d);
+      
+      if(wasIn){
+        // console.log("is in");
+        if(this.hasHovered === false){
+          this.hasHovered = true;
+          this.onHoverIn();
+        }
+        else{
+          this.onHover();
+        }
+      }
+      else {
+        // console.log("is nottttt");
+        if(this.hasHovered === true){
+          this.hasHovered = false;
+          this.onHoverOut();
+        }
+      }
+      
+      
+    }
+    
+    // this.onTap(){}
+    // this.onDown(){}
+    // this.onUp(){}
+
+    // this.onSelect(){}
+    
+    // this.onDeselect(){}
+
+  }
+
   //
   //
   // Events!!!!
   //
   //
   //
+  
   onTap(){}
   onDown(){}
   onUp(){}
