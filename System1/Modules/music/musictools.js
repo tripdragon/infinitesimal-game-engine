@@ -20,6 +20,35 @@ export const SemitoneDistances = {
   B: 2
 };
 
+// copy from above in order
+export const SemitoneDistancesArray = [
+  // -9,
+  // -8, //"D♭": -8,
+  // -7,
+  // -6, //"E♭": -6,
+  // -5,
+  // -4,
+  // -3, //"G♭": -3,
+  // -2,
+  // -1, //"A♭": -1,
+  // 0,
+  // 1, //"B♭": 1,
+  // 2
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B"
+];
+
+
 // The equation to calculate frequency is 𝑓 = 440Hz × 2𝑛/12, 
 // where 𝑛 is the number of semitones between A4 and the input note.
 // https://codepen.io/sophiekoonin/pen/JjEJowB

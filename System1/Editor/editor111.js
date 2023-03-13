@@ -370,9 +370,7 @@ export class Editor111 extends Editor {
     item1Select.click();
 
 
-    var item1SelectMusic = new ToolCheckBoxFactory(panel, checkboxes, selectToolMusic, "url(./Editor/arrow2.png)");
-    item1SelectMusic.checkbox.style.backgroundColor = "#ffffff";
-    
+
     
     
     // // <<<<
@@ -438,8 +436,11 @@ export class Editor111 extends Editor {
     
     
     
+    var item1SelectMusic = new ToolCheckBoxFactory(panel, checkboxes, selectToolMusic, "url(./Editor/notesedit.png)");
+    item1SelectMusic.checkbox.style.backgroundColor = "#ffffff";
     
-    new ToolCheckBoxFactory(panel, checkboxes, musicDrawStamp, "url(./Editor/arrow2.png)"); // (parent, cache, tool, imageURL)
+    
+    new ToolCheckBoxFactory(panel, checkboxes, musicDrawStamp, "url(./Editor/notes01.png)"); // (parent, cache, tool, imageURL)
     
 
     

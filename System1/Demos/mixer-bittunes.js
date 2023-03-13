@@ -27,6 +27,7 @@ import { Editor111 } from "../Editor/editor111.js";
 
 import { Grid } from "../Modules/Grid.js";
 
+import {SemitoneDistances, calcFrequency, SemitoneDistancesArray} from '../Modules/music/musictools.js';
 
 export let disc = new Game("mixerBittunes");
 
@@ -195,8 +196,7 @@ disc.load = function(){
   musicDrawStamp.stampingObject = new Platform("MusicDrawTool2", 0, 0, 0, grid.width, grid.height,0, {r:0,g:1,b:1,a:1}, this.system);
   musicDrawStamp.stampingObject.color.setHex(0x000547);
   musicDrawStamp.afterStamp = function(){
-  // debugger
-    // this.visualObject.color.setHex(0x000547);
+
     
     this.currentItem.onTap = () => {
       // debugger
@@ -313,62 +313,105 @@ disc.load = function(){
   
   // ksdsl klsdfl kk lsdl kklsdfsdff dfdnfdf ksdf ksdf kdfklsdfns
   // 
-  for (var i = 0; i < 8 * 3; i++) {
   
-    var w = 80;
-    var h = 20;
-    var xx = 200;
-    var yy = i;
-    var box = new Platform("plane", xx, ((i*(h+1))+ 40), 0, w, h, {r:1,g:1,b:1,a:1}, this.system);
-    this.system.add(box);
+  // cc being group, untill know proper name, maybe its octave
+  var startOctave = 4;
+  for (var indexOctave = startOctave; indexOctave < startOctave+1; indexOctave++) {
   
-    box.onTap = () => {
-      // debugger
-      // console.log("_frequency", _frequency);
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      var ctx = new AudioContext();
-      var oo = ctx.createOscillator();
-      // oo.type = ev.currentTarget.id;
-      // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
-      oo.type = "sine";
-      var octaveScalar = 1;
-      // oo.frequency.value = _frequency + octaveScalar;
-      oo.frequency.value = 400;
-      // oo.frequency.value = Math.pow(0.2, i);
-      // console.log("oo.frequency.value", oo.frequency.value);
-      // console.log("octaveScalar", octaveScalar);
-      oo.start(0);
-      oo.connect(ctx.destination);
-      oo.stop(0.1);
-  
-      // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
-  
-    }
-  
-    // box.onHover = () => {
-    //   // debugger
-    //   // console.log("_frequency", _frequency);
-    //   window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    //   var ctx = new AudioContext();
-    //   var oo = ctx.createOscillator();
-    //   // oo.type = ev.currentTarget.id;
-    //   // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
-    //   oo.type = "sine";
-    //   var octaveScalar = 1;
-    //   // oo.frequency.value = _frequency + octaveScalar;
-    //   oo.frequency.value = 400;
-    //   // oo.frequency.value = Math.pow(0.2, i);
-    //   // console.log("oo.frequency.value", oo.frequency.value);
-    //   // console.log("octaveScalar", octaveScalar);
-    //   oo.start(0);
-    //   oo.connect(ctx.destination);
-    //   oo.stop(0.05);
-    // 
-    //   // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
-    // 
-    // }
+    for (var ii = 0; ii < 12; ii++) {
     
-  }
+      var ww = 80;
+      // var h = 20;
+      var hh = grid.height;
+      var xx = 200;
+      var yy = ii + indexOctave;
+      
+      // skip at e/f
+      if(ii === 5){
+          continue;
+      }
+      
+      var margin = 1;
+      yy =  (yy * (hh+margin) ) + 140;
+      
+      // bring down one key at e/f
+      if(ii > 5){
+        yy -= hh + margin;
+      }
+      
+      
+      var box = new Platform("plane", xx, yy, 0, ww, hh, {r:1,g:1,b:1,a:1}, this.system);
+      this.system.add(box);
+      box.noteType = "full";
+      // if odd
+      if (ii % 2) {
+        box.noteType = "flat";
+        box.color.setHex(0x00ff09)
+      }
+      
+        // debugger
+        var freq = calcFrequency( SemitoneDistancesArray[ii], indexOctave );
+        console.log("freq", freq);
+        box.frequency = freq;
+    
+      box.onTap = function() {
+        // debugger
+        // console.log("_frequency", _frequency);
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var ctx = new AudioContext();
+        var oo = ctx.createOscillator();
+        // oo.type = ev.currentTarget.id;
+        // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+        oo.type = "sine";
+        // var octaveScalar = indexOctave;
+        // oo.frequency.value = _frequency + octaveScalar;
+        // oo.frequency.value = 400;
+        // oo.frequency.value = Math.pow(0.2, i);
+        // console.log("oo.frequency.value", oo.frequency.value);
+        // console.log("octaveScalar", octaveScalar);
+        
+        
+        // oo.frequency.value = freq;
+        oo.frequency.value = this.frequency;
+        console.log("oo.frequency", oo.frequency.value);
+        
+        // console.log("this.frequency", this.frequency);
+        // this.tone = generateTone(this.frequency, this.type);
+        
+        oo.start(0);
+        oo.connect(ctx.destination);
+        oo.stop(0.1);
+    
+        // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+    
+      }
+    
+        // box.onHover = () => {
+        //   // debugger
+        //   // console.log("_frequency", _frequency);
+        //   window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        //   var ctx = new AudioContext();
+        //   var oo = ctx.createOscillator();
+        //   // oo.type = ev.currentTarget.id;
+        //   // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+        //   oo.type = "sine";
+        //   var octaveScalar = 1;
+        //   // oo.frequency.value = _frequency + octaveScalar;
+        //   oo.frequency.value = 400;
+        //   // oo.frequency.value = Math.pow(0.2, i);
+        //   // console.log("oo.frequency.value", oo.frequency.value);
+        //   // console.log("octaveScalar", octaveScalar);
+        //   oo.start(0);
+        //   oo.connect(ctx.destination);
+        //   oo.stop(0.05);
+        // 
+        //   // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+        // 
+        // }
+        
+    }
+      
+  }// octave loop
   // 
   // 
   // 
