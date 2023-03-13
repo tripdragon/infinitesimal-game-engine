@@ -68,55 +68,77 @@ disc.load = function(){
   var gg = new VisualPlane("origin", 280, 100, 0, 20, 20, {r:0.8,g:0.8,b:0,a:1});
   this.system.add(gg);
   
-  var grid = new Grid(80,20,4,12, this.system);
+  // var grid = new Grid(20,20,4,12, this.system);
   // grid.origin.set(280,100,0);
   // grid.buildDebuggerScreenSpace();
-  grid.buildDebugger3D(true, true);
+  // grid.buildDebugger3D(true, true);
   
-  window.griiiid = grid;
+  // window.griiiid = grid;
   
-  EditorMagic.toolsController.tools.selectToolMusic.grid = grid;
-  EditorMagic.toolsController.tools.selectToolMusic.useGrid = true;
+  // EditorMagic.toolsController.tools.selectToolMusic.grid = grid;
+  // EditorMagic.toolsController.tools.selectToolMusic.useGrid = true;
   // 
   
   
   
   
-  var gg = new Plane("big thingy", 380, 200, 0, 400, 300, {r:0.1,g:0.2,b:0,a:1});
-  gg.setOriginAndGeometry("leftBottom");
-  // gg.setOriginAndGeometry("rightBottom");
-  // gg.setOriginAndGeometry("rightTop");
-  // gg.setOriginAndGeometry("leftTop");
-  this.system.add(gg);
-  gg.isSelectableAlways = true;
+  var scrollSpace = new Plane("scroll space", 380, 200, 0, 1400, 500, {r:0.1,g:0.2,b:0,a:1});
+  scrollSpace.color.setHex(0x8a92ff);
+  
+  scrollSpace.setOriginAndGeometry("leftBottom");
+  // scrollSpace.setOriginAndGeometry("rightBottom");
+  // scrollSpace.setOriginAndGeometry("rightTop");
+  // scrollSpace.setOriginAndGeometry("leftTop");
+  //this.system.add(scrollSpace);
+  scrollSpace.isSelectableAlways = true;
+  scrollSpace.boxLimit = true;
+  
+  
+  // render order for now requires loading after scroll space
+  var viewSpace = new Plane("view space", 280, 100, 0, 400, 300, {r:0.1,g:1,b:0,a:1});
+  viewSpace.setOriginAndGeometry("leftBottom");
+  //this.system.add(viewSpace);
+  viewSpace.isSelectableAlways = false;
+  viewSpace.isSelectable = false;
+  // viewSpace.visible = false;
+  viewSpace.renderType = "wires";
+  
+  
+  this.system.add(scrollSpace);
+  this.system.add(viewSpace);
+  scrollSpace.parent = viewSpace;
+  scrollSpace.position.set(0,0,0);
+  scrollSpace.bbb();
+  
   
   
   var centerPoint = new VisualPlane("cursor like", 500, 500, 0, 10, 10, {r:0,g:0,b:1,a:1});
-  centerPoint.position.copy(gg.position);
+  centerPoint.position.copy(scrollSpace.position);
   this.system.add(centerPoint);
   
-  gg.onHover = function() {
+  viewSpace.onHover = function() {
     console.log("hovery");
   }
-  gg.onHoverIn = function() {
+  viewSpace.onHoverIn = function() {
     console.log("hovery iiiinnn");
   }
-  gg.onHoverOut = function() {
+  viewSpace.onHoverOut = function() {
     console.log("hovery outttttt");
   }
   
   
-  var grid = new Grid(40,40,40,40, this.system).computeRowsColumns(gg.width, gg.height);
+  // var grid = new Grid(40,40,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
+  var grid = new Grid(2*8, 20,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
   // need bottom left
-  // grid.origin.copy(gg.sidePointsWorld.bottomLeft);
+  // grid.origin.copy(scrollSpace.sidePointsWorld.bottomLeft);
   
   // grid.buildDebugger3D(true, true, {r:1,g:0.2,b:1,a:1});
-  grid.buildDebugger3D(true, true, {r:1,g:0.2,b:1,a:1}, gg);
+  // grid.buildDebugger3D(true, true, {r:1,g:0.2,b:1,a:1}, scrollSpace);
 
   
   var cursorC = new VisualPlane("cursor like C", 0, 0, 0, 18, 18, {r:0,g:1,b:1,a:1});
   this.system.add(cursorC);
-  gg.add(cursorC)
+  scrollSpace.add(cursorC)
   
   var bb = new Vector3();
   
@@ -127,37 +149,111 @@ disc.load = function(){
     // is it correct????
     var pointer3d = this.system.pointer.worldSpace;
     this.position.copy(pointer3d);
-    gg.worldToLocal(bb.copy(pointer3d))
+    scrollSpace.worldToLocal(bb.copy(pointer3d))
     onConsole.log("bb", bb);
     grid.snap3d(bb.x, bb.y);
     
     // this a local space object parented to the main box
     // cursorC.position.copy(bb);
-    cursorC.position.copy(grid.position3D);
-    // cursorC.position.copy(grid.position3DCenter);
+    // cursorC.position.copy(grid.position3D);
+    cursorC.position.copy(grid.position3DCenter);
     
     // this is for a world space object 
-    this.position.copy(grid.position3D).add(gg.position);
-    // this.position.copy(grid.position3DCenter).add(gg.position);
+              // this.position.copy(grid.position3D).add(scrollSpace.position);
+    
+    // this.position.copy(grid.position3D).add(scrollSpace.worldPosition);
+    this.position.copy(grid.position3DCenter).add(scrollSpace.worldPosition);
+    
+                // this.position.copy(grid.position3DCenter).add(scrollSpace.position);
     
   }
   
   
-  var cursor = new VisualPlane("cursor like", 500, 500, 0, 18, 18, {r:0.9,g:1,b:1,a:1});
-  this.system.add(cursor);
   
-  cursor.updatesdfsdf = function(){
+  // 
+  //  Reseting some things 
+  //
+  
+  EditorMagic.selectToolMusic.useGrid = true;
+  EditorMagic.selectToolMusic.grid = grid;
+  // EditorMagic.selectToolMusic.scrollBoxPointer = scrollSpace;
+  
+  
+  var musicDrawStamp = EditorMagic.musicDrawStamp;
+  musicDrawStamp.scrollBoxPointer = scrollSpace;
+  
+  var musicDraw = new Platform("platy", 0, 0, 0, grid.width, grid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
+  // var musicDrawStamp = new MusicDrawTool(this.system, "MusicDrawTool_plane", "MusicDrawTool stamper");
+  musicDrawStamp.visualObject = musicDraw;
+  musicDrawStamp.visualObject.canUpdate  = false;
+  // musicDrawStamp.visualObject.color.setHex(0x000547);
+  musicDraw.color.setHex(0x000547);
+  // musicDrawStamp.visualObject.useGrid = true;
+  // musicDrawStamp.visualObject.grid = grid;
+  musicDrawStamp.stampingObject = musicDraw.clone();
+  
+  musicDrawStamp.stampingObject = new Platform("MusicDrawTool2", 0, 0, 0, grid.width, grid.height,0, {r:0,g:1,b:1,a:1}, this.system);
+  musicDrawStamp.stampingObject.color.setHex(0x000547);
+  musicDrawStamp.afterStamp = function(){
+  // debugger
+    // this.visualObject.color.setHex(0x000547);
     
-    var pointer3d = this.system.pointer.worldSpace;
-    
-    grid.snap();
-    // grid.origin.copy(gg.sidePointsWorld.bottomLeft);
-    // grid.snapAtRowCol(pointer3d.x,pointer3d.y,"3d");
-    
-    this.position.copy(grid.position3DCenter);
-                
+    this.currentItem.onTap = () => {
+      // debugger
+      // console.log("_frequency", _frequency);
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AudioContext();
+      var oo = ctx.createOscillator();
+      // oo.type = ev.currentTarget.id;
+      // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+      oo.type = "sine";
+      var octaveScalar = 1;
+      // oo.frequency.value = _frequency + octaveScalar;
+      oo.frequency.value = 400;
+      // oo.frequency.value = Math.pow(0.2, i);
+      // console.log("oo.frequency.value", oo.frequency.value);
+      // console.log("octaveScalar", octaveScalar);
+      oo.start(0);
+      oo.connect(ctx.destination);
+      oo.stop(0.1);
+  
+      // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+  
+    }
+  
+  
   }
+  // musicDrawStamp.editor = EditorMagic;
   
+  // EditorMagic.addTool(musicDrawStamp);
+  // musicDrawStamp.stampingObject.color.setHex(0xff14c0);
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // var cursor = new VisualPlane("cursor like", 500, 500, 0, 18, 18, {r:0.9,g:1,b:1,a:1});
+  // this.system.add(cursor);
+  // 
+  // cursor.updatesdfsdf = function(){
+  // 
+  //   var pointer3d = this.system.pointer.worldSpace;
+  // 
+  //   grid.snap();
+  //   // grid.origin.copy(gg.sidePointsWorld.bottomLeft);
+  //   // grid.snapAtRowCol(pointer3d.x,pointer3d.y,"3d");
+  // 
+  //   this.position.copy(grid.position3DCenter);
+  // 
+  // }
+  // 
 
   // gg.update = function() {
   // 
@@ -216,7 +312,7 @@ disc.load = function(){
   // 
   
   // ksdsl klsdfl kk lsdl kklsdfsdff dfdnfdf ksdf ksdf kdfklsdfns
-  
+  // 
   for (var i = 0; i < 8 * 3; i++) {
   
     var w = 80;
@@ -225,7 +321,7 @@ disc.load = function(){
     var yy = i;
     var box = new Platform("plane", xx, ((i*(h+1))+ 40), 0, w, h, {r:1,g:1,b:1,a:1}, this.system);
     this.system.add(box);
-    
+  
     box.onTap = () => {
       // debugger
       // console.log("_frequency", _frequency);
@@ -244,11 +340,11 @@ disc.load = function(){
       oo.start(0);
       oo.connect(ctx.destination);
       oo.stop(0.1);
-      
+  
       // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
-
+  
     }
-    
+  
     // box.onHover = () => {
     //   // debugger
     //   // console.log("_frequency", _frequency);
@@ -271,47 +367,47 @@ disc.load = function(){
     //   // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
     // 
     // }
-    // 
-  }
-  
-  
-  
-  for (var i = 0; i < 8 * 4; i++) {
-  
-    var w = 80;
-    var h = 18;
-    var xx = 160;
-    var yy = i;
-    var box = new Platform("plane", xx, ((i*(h+1))+ 30), 0, w, h, {r:0,g:1,b:1,a:1}, this.system);
-    this.system.add(box);
     
-    box.onTap = () => {
-      // debugger
-      // console.log("_frequency", _frequency);
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      var ctx = new AudioContext();
-      var oo = ctx.createOscillator();
-      // oo.type = ev.currentTarget.id;
-      // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
-      oo.type = "sine";
-      var octaveScalar = 1;
-      // oo.frequency.value = _frequency + octaveScalar;
-      oo.frequency.value = 400;
-      // oo.frequency.value = Math.pow(0.2, i);
-      // console.log("oo.frequency.value", oo.frequency.value);
-      // console.log("octaveScalar", octaveScalar);
-      oo.start(0);
-      oo.connect(ctx.destination);
-      oo.stop(0.1);
-      
-      // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
-
-    }
-    
-
   }
-  
-  
+  // 
+  // 
+  // 
+  // for (var i = 0; i < 8 * 4; i++) {
+  // 
+  //   var w = 80;
+  //   var h = 18;
+  //   var xx = 160;
+  //   var yy = i;
+  //   var box = new Platform("plane", xx, ((i*(h+1))+ 30), 0, w, h, {r:0,g:1,b:1,a:1}, this.system);
+  //   this.system.add(box);
+  // 
+  //   box.onTap = () => {
+  //     // debugger
+  //     // console.log("_frequency", _frequency);
+  //     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  //     var ctx = new AudioContext();
+  //     var oo = ctx.createOscillator();
+  //     // oo.type = ev.currentTarget.id;
+  //     // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+  //     oo.type = "sine";
+  //     var octaveScalar = 1;
+  //     // oo.frequency.value = _frequency + octaveScalar;
+  //     oo.frequency.value = 400;
+  //     // oo.frequency.value = Math.pow(0.2, i);
+  //     // console.log("oo.frequency.value", oo.frequency.value);
+  //     // console.log("octaveScalar", octaveScalar);
+  //     oo.start(0);
+  //     oo.connect(ctx.destination);
+  //     oo.stop(0.1);
+  // 
+  //     // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+  // 
+  //   }
+  // 
+  // 
+  // }
+  // 
+  // 
 
 
 };

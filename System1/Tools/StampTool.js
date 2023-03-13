@@ -118,7 +118,13 @@ export class StampTool extends Tool {
       //   debugger
       // }
       
+      
+      this.afterStamp();
   }
+  
+  
+  
+  afterStamp(){}
   
   
 } 

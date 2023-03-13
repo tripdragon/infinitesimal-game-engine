@@ -354,6 +354,8 @@ export class SelectTool extends Tool {
       if(this.selectedObject.moveyThingTool === null){
         
         this.selectedObject.moveyThingTool = new MoveyThingTool(this.system, this.selectedObject);
+        this.selectedObject.moveyThingTool.useGrid = this.useGrid;
+        this.selectedObject.moveyThingTool.grid = this.grid;
         //this.selectedObject.moveyThingTool.onHover(this.data);
         // window.mmm4 = this.selectedObject;
       }

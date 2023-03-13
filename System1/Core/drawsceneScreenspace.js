@@ -253,7 +253,7 @@ export function drawSceneScreenspace(app, gl, programInfo ) {
     var vertexCount = ff.pointsCount;
     
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
-    if(ff.subType === "wirefornow"){
+    if(ff.subType === "wirefornow" || ff.renderType === "wires"){
 
       // boo no width option
       // gl.lineWidth(10);

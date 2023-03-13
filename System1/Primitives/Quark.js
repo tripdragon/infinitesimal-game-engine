@@ -97,6 +97,7 @@ export class Quark {
   lv = 0;
   
   visible = true;
+  renderType = "solid"; // soild wire
   
   static = false;
   
@@ -312,6 +313,14 @@ export class Quark {
   // need a wrapper function
   // position = new Vector3();
   position = new _Position(this);
+  
+  _worldPos = new Vector3();
+  get worldPosition(){
+    if(this.parent){
+      return this._worldPos.copy(this.position).applyMatrix4(this.parent.worldMatrix);
+    }
+    return this._worldPos.copy(this.position);
+  }
   
   mPosition = new Vector3(Infinity, Infinity, Infinity); // not sure of this yet
   // _position = new Vector3();

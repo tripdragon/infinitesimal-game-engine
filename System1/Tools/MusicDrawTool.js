@@ -11,7 +11,7 @@ import { StampTool } from "./StampTool.js";
 
 // thinking that The Tool is a First class citizen that handles its 
 // rename to PlatformDrawTool
-export class PlatformStampTool extends StampTool {
+export class MusicDrawTool extends StampTool {
   
   visualObject = null;
   stampingObject = null;
@@ -27,6 +27,8 @@ export class PlatformStampTool extends StampTool {
   IS_DOWN = false;
   
   currentItem = null;
+  
+  scrollBoxPointer = null;
   
   pointerDown(ev){
     console.log("down", ev);
@@ -53,14 +55,34 @@ export class PlatformStampTool extends StampTool {
     ff.start();
     this.currentItem = ff;
     window.recent = ff;
+    
+    this.afterStamp();
   }
   
   // we are moving the logic to mouse down to do resizing
+  mPos98345 = new Vector3();
   pointerUp(){
     this.visualObject.visible = true;
     this.IS_DOWN = false;
     this.currentItem.rebuildDimensions();
-    // this.afterStamp();
+    
+    
+    // move box to local space of scrollbox
+    // this should happen in Quark but for now just get it done here
+    if(this.currentItem !== null && this.scrollBoxPointer !== null){
+      if(this.currentItem !== this.scrollBoxPointer){
+        
+        this.scrollBoxPointer.worldToLocal( this.mPos98345.copy(this.currentItem.position) );
+        
+        this.currentItem.parent = this.scrollBoxPointer;
+        
+        this.currentItem.position.copy(this.mPos98345);
+        
+        this.currentItem.bbb();
+      }
+    }
+    
+
   }
   
   // 
@@ -129,21 +151,21 @@ export class PlatformStampTool extends StampTool {
         
         // top
         // 
-        if (this.baseGrid.indexCol < this.startingIdexes.col) {
-          var val = this.startingIdexes.col - this.baseGrid.indexCol + 1;
-          // console.log(val);
-          this.currentItem.scaleSidePower(val,"top");
-        }
-        // bottom
-        else if (this.baseGrid.indexCol > this.startingIdexes.col) {
-          var val = this.baseGrid.indexCol - this.startingIdexes.col + 1;
-          // console.log(val);
-          this.currentItem.scaleSidePower(val,"bottom");
-        }
-        else if (this.baseGrid.indexCol === this.startingIdexes.col) {
-          // console.log(val);
-          this.currentItem.scaleSidePower(1,"top");
-        }
+        // if (this.baseGrid.indexCol < this.startingIdexes.col) {
+        //   var val = this.startingIdexes.col - this.baseGrid.indexCol + 1;
+        //   // console.log(val);
+        //   this.currentItem.scaleSidePower(val,"top");
+        // }
+        // // bottom
+        // else if (this.baseGrid.indexCol > this.startingIdexes.col) {
+        //   var val = this.baseGrid.indexCol - this.startingIdexes.col + 1;
+        //   // console.log(val);
+        //   this.currentItem.scaleSidePower(val,"bottom");
+        // }
+        // else if (this.baseGrid.indexCol === this.startingIdexes.col) {
+        //   // console.log(val);
+        //   this.currentItem.scaleSidePower(1,"top");
+        // }
         
         this.currentItem.rebuildDimensions();
         

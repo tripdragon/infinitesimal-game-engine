@@ -47,6 +47,9 @@ import { Grid } from "../Modules/Grid.js";
 
 export class SelectToolMusic extends SelectTool {
   
+  
+  scrollBoxPointer = null;
+  
   constructor(system, name = "SelectToolMusic", displayName = "SelectToolMusic"){
     
     // super(name, displayName, system);
@@ -64,10 +67,35 @@ export class SelectToolMusic extends SelectTool {
     // 
     // 
     
+    
+    
     update(){
       super.update();
-      
+      // debugger
     }
+    
+    // mPos98345 = new Vector3();
+    pointerUp(){
+      super.pointerUp();
+      
+      this.isMouseDown = false;
+      // if(this.selectedObject !== null && this.scrollBoxPointer !== null){
+      //   if(this.selectedObject !== this.scrollBoxPointer){
+      // 
+      //     // move box to local space of scrollbox
+      //     // this should happen in Quark but for now just get it done here
+      //     this.scrollBoxPointer.worldToLocal( this.mPos98345.copy(this.selectedObject.position) );
+      // 
+      //     this.selectedObject.parent = this.scrollBoxPointer;
+      // 
+      //     this.selectedObject.position.copy(this.mPos98345);
+      // 
+      //     this.selectedObject.bbb();
+      //   }
+      // }
+    }
+  
+  
   
 
 }

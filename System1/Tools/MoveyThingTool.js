@@ -75,6 +75,10 @@ export class MoveyThingTool extends Tool {
     
     super(system, name, displayName);
     this.attached = attachedObject;
+    if(this.attached.useGrid && this.attached.grid){
+      this.useGrid = true;
+      this.grid = this.attached.grid;
+    }
   }
   
   
@@ -324,10 +328,11 @@ export class MoveyThingTool extends Tool {
       this.posWorkVectorToMegas.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
                                     pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
                                     0);
-                                    
+      // debugger                              
       // Need to figure out what kinda snap we would need
       // this mutates posWorkVectorToMegas
       if(this.useGrid && this.grid){
+        
         // this.grid.snap(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
         this.grid.snap3d(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
         this.posWorkVectorToMegas.copy(this.grid.position3DCenter);
@@ -373,7 +378,18 @@ export class MoveyThingTool extends Tool {
       }
       
       
+      // if(this.useGrid && this.grid){
+      //   debugger
+      //   // this.grid.snap(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
+      //   this.grid.snap3d(this.posWorkVectorToMegas.x, this.posWorkVectorToMegas.y,0);
+      //   this.posWorkVectorToMegas.copy(this.grid.position3DCenter);
+      // }
+      
 
+      
+      this.attached.position.copy(this.posWorkVectorToMegas);
+      this.attached.refreshMatrixes();
+      this.attached.bbb();
       
       
       

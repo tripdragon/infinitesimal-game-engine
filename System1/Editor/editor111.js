@@ -24,6 +24,7 @@ import { Grid } from "../Modules/Grid.js";
 
 
 import { PlatformStampTool } from "../Tools/PlatformStampTool.js";
+import { MusicDrawTool } from "../Tools/MusicDrawTool.js";
 
 
 
@@ -78,6 +79,8 @@ export class Editor111 extends Editor {
     EditorMagic.addTool(selectTool);
     EditorMagic.addTool(selectToolMusic);
     
+    // temp global
+    EditorMagic.selectToolMusic = selectToolMusic;
     
     EditorMagic.baseGrid = new Grid(40, 40,20,40, this.system);
     
@@ -156,6 +159,22 @@ export class Editor111 extends Editor {
     EditorMagic.addTool(platy_stamper333);
 
 
+
+
+    var musicDraw = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
+    var musicDrawStamp = new MusicDrawTool(this.system, "MusicDrawTool_plane", "MusicDrawTool stamper");
+    musicDrawStamp.visualObject = musicDraw;
+    musicDrawStamp.visualObject.canUpdate  = false;
+    // musicDrawStamp.stampingObject = musicDraw.clone();
+    musicDrawStamp.stampingObject = new Platform("MusicDrawTool2", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height,0, {r:0,g:1,b:1,a:1}, this.system);
+    musicDrawStamp.stampingObject.color.setHex(0x5314ff);
+    musicDrawStamp.baseGrid = EditorMagic.baseGrid;
+    musicDrawStamp.editor = EditorMagic;
+    
+    EditorMagic.addTool(musicDrawStamp);
+
+    // tem[-p global]
+    EditorMagic.musicDrawStamp = musicDrawStamp;
 
 
 
@@ -416,6 +435,13 @@ export class Editor111 extends Editor {
     
     new ToolCheckBoxFactory(panel, checkboxes, platy_stamper333, "url(./Cast/cwouds.png)"); // (parent, cache, tool, imageURL)
     
+    
+    
+    
+    
+    new ToolCheckBoxFactory(panel, checkboxes, musicDrawStamp, "url(./Editor/arrow2.png)"); // (parent, cache, tool, imageURL)
+    
+
     
     
 

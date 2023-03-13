@@ -65,6 +65,18 @@ disc.load = function(){
   // so its .snap()
   // 
   
+  
+  // scrollbox / panspace
+  // requires scroll space to be larger than view space
+  // bb.boxLimit = true;
+  // and pareneted to the view space
+  // bb.parent = gg;
+  // then render view space with wires untill we can get masking
+  // gg.renderType = "wires";
+  // and viewspace to not be isSelectable
+  // viewSpace.isSelectable = false;
+  
+  
   // var bb = new Plane("scroll space", 280, 100, 0, 80, 80, {r:0.1,g:0.3,b:0.8,a:1});
   var bb = new Plane("scroll space", 280, 100, 0, 600, 500, {r:0.1,g:0.3,b:0.8,a:1});
   bb.setOriginAndGeometry("leftBottom");
@@ -81,6 +93,8 @@ disc.load = function(){
   this.system.add(gg);
   gg.isSelectableAlways = false;
   gg.isSelectable = false;
+  // gg.visible = false;
+  gg.renderType = "wires";
   
   bb.parent = gg;
   bb.position.set(0,0,0);
