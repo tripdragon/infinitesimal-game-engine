@@ -51,6 +51,24 @@ export const defaultState = {
   }
 };
 
+// Hot path
+internals.moveCursor = ({ element, x, y }) => {
+
+    // Hopefully the 'px' at the end here will negate attempts to run a script
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+};
+
+internals.updateScore = ({ element, score }) => {
+
+    if (!element) {
+        console.warn('Score element not found');
+        return;
+    }
+
+    element.textContent = score;
+};
+
 // We'll do the security layer on the receiving end
 export const sendNetworkedEvent = ({ to, stateEvent }) => {
   if (!stateEvent) {
@@ -63,8 +81,12 @@ export const sendNetworkedEvent = ({ to, stateEvent }) => {
   }
 };
 
-export const initState = ({ shouldConnectToNetwork = false } = {}) => {
+export const initState = ({ shouldConnectToNetwork = false, wsUrl } = {}) => {
 
+  internals.myTacoEl = document.getElementById(MY_TACO_ID);
+  internals.myScoreEl = document.getElementById(MY_SCORE_ID);
+
+  console.log('init stateee, shouldConnectToNetwork', shouldConnectToNetwork);
   const storageState = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) || "{}");
   // Only persist _sessionId from localStorage if we shouldConnectToNetwork
   const previousSessionId = [].concat(storageState._previousSessionIds).pop();
@@ -82,7 +104,7 @@ export const initState = ({ shouldConnectToNetwork = false } = {}) => {
         merge(cache, {
           ...merge(defaultState, storageState),
           _sessionId: sessionId,
-          // Set will dedupe
+          // Set will dedupe for us
           _previousSessionIds: [...new Set([...storageState._previousSessionIds, storageState._sessionId])]
             .slice(0, 5)
             .filter((x) => !!x)
@@ -92,7 +114,7 @@ export const initState = ({ shouldConnectToNetwork = false } = {}) => {
   }
 
   if (shouldConnectToNetwork) {
-    onStateEvent({ eventName: STATE_EVENTS.CONNECT_TO_NETWORK });
+    onStateEvent({ eventName: STATE_EVENTS.CONNECT_TO_NETWORK, wsUrl });
   }
 
   if (!cache._isStateInitialized) {
@@ -199,7 +221,7 @@ const handleSyncRequest = ({ state, data }) => {
 
 // THE BIG STATE REDUCER
 const onStateEvent = (stateEvt) => {
-  const { eventName, _senderId, ...data } = stateEvt;
+  const { eventName, _senderId, wsUrl, ...data } = stateEvt;
 
   // Get fresh state
   const state = getState();
@@ -211,11 +233,8 @@ const onStateEvent = (stateEvt) => {
   switch (eventName) {
     case STATE_EVENTS.CONNECT_TO_NETWORK:
       internals.initSocket({
-        onNetworkEvent: (networkEvent) => onStateEvent(networkEvent),
-        callback: () =>
-          internals.saveState({
-            _shouldConnectToNetwork: true
-          })
+        wsUrl,
+        onNetworkEvent: (networkEvent) => onStateEvent(networkEvent)
       });
       break;
     case STATE_EVENTS.DISCONNECT_FROM_NETWORK:
@@ -254,10 +273,16 @@ export const applyAndSendNetworkedEvent = stateEvt => {
 };
 
 // We need this wrapper to make async/await nice to write
-internals.initSocket = async ({ callback, onNetworkEvent }) => {
+internals.initSocket = async ({ callback, wsUrl, onNetworkEvent }) => {
 
   if (internals.RoomClient) {
       await internals.RoomClient.disconnect();
+  }
+
+  console.log('INIT SOCKET!');
+
+  if (!wsUrl) {
+    throw new Error('wsUrl is required');
   }
 
   const { location: { protocol, host } } = window;
@@ -265,38 +290,28 @@ internals.initSocket = async ({ callback, onNetworkEvent }) => {
   // This will replace 'https' for 'ws' which will also leave 'wss' for 'https' protocols
   const url = protocol.replace('http', 'ws') + '//' + host;
 
-  let wsLocation = url.replace('localhost:3001', 'localhost:3000');
-
-  console.log('wsLocation', wsLocation);
+  console.log('wsUrl', wsUrl);
 
   const Nes = initNes();
-  internals.RoomClient = new Nes.Client(wsLocation);
+  internals.RoomClient = new Nes.Client(wsUrl);
 
   console.log('internals.RoomClient', internals.RoomClient);
 
   try {
-      await internals.RoomClient.connect();
+    console.log('Attempting connection to', wsUrl);
+    await internals.RoomClient.connect();
   }
   catch (connectErr) {
-      // Setup some kinda easy debugging or something
-      const connectionMsg = document.getElementById('connectionMsg') || document.createElement('h3');
+    // Setup some kinda easy debugging or something
+    const connectionMsg = document.getElementById('connectionMsg') || document.createElement('h3');
 
-      connectionMsg.id = 'connectionMsg';
+    connectionMsg.id = 'connectionMsg';
 
-      connectionMsg.style.color = '#f88070';
-      connectionMsg.textContent = `Error ${connectErr.message}`;
+    connectionMsg.style.color = '#f88070';
+    connectionMsg.textContent = `Error ${connectErr.message}`;
+
+    throw new Error(`Connection error: ${connectErr}`);
   }
-
-  // Init user
-  const user = await internals.updateRoom({
-      roomId: TACOS_ROOM_ID,
-      userId: internals.roomUserId
-  });
-
-  console.log('init user', user);
-
-  // Init chat room
-  internals.updateChatRoomMessages({ roomId: TACOS_ROOM_ID, messages: [] });
 
   const roomEl = document.querySelector('.room');
 
@@ -304,188 +319,209 @@ internals.initSocket = async ({ callback, onNetworkEvent }) => {
 
   let roomUsers = {};
 
-  // Hot path, throttled server-side
-  const onRoomUpdate = (props) => {
-
-      const {
-          // id: roomId,
-          users = {},
-          isSync,
-          scoreboard,
-          shouldDeleteUsers,
-          chat
-      } = props;
-
-      if (DEBUG) {
-          console.log('onRoomUpdate', props);
-      }
-
-      if (chat) {
-        internals.updateChatRoomMessages({ roomId: TACOS_ROOM_ID, messages: chat });
-      }
-
-      const ghostTacos = Array.from(document.getElementsByClassName('ghost-taco'));
-      let remainingGhostTacos = ghostTacos;
-
-      // isPartial
-      if (shouldDeleteUsers) {
-          Object.values(users).forEach((user) => {
-
-              const maybeTaco = document.getElementById(user.id);
-
-              if (maybeTaco) {
-                  // Remove this taco
-                  roomEl.removeChild();
-              }
-          });
-          return;
-      }
-      if (isSync) {
-          // Remove inactive tacos
-          const userIds = Object.keys(users);
-
-          ghostTacos.forEach((ghostTaco) => {
-
-              if (!userIds.includes(ghostTaco.id)) {
-                  // Remove this taco
-                  roomEl.removeChild(ghostTaco);
-              }
-              else {
-                  remainingGhostTacos.push(ghostTaco);
-              }
-          });
-
-          roomUsers = users;
-      }
-
-      if (scoreboard) {
-          roomScoreboard = scoreboard;
-          const scoreboardEl = document.getElementById('scoreboard');
-          scoreboardEl.innerHTML = `<h3>Scoreboard</h3>${scoreboard.map(({ userId, score }) => `<p>${abbreviateUserId(userId)}: ${score}</p>`).join('')}`;
-          const myScore = roomScoreboard.find(({ userId }) => userId === internals.roomUserId)?.score;
-
-          updateScore({
-              element: myScoreEl,
-              score: myScore
-          });
-      }
-
-      const usersNotMe = Object.keys(users)
-          .filter((id) => id !== internals.roomUserId)
-          .map((id) => users[id]);
-
-      Object.values(usersNotMe).forEach(({ id: userId, lastClick: { epoch, x, y } = {} }) => {
-
-          const userClicked = epoch;
-          const lastUserClick = clickTracker[userId];
-          let shouldGenParticles = false;
-
-          if (userClicked && !lastUserClick || (lastUserClick && userClicked > lastUserClick)) {
-              shouldGenParticles = true;
-          }
-
-          if (shouldGenParticles) {
-              genParticles(x, y);
-          }
-
-          clickTracker[userId] = epoch;
-      });
-
-      const usersYesMe = users[Object.keys(users).find((id) => id === internals.roomUserId)];
-
-      const singleUsersNotMe = usersNotMe.length === 1 ? usersNotMe[0] : null;
-
-      if (DEBUG) {
-          if (usersYesMe) {
-              console.log('usersYesMe', usersYesMe);
-          }
-          if (singleUsersNotMe || usersNotMe.length) {
-              console.log('usersNotMe', singleUsersNotMe || usersNotMe);
-          }
-      }
-
-      if (usersYesMe) {
-          moveCursor({
-              element: myTacoEl,
-              x: usersYesMe.x,
-              y: usersYesMe.y
-          });
-      }
-
-      const getIds = (arr) => arr.map(({ id }) => id);
-
-      // Manage ghost tacos
-
-      remainingGhostTacos.forEach((tacoEl) => {
-
-          const tacoUpdate = usersNotMe.find(({ id }) => id === tacoEl.id);
-
-          if (tacoUpdate) {
-              moveCursor({
-                  element: tacoEl,
-                  x: tacoUpdate.x,
-                  y: tacoUpdate.y
-              });
-
-              const tacoScore = document.getElementById(`${tacoEl.id}-score`);
-
-              updateScore({
-                  element: tacoScore,
-                  score: roomScoreboard.find(({ userId }) => userId === tacoEl.id)?.score
-              });
-          }
-      });
-
-      const roomUserIds = Object.keys(roomUsers);
-      const newGhostIds = getIds(usersNotMe).filter((id) => !roomUserIds.includes(id));
-
-      usersNotMe.forEach((user) => {
-
-          roomUsers[user.id] = user;
-      });
-
-      newGhostIds.forEach((id) => {
-
-          // Add a new ghost taco
-          const newTacoEl = document.createElement('div');
-          const newTacoCursor = document.createElement('div');
-          const newTacoScoreEl = document.createElement('div');
-
-          newTacoScoreEl.id = `${id}-score`;
-
-          updateScore({
-              element: newTacoScoreEl,
-              score: roomScoreboard[id]
-          });
-
-          newTacoEl.id = id;
-          newTacoEl.classList.add('ghost-taco');
-          newTacoEl.classList.add('taco-cursor');
-
-          newTacoEl.appendChild(newTacoScoreEl);
-          newTacoEl.appendChild(newTacoCursor);
-
-          addIdToTacoIfNotExists(newTacoEl, id);
-
-          roomEl.appendChild(newTacoEl);
-
-          const userInfo = usersNotMe.find(({ id }) => id === id);
-
-          moveCursor({
-              element: newTacoEl,
-              x: userInfo.x,
-              y: userInfo.y
-          });
-
-          genParticles(userInfo.x, userInfo.y);
-      });
-  };
-
   // Coooonnnnnneeeeeeecccccctttttttt!!!!!!!
-  await internals.RoomClient.subscribe(`/rooms/${TACOS_ROOM_ID}`, onRoomUpdate);
-  internals.networkUnsubscribe = () => internals.RoomClient.subscribe(`/rooms/${TACOS_ROOM_ID}`, onRoomUpdate);
+  const res = await internals.RoomClient.subscribe(`/rooms/${TACOS_ROOM_ID}`, internals.onRoomUpdate);
+  internals.networkUnsubscribe = () => internals.RoomClient.disconnect();
 
-  callback();
+  console.log('res', res);
+
+  internals.saveState({
+    _shouldConnectToNetwork: true,
+    _isConnectedToNetwork: true
+  })
+
+  // Init user
+  const user = await internals.updateRoom({
+    roomId: TACOS_ROOM_ID,
+    userId: internals.roomUserId
+  });
+
+  console.log('init user', user);
+
+  // Init chat room
+  internals.updateChatRoomMessages({ roomId: TACOS_ROOM_ID, messages: [] });
+
+  if (callback) {
+    callback();
+  }
+};
+
+// Hot path, throttled server-side
+internals.onRoomUpdate = (props) => {
+
+  console.log('ON ROOM UPDATE', props);
+
+  const {
+    // id: roomId,
+    users = {},
+    isSync,
+    scoreboard,
+    shouldDeleteUsers,
+    chat
+  } = props;
+
+  if (DEBUG) {
+    console.log('onRoomUpdate', props);
+  }
+
+  if (chat) {
+    internals.updateChatRoomMessages({ roomId: TACOS_ROOM_ID, messages: chat });
+  }
+
+  const ghostTacos = Array.from(document.getElementsByClassName('ghost-taco'));
+  let remainingGhostTacos = ghostTacos;
+
+  // isPartial
+  if (shouldDeleteUsers) {
+    Object.values(users).forEach((user) => {
+
+      const maybeTaco = document.getElementById(user.id);
+
+      if (maybeTaco) {
+        // Remove this taco
+        roomEl.removeChild();
+      }
+    });
+    return;
+  }
+  if (isSync) {
+    // Remove inactive tacos
+    const userIds = Object.keys(users);
+
+    ghostTacos.forEach((ghostTaco) => {
+
+      if (!userIds.includes(ghostTaco.id)) {
+        // Remove this taco
+        roomEl.removeChild(ghostTaco);
+      }
+      else {
+        remainingGhostTacos.push(ghostTaco);
+      }
+    });
+
+    roomUsers = users;
+  }
+
+  if (scoreboard) {
+    roomScoreboard = scoreboard;
+    const scoreboardEl = document.getElementById('scoreboard');
+    scoreboardEl.innerHTML = `<h3>Scoreboard</h3>${scoreboard.map(({ userId, score }) => `<p>${abbreviateUserId(userId)}: ${score}</p>`).join('')}`;
+    const myScore = roomScoreboard.find(({ userId }) => userId === internals.roomUserId)?.score;
+
+    internals.updateScore({
+      element: internals.myScoreEl,
+      score: myScore
+    });
+  }
+
+  const usersNotMe = Object.keys(users)
+    .filter((id) => id !== internals.roomUserId)
+    .map((id) => users[id]);
+
+  Object.values(usersNotMe).forEach(({ id: userId, lastClick: { epoch, x, y } = {} }) => {
+
+    const userClicked = epoch;
+    const lastUserClick = clickTracker[userId];
+    let shouldGenParticles = false;
+
+    if (userClicked && !lastUserClick || (lastUserClick && userClicked > lastUserClick)) {
+        shouldGenParticles = true;
+    }
+
+    if (shouldGenParticles) {
+        genParticles(x, y);
+    }
+
+    clickTracker[userId] = epoch;
+  });
+
+  const usersYesMe = users[Object.keys(users).find((id) => id === internals.roomUserId)];
+
+  const singleUsersNotMe = usersNotMe.length === 1 ? usersNotMe[0] : null;
+
+  if (DEBUG) {
+    if (usersYesMe) {
+      console.log('usersYesMe', usersYesMe);
+    }
+    if (singleUsersNotMe || usersNotMe.length) {
+      console.log('usersNotMe', singleUsersNotMe || usersNotMe);
+    }
+  }
+
+  if (usersYesMe) {
+    internals.moveCursor({
+      element: internals.myTacoEl,
+      x: usersYesMe.x,
+      y: usersYesMe.y
+    });
+  }
+
+  const getIds = (arr) => arr.map(({ id }) => id);
+
+  // Manage ghost tacos
+  remainingGhostTacos.forEach((tacoEl) => {
+
+    const tacoUpdate = usersNotMe.find(({ id }) => id === tacoEl.id);
+
+    if (tacoUpdate) {
+      internals.moveCursor({
+        element: tacoEl,
+        x: tacoUpdate.x,
+        y: tacoUpdate.y
+      });
+
+      const tacoScore = document.getElementById(`${tacoEl.id}-score`);
+
+      internals.updateScore({
+        element: tacoScore,
+        score: roomScoreboard.find(({ userId }) => userId === tacoEl.id)?.score
+      });
+    }
+  });
+
+  const roomUserIds = Object.keys(roomUsers);
+  const newGhostIds = getIds(usersNotMe).filter((id) => !roomUserIds.includes(id));
+
+  usersNotMe.forEach((user) => {
+
+    roomUsers[user.id] = user;
+  });
+
+  newGhostIds.forEach((id) => {
+
+    // Add a new ghost taco
+    const newTacoEl = document.createElement('div');
+    const newTacoCursor = document.createElement('div');
+    const newTacoScoreEl = document.createElement('div');
+
+    newTacoScoreEl.id = `${id}-score`;
+
+    internals.updateScore({
+      element: newTacoScoreEl,
+      score: roomScoreboard[id]
+    });
+
+    newTacoEl.id = id;
+    newTacoEl.classList.add('ghost-taco');
+    newTacoEl.classList.add('taco-cursor');
+
+    newTacoEl.appendChild(newTacoScoreEl);
+    newTacoEl.appendChild(newTacoCursor);
+
+    addIdToTacoIfNotExists(newTacoEl, id);
+
+    roomEl.appendChild(newTacoEl);
+
+    const userInfo = usersNotMe.find(({ id }) => id === id);
+
+    internals.moveCursor({
+      element: newTacoEl,
+      x: userInfo.x,
+      y: userInfo.y
+    });
+
+    genParticles(userInfo.x, userInfo.y);
+  });
 };
 
 // Upsert user in room
@@ -507,15 +543,15 @@ internals.updateRoom = async ({ roomId, userId, ...rest }) => {
 
   console.log('ABOUT to request');
   const { payload: { error, user } } = await internals.RoomClient.request({
-      method: 'post',
-      path: `/rooms/${roomId}/update`,
-      payload
+    method: 'post',
+    path: `/rooms/${roomId}/update`,
+    payload
   });
 
   if (user) {
-      internals.roomUserId = user.id;
-      const myTacoElEl = document.getElementById(MY_TACO_ID);
-      internals.addIdToTacoIfNotExists(myTacoElEl, internals.roomUserId);
+    internals.roomUserId = user.id;
+    const myTacoElEl = document.getElementById(MY_TACO_ID);
+    internals.addIdToTacoIfNotExists(myTacoElEl, internals.roomUserId);
   }
 
   // Setup some kinda easy debugging or something
@@ -524,13 +560,13 @@ internals.updateRoom = async ({ roomId, userId, ...rest }) => {
   connectionMsg.id = 'connectionMsg';
 
   if (error) {
-      // let err = document.createElement(`<h3 style='color: white;'>Error ${error.message}</h3>`);
-      connectionMsg.style.color = '#f88070';
-      connectionMsg.textContent = `Error ${error.message || error}`;
+    // let err = document.createElement(`<h3 style='color: white;'>Error ${error.message}</h3>`);
+    connectionMsg.style.color = '#f88070';
+    connectionMsg.textContent = `Error ${error.message || error}`;
   }
   else {
-      connectionMsg.style.color = '#73c991';
-      connectionMsg.textContent = `Connected x: ${payload.x || 'null'} y: ${payload.y || 'null'}`;
+    connectionMsg.style.color = '#73c991';
+    connectionMsg.textContent = `Connected x: ${payload.x || 'null'} y: ${payload.y || 'null'}`;
   }
 
   // Add it
@@ -546,19 +582,19 @@ internals.addIdToTacoIfNotExists = (el, id) => {
   const idEl = el.querySelector('.taco-id');
 
   if (!idEl) {
-      const tacoId = document.createElement('div');
-      tacoId.className = 'taco-id';
-      tacoId.textContent = internals.abbreviateUserId(id);
-      tacoId.style.color = 'white';
-      tacoId.style.fontSize = '16px';
-      tacoId.style.position = 'absolute';
-      tacoId.style.transform = 'translateX(-25%)';
-      tacoId.style.bottom = '-20px';
-      tacoId.style.whiteSpace = 'nowrap';
-      el.appendChild(tacoId);
+    const tacoId = document.createElement('div');
+    tacoId.className = 'taco-id';
+    tacoId.textContent = internals.abbreviateUserId(id);
+    tacoId.style.color = 'white';
+    tacoId.style.fontSize = '16px';
+    tacoId.style.position = 'absolute';
+    tacoId.style.transform = 'translateX(-25%)';
+    tacoId.style.bottom = '-20px';
+    tacoId.style.whiteSpace = 'nowrap';
+    el.appendChild(tacoId);
   }
   else {
-      idEl.textContent = internals.abbreviateUserId(id);
+    idEl.textContent = internals.abbreviateUserId(id);
   }
 };
 
@@ -584,61 +620,61 @@ internals.updateChatRoomMessages = ({ roomId, messages }) => {
   let chatRoomMessages;
 
   if (!chatRoom) {
-      const chatRoom = document.createElement('div');
-      chatRoom.id = 'chat-room';
+    const chatRoom = document.createElement('div');
+    chatRoom.id = 'chat-room';
 
-      const chatRoomHeader = document.createElement('h3');
-      chatRoomHeader.id = 'chat-room-header';
-      chatRoomHeader.innerText = `${roomId} chat — be nice! =P`;
+    const chatRoomHeader = document.createElement('h3');
+    chatRoomHeader.id = 'chat-room-header';
+    chatRoomHeader.innerText = `${roomId} chat — be nice! =P`;
 
-      chatRoomMessages = document.createElement('div');
-      chatRoomMessages.id = 'chat-room-messages';
+    chatRoomMessages = document.createElement('div');
+    chatRoomMessages.id = 'chat-room-messages';
 
-      const chatInputContainer = document.createElement('div');
+    const chatInputContainer = document.createElement('div');
 
-      const input = document.createElement('input');
-      input.name = 'new-chat';
-      input.autocomplete = 'new-password';
-      input.id = 'chat-room-input';
+    const input = document.createElement('input');
+    input.name = 'new-chat';
+    input.autocomplete = 'new-password';
+    input.id = 'chat-room-input';
 
-      const submitBtn = document.createElement('button');
-      submitBtn.type = 'submit';
-      submitBtn.id = 'chat-room-submit';
-      submitBtn.textContent = 'SUBMIT';
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'submit';
+    submitBtn.id = 'chat-room-submit';
+    submitBtn.textContent = 'SUBMIT';
 
-      const chatRoomForm = document.createElement('form');
-      chatRoomForm.autocomplete = 'new-password';
-      chatRoomForm.id = 'chat-room-form';
-      chatRoomForm.appendChild(input);
-      chatRoomForm.appendChild(submitBtn);
+    const chatRoomForm = document.createElement('form');
+    chatRoomForm.autocomplete = 'new-password';
+    chatRoomForm.id = 'chat-room-form';
+    chatRoomForm.appendChild(input);
+    chatRoomForm.appendChild(submitBtn);
 
-      chatRoomForm.onsubmit = (evt) => {
+    chatRoomForm.onsubmit = (evt) => {
 
-          evt.preventDefault();
+        evt.preventDefault();
 
-          const chatInputEl = document.getElementById('chat-room-input');
+        const chatInputEl = document.getElementById('chat-room-input');
 
-          if (chatInputEl && chatInputEl.value) {
+        if (chatInputEl && chatInputEl.value) {
 
-              sendRoomChat({
-                  roomId,
-                  userId: internals.roomUserId,
-                  msg: chatInputEl.value
-              });
+            sendRoomChat({
+                roomId,
+                userId: internals.roomUserId,
+                msg: chatInputEl.value
+            });
 
-              // Clear out the input
-              chatInputEl.value = '';
-          }
-      };
+            // Clear out the input
+            chatInputEl.value = '';
+        }
+    };
 
-      // Append chatRoomForm
-      chatInputContainer.appendChild(chatRoomForm);
+    // Append chatRoomForm
+    chatInputContainer.appendChild(chatRoomForm);
 
-      chatRoom.appendChild(chatRoomHeader);
-      chatRoom.appendChild(chatRoomMessages);
-      chatRoom.appendChild(chatInputContainer);
+    chatRoom.appendChild(chatRoomHeader);
+    chatRoom.appendChild(chatRoomMessages);
+    chatRoom.appendChild(chatInputContainer);
 
-      document.body.appendChild(chatRoom);
+    document.body.appendChild(chatRoom);
   }
 
   chatRoomMessages = document.querySelector('#chat-room-messages');

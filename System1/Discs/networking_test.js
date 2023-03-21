@@ -11,10 +11,9 @@ import { initState } from "../State/state.js";
 export const disc = new Game("networking_test");
 
 disc.load = function(){
-  //
 
-  // initState({ shouldConnectToNetwork: true });
-  initState({ shouldConnectToNetwork: false });
+  initState({ shouldConnectToNetwork: true, wsUrl: "ws://localhost:3000" });
+  // initState({ shouldConnectToNetwork: false });
 
   console.log('STATE INITIALIZED!');
 
