@@ -1,0 +1,23 @@
+# top-most EditorConfig file
+root = true
+
+# format all files as UTF-8
+[*]
+charset = utf-8
+
+# use Unix-style line endings
+end_of_line = lf
+
+# use 4 spaces for indentation
+[*.js]
+indent_style = space
+indent_size = 4
+
+# automatically format files on save
+[*.js]
+editor.formatOnSave = true
+
+[*.{js,jsx,ts,tsx}]
+editor.codeActionsOnSave: {
+  "source.fixAll": true
+}
