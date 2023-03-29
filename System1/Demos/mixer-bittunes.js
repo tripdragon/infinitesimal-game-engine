@@ -27,7 +27,10 @@ import { Editor111 } from "../Editor/editor111.js";
 
 import { Grid } from "../Modules/Grid.js";
 
-import {SemitoneDistances, calcFrequency, SemitoneDistancesArray} from '../Modules/music/musictools.js';
+import {SemitoneDistances, calcFrequency, 
+  SemitoneDistancesArray, generateTone, generateToneFromNote} from '../Modules/music/musictools.js';
+
+import { MusicNote } from "../Primitives/MusicNote.js";
 
 export let disc = new Game("mixerBittunes");
 
@@ -50,6 +53,29 @@ disc.load = function(){
   
   this.system.backgroundColor = {r:0,g:0.05,b:0.05,a:1};
 
+// generateTone(this.frequency, "sine", 0.15);
+window.generateTone = generateTone;
+window.generateToneFromNote = generateToneFromNote;
+
+// generateTone(262, "sine", 0.55);
+// generateTone(262+4, "sine", 0.75);
+
+// generateToneFromNote
+
+var sheetMusic = [
+  ["C", "3", "sine", 0.5, 0],
+  ["D", "3", "sine", 0.5, 0.5],
+  ["E", "3", "sine", 1, 0.4],
+]
+
+generateToneFromNote("C", "3", "sine", 0.2)
+
+window.playsheetmusic = function(){
+  for (var i = 0; i < sheetMusic.length; i++) {
+    
+    generateToneFromNote(sheetMusic[i][0], sheetMusic[i][1], sheetMusic[i][2], sheetMusic[i][3], sheetMusic[i][4])
+  }
+}
 
 
 
@@ -130,6 +156,7 @@ disc.load = function(){
   
   // var grid = new Grid(40,40,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
   var grid = new Grid(2*8, 20,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
+  // var grid = new Grid(80, 80,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
   // need bottom left
   // grid.origin.copy(scrollSpace.sidePointsWorld.bottomLeft);
   
@@ -174,16 +201,22 @@ disc.load = function(){
   // 
   //  Reseting some things 
   //
+  var startOctave = 4;
+  
+  EditorMagic.musicDrawStamp.grid = grid;
+  EditorMagic.musicDrawStamp.startingOctave = startOctave;
   
   EditorMagic.selectToolMusic.useGrid = true;
   EditorMagic.selectToolMusic.grid = grid;
+  EditorMagic.selectToolMusic.startingOctave = startOctave;
   // EditorMagic.selectToolMusic.scrollBoxPointer = scrollSpace;
   
   
   var musicDrawStamp = EditorMagic.musicDrawStamp;
   musicDrawStamp.scrollBoxPointer = scrollSpace;
+  musicDrawStamp.grid = grid;
   
-  var musicDraw = new Platform("platy", 0, 0, 0, grid.width, grid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
+  var musicDraw = new MusicNote("platy", 0, 0, 0, grid.width, grid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
   // var musicDrawStamp = new MusicDrawTool(this.system, "MusicDrawTool_plane", "MusicDrawTool stamper");
   musicDrawStamp.visualObject = musicDraw;
   musicDrawStamp.visualObject.canUpdate  = false;
@@ -193,11 +226,11 @@ disc.load = function(){
   // musicDrawStamp.visualObject.grid = grid;
   musicDrawStamp.stampingObject = musicDraw.clone();
   
-  musicDrawStamp.stampingObject = new Platform("MusicDrawTool2", 0, 0, 0, grid.width, grid.height,0, {r:0,g:1,b:1,a:1}, this.system);
-  musicDrawStamp.stampingObject.color.setHex(0x000547);
+  musicDrawStamp.stampingObject = new MusicNote("MusicDrawTool2", 0, 0, 0, grid.width, grid.height,0, {r:0,g:1,b:1,a:1}, this.system);
+  musicDrawStamp.stampingObject.color.setHex(0x44ff1a);
   musicDrawStamp.afterStamp = function(){
 
-    
+    // this sets up the piano key to the octave and key
     this.currentItem.onTap = () => {
       // debugger
       // console.log("_frequency", _frequency);
@@ -315,7 +348,7 @@ disc.load = function(){
   // 
   
   // cc being group, untill know proper name, maybe its octave
-  var startOctave = 4;
+  // var startOctave = 4;
   for (var indexOctave = startOctave; indexOctave < startOctave+1; indexOctave++) {
   
     for (var ii = 0; ii < 12; ii++) {
@@ -354,37 +387,41 @@ disc.load = function(){
         console.log("freq", freq);
         box.frequency = freq;
     
+      // box.onTap = function() {
+      //   // debugger
+      //   // console.log("_frequency", _frequency);
+      //   window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      //   var ctx = new AudioContext();
+      //   var oo = ctx.createOscillator();
+      //   // oo.type = ev.currentTarget.id;
+      //   // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+      //   oo.type = "sine";
+      //   // var octaveScalar = indexOctave;
+      //   // oo.frequency.value = _frequency + octaveScalar;
+      //   // oo.frequency.value = 400;
+      //   // oo.frequency.value = Math.pow(0.2, i);
+      //   // console.log("oo.frequency.value", oo.frequency.value);
+      //   // console.log("octaveScalar", octaveScalar);
+      // 
+      // 
+      //   // oo.frequency.value = freq;
+      //   oo.frequency.value = this.frequency;
+      //   console.log("oo.frequency", oo.frequency.value);
+      // 
+      //   // console.log("this.frequency", this.frequency);
+      //   // this.tone = generateTone(this.frequency, this.type);
+      // 
+      //   oo.start(0);
+      //   oo.connect(ctx.destination);
+      //   oo.stop(0.1);
+      // 
+      //   // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
+      // 
+      // }
       box.onTap = function() {
-        // debugger
-        // console.log("_frequency", _frequency);
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        var ctx = new AudioContext();
-        var oo = ctx.createOscillator();
-        // oo.type = ev.currentTarget.id;
-        // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
-        oo.type = "sine";
-        // var octaveScalar = indexOctave;
-        // oo.frequency.value = _frequency + octaveScalar;
-        // oo.frequency.value = 400;
-        // oo.frequency.value = Math.pow(0.2, i);
-        // console.log("oo.frequency.value", oo.frequency.value);
-        // console.log("octaveScalar", octaveScalar);
-        
-        
-        // oo.frequency.value = freq;
-        oo.frequency.value = this.frequency;
-        console.log("oo.frequency", oo.frequency.value);
-        
-        // console.log("this.frequency", this.frequency);
-        // this.tone = generateTone(this.frequency, this.type);
-        
-        oo.start(0);
-        oo.connect(ctx.destination);
-        oo.stop(0.1);
-    
-        // setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
-    
+        generateTone(this.frequency, "sine", 0.15);
       }
+      
     
         // box.onHover = () => {
         //   // debugger

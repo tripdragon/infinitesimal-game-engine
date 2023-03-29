@@ -732,6 +732,7 @@
         oo.start(0);
         oo.connect(ctx.destination);
         
+        // it has its own native .stop(sec)
         setTimeout(function(){ oo.stop(0); console.log("pop"); }, sec*1000);
       
           // setTimeout(function(){console.log("fish");}, 1000);

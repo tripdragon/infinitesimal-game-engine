@@ -32,9 +32,9 @@ export class Platform extends Plane {
   layer = "platform"; // both???
   
   gridSize = {
-    width : 20,
-    height : 20,
-    scalar : 1
+    // width : 20,
+    // height : 20,
+    // scalar : 1
   }
   
   behaviours = new BehavioursController();

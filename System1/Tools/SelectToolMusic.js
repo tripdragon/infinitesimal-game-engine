@@ -50,6 +50,10 @@ export class SelectToolMusic extends SelectTool {
   
   scrollBoxPointer = null;
   
+  grid;
+  
+  startingOctave = 1;
+  
   constructor(system, name = "SelectToolMusic", displayName = "SelectToolMusic"){
     
     // super(name, displayName, system);

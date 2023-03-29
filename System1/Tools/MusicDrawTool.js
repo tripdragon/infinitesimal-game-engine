@@ -17,7 +17,9 @@ export class MusicDrawTool extends StampTool {
   stampingObject = null;
   
   editor; // set these outside of the constructor
-  basegrid;
+  grid;
+  
+  startingOctave = 1;
   
   // row is x col is y
   startingIdexes = {
@@ -52,6 +54,7 @@ export class MusicDrawTool extends StampTool {
       ff.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
       
     }
+    // debugger
     ff.start();
     this.currentItem = ff;
     window.recent = ff;

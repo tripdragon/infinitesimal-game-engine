@@ -65,3 +65,73 @@ export function calcFrequency(note, octave) {
   // round to 1 d.p.
   return Math.round(freq * 10) / 10;
 }
+
+
+
+
+export function generateToneFromNote(note, octave, type, stop = 0.2, start = 0){
+  var bb = SemitoneDistances[note];
+  if(bb){
+    generateTone(calcFrequency(note, octave), type, stop, start);
+  }
+}
+
+export function generateTone(frequency, type, stop = 0, start = 0 ){
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  var ctx = new AudioContext();
+  var oo = ctx.createOscillator();
+  // values are "sine", "square", "sawtooth", "triangle" and "custom". The default is "sine".
+  oo.type = type;
+  // var octaveScalar = 1;
+  // oo.frequency.value = _frequency + octaveScalar;
+  // oo.frequency.value = frequency + scalarFrequency;
+  
+  oo.frequency.value = frequency;
+  
+  // var now = ctx.currentTime;
+  // oo.frequency.setValueAtTime(frequency + scalarFrequency, now+0.5);
+  // oo.frequency.setValueAtTime(frequency + 1000, now+0.5);
+  
+  // console.log("oo.frequency.value", oo.frequency.value);
+  //console.log("octaveScalar", octaveScalar);
+      oo.start(start);
+      oo.connect(ctx.destination);
+      
+      oo.stop(stop+start);
+  
+      //         const real = new Float32Array(2);
+      // const imag = new Float32Array(2);
+      // // const ac = new AudioContext();
+      // // const osc = ac.createOscillator();
+      // 
+      // real[0] = 2;
+      // imag[0] = 0;
+      // real[1] = 1;
+      // imag[1] = 4;
+      // real[2] = 2;
+      // imag[2] = 8;
+      // real[3] = 1;
+      // imag[3] = 2;
+      // 
+      // const wave = ctx.createPeriodicWave(real, imag, { disableNormalization: true });
+      // 
+      // oo.setPeriodicWave(wave);
+
+      // oo.start(0);
+      // oo.connect(ctx.destination);
+        
+      // var now = ctx.currentTime;
+      // // Frequency in Hz.
+      // // Set initial value. (you can use .value=freq if you want)
+      // oo.frequency.setValueAtTime(frequency, now);
+      // // set a "checkpoint" in 3 seconds - that will be the starting point of the ramp.
+      // oo.frequency.setValueAtTime(frequency + scalarFrequency, now+3);
+      // // set a ramp to freq+100Hz over the next 4 seconds.
+      // oo.frequency.linearRampToValueAtTime(frequency+100 + scalarFrequency,now+7)
+      // oo.connect(ctx.destination); 
+      // oo.start(now);
+      // var duration = 2;
+      // oo.stop(now + duration);
+      // 
+  return oo;
+}
