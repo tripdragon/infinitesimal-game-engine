@@ -82,8 +82,13 @@ export class Editor111 extends Editor {
     // temp global
     EditorMagic.selectToolMusic = selectToolMusic;
     
+    //  todo:: something relies on this or crashes, need to fix
+    // also the grid needs to be the same for the music grid???
+    // they should beable to be seperate
     EditorMagic.baseGrid = new Grid(40, 40,20,40, this.system);
-    
+    EditorMagic.baseGrid = new Grid(2*8, 20,40,40, this.system);
+    // var grid = new Grid(2*8, 20,40,40, this.system).computeRowsColumns(scrollSpace.width, scrollSpace.height);
+
     
     
     
@@ -145,7 +150,7 @@ export class Editor111 extends Editor {
 
 
     
-
+    
     var platy333 = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
     var platy_stamper333 = new PlatformStampTool(this.system, "wobject_stamper_platform", "platform stamper");
     platy_stamper333.visualObject = platy333;
@@ -160,9 +165,9 @@ export class Editor111 extends Editor {
 
 
 
-
-    var musicDraw = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:1,b:1,a:1}, this.system);
+    // MusicDrawTool
     var musicDrawStamp = new MusicDrawTool(this.system, "MusicDrawTool_plane", "MusicDrawTool stamper");
+    var musicDraw = new Platform("platy", 0, 0, 0, EditorMagic.baseGrid.width,EditorMagic.baseGrid.height, 0, {r:0,g:0,b:1,a:1}, this.system);
     musicDrawStamp.visualObject = musicDraw;
     musicDrawStamp.visualObject.canUpdate  = false;
     // musicDrawStamp.stampingObject = musicDraw.clone();

@@ -1,6 +1,10 @@
 
 /*
 
+move logic moved to 
+MoveyThingTool
+
+
 debug within
 
 

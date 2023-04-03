@@ -7,6 +7,12 @@ grid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo
 box2.x = grid.position3D.x;
 box2.y = grid.position3D.y;
 
+
+this.position3D
+
+this.position3DCenter
+
+
 */
 
 
@@ -248,12 +254,18 @@ export class Grid{
   snap3d(_x,_y){
     // dskfjbkdfg
     this.snapClient(_x,_y); // this denotes its the wrong name know
+    // 
+    // this.position3D.x = this.position.x + this.origin.x + -this.system.world.position.x;
+    // this.position3D.y = this.position.y + this.origin.y + -this.system.world.position.y;
+    // 
+    // this.position3DCenter.x = this.positionCenter.x + this.origin.x + -this.system.world.position.x;
+    // this.position3DCenter.y = this.positionCenter.y + this.origin.y + -this.system.world.position.y;
+    // 
+    this.position3D.x = this.position.x + this.origin.x ;
+    this.position3D.y = this.position.y + this.origin.y ;
     
-    this.position3D.x = this.position.x + this.origin.x + -this.system.world.position.x;
-    this.position3D.y = this.position.y + this.origin.y + -this.system.world.position.y;
-    
-    this.position3DCenter.x = this.positionCenter.x + this.origin.x + -this.system.world.position.x;
-    this.position3DCenter.y = this.positionCenter.y + this.origin.y + -this.system.world.position.y;
+    this.position3DCenter.x = this.positionCenter.x + this.origin.x ;
+    this.position3DCenter.y = this.positionCenter.y + this.origin.y ;
     
     
     return this;

@@ -98,6 +98,11 @@ export class SelectToolMusic extends SelectTool {
       //   }
       // }
     }
+    
+    pointerDown(){
+      // debugger
+      super.pointerDown();
+    }
   
   
   

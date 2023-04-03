@@ -325,6 +325,8 @@ export class MoveyThingTool extends Tool {
     
     if( !this.usePreventCollide ){
       
+      // This IS NOT maybe, taking the grid into account in the mouse offset
+      // TABUN~
       this.posWorkVectorToMegas.set(pointer.x + (this.mSelectedPos.x - this.mPointerPos.x), 
                                     pointer.y + (this.mSelectedPos.y - this.mPointerPos.y),
                                     0);

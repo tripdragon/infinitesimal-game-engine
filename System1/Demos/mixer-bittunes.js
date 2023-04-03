@@ -53,40 +53,40 @@ disc.load = function(){
   
   this.system.backgroundColor = {r:0,g:0.05,b:0.05,a:1};
 
-// generateTone(this.frequency, "sine", 0.15);
-window.generateTone = generateTone;
-window.generateToneFromNote = generateToneFromNote;
+  // generateTone(this.frequency, "sine", 0.15);
+  window.generateTone = generateTone;
+  window.generateToneFromNote = generateToneFromNote;
 
-// generateTone(262, "sine", 0.55);
-// generateTone(262+4, "sine", 0.75);
+  // generateTone(262, "sine", 0.55);
+  // generateTone(262+4, "sine", 0.75);
 
-// generateToneFromNote
+  // generateToneFromNote
 
-var sheetMusic = [
-  ["C", "3", "sine", 0.5, 0],
-  ["D", "3", "sine", 0.5, 0.5],
-  ["E", "3", "sine", 1, 0.4],
-]
+  var sheetMusic = [
+    ["C", "3", "sine", 0.5, 0],
+    ["D", "3", "sine", 0.5, 0.5],
+    ["E", "3", "sine", 1, 0.4],
+  ]
 
-generateToneFromNote("C", "3", "sine", 0.2)
+  generateToneFromNote("C", "3", "sine", 0.2)
 
-window.playsheetmusic = function(){
-  for (var i = 0; i < sheetMusic.length; i++) {
-    
-    generateToneFromNote(sheetMusic[i][0], sheetMusic[i][1], sheetMusic[i][2], sheetMusic[i][3], sheetMusic[i][4])
+  window.playsheetmusic = function(){
+    for (var i = 0; i < sheetMusic.length; i++) {
+      
+      generateToneFromNote(sheetMusic[i][0], sheetMusic[i][1], sheetMusic[i][2], sheetMusic[i][3], sheetMusic[i][4])
+    }
   }
-}
 
 
 
-// this wont work
-// its too janky in where and how
-// so instead! we can infact generate positions and do hit testing on them DIFERENTLY
-// group the  y up colums and do a hit test on that
-// and then do a hit test on all in column
-// not not perfect, but it allows offset
+  // this wont work
+  // its too janky in where and how
+  // so instead! we can infact generate positions and do hit testing on them DIFERENTLY
+  // group the  y up colums and do a hit test on that
+  // and then do a hit test on all in column
+  // not not perfect, but it allows offset
 
-// THOUGh we could cast the point into the local space of the box and do snap testing that way
+  // THOUGh we could cast the point into the local space of the box and do snap testing that way
 
   // need a grid
   // so its .snap()

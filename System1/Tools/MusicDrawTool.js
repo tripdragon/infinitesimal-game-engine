@@ -52,6 +52,7 @@ export class MusicDrawTool extends StampTool {
     if(this.baseGrid){
 
       ff.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
+      // ff.position.set(this.baseGrid.position3D.x, this.baseGrid.position3D.y, 0);
       
     }
     // debugger
@@ -64,7 +65,10 @@ export class MusicDrawTool extends StampTool {
   
   // we are moving the logic to mouse down to do resizing
   mPos98345 = new Vector3();
+  
   pointerUp(){
+    // return;
+    
     this.visualObject.visible = true;
     this.IS_DOWN = false;
     this.currentItem.rebuildDimensions();
@@ -110,7 +114,8 @@ export class MusicDrawTool extends StampTool {
     
     if(this.baseGrid){
       
-      this.baseGrid.snap().screenTo3D();
+      // this.baseGrid.snap().screenTo3D();
+      this.baseGrid.snap();
       
       
       // this.baseGrid.snap(_this.system.pointer.client.x, _this.system.pointer.client.y).screenTo3D();
@@ -121,7 +126,10 @@ export class MusicDrawTool extends StampTool {
       // console.log(this.baseGrid.indexRow, this.baseGrid.indexCol);
 
       this.visualObject.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
+      this.visualObject.color.setHex(0xffffff);
       
+      // this.visualObject.position.set(this.baseGrid.position3D.x, this.baseGrid.position3D.y, 0);
+      // console.log("this.baseGrid.position3DCenter", this.baseGrid.position3DCenter);
       
       this.visualObject.visible = true;
       if (this.IS_DOWN) {
