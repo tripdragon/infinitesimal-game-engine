@@ -93,6 +93,7 @@ export class MoveyThingTool extends Tool {
   
   start(){
     
+    
     if(this.hasStarted === true){
       return;
     }
@@ -317,6 +318,7 @@ export class MoveyThingTool extends Tool {
   // 
   dragAction(space){
     
+    // debugger
     var pointer = this.system.pointer.worldSpace;
     
     if (space === "screen") {

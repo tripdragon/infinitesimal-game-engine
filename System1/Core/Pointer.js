@@ -55,6 +55,8 @@ export class Pointer {
   // this handles the world being offset
   // screenUVOffset = new Vector3();
   worldSpace = new Vector3();
+  // now we need world offset off
+  worldSpaceSans = new Vector3();
   
   
   
@@ -97,6 +99,10 @@ export class Pointer {
     
     this.worldSpace.x = this.client.x + -this.system.world.position.x;
     this.worldSpace.y = this.system.gameHeight - this.client.y + -this.system.world.position.y;
+    
+    // SAME as screenUV but better name
+    this.worldSpaceSans.x = this.client.x;
+    this.worldSpaceSans.y = this.system.gameHeight - this.client.y;
     
     
     

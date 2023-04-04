@@ -34,7 +34,16 @@ export class MusicDrawTool extends StampTool {
   
   pointerDown(ev){
     console.log("down", ev);
-    this.baseGrid.snap().screenTo3D();
+    
+    // this.baseGrid.snap().screenTo3D();
+    
+    // this.scrollBoxPointer.worldToLocal( this.dfiuhsdfVec.copy(this.system.pointer.worldSpace) );
+    this.scrollBoxPointer.worldToLocal( this.dfiuhsdfVec.copy(this.system.pointer.worldSpaceSans) );
+
+    this.baseGrid.snap3d(this.dfiuhsdfVec.x, this.dfiuhsdfVec.y,0);
+
+    
+    
     this.startingIdexes.row = this.baseGrid.indexRow;
     this.startingIdexes.col = this.baseGrid.indexCol;
     
@@ -43,17 +52,21 @@ export class MusicDrawTool extends StampTool {
     var ff = this.stampingObject.clone();
     ff.refreshMatrixes();
     this.system.add(ff);
+    
+    ff.parent = this.scrollBoxPointer;
+    
 
     ff.visible = true;
 
-    ff.position.copy(this.system.pointer.worldSpace);
+    // ff.position.copy(this.system.pointer.worldSpace);
 
     
     if(this.baseGrid){
 
       ff.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
       // ff.position.set(this.baseGrid.position3D.x, this.baseGrid.position3D.y, 0);
-      
+      // thinking         //this.scrollBoxPointer.worldToLocal( this.mPos98345.copy(this.baseGrid.position3DCenter) );
+      // debugger
     }
     // debugger
     ff.start();
@@ -79,12 +92,13 @@ export class MusicDrawTool extends StampTool {
     if(this.currentItem !== null && this.scrollBoxPointer !== null){
       if(this.currentItem !== this.scrollBoxPointer){
         
-        this.scrollBoxPointer.worldToLocal( this.mPos98345.copy(this.currentItem.position) );
+        // this.scrollBoxPointer.worldToLocal( this.mPos98345.copy(this.currentItem.position) );
         
-        this.currentItem.parent = this.scrollBoxPointer;
         
-        this.currentItem.position.copy(this.mPos98345);
+        // this.currentItem.parent = this.scrollBoxPointer;
         
+        // this.currentItem.position.copy(this.mPos98345);
+        // debugger
         this.currentItem.bbb();
       }
     }
@@ -107,7 +121,7 @@ export class MusicDrawTool extends StampTool {
     this.currentItem = null;
   }
   
-  
+  dfiuhsdfVec = new Vector3()
   
   // will need to feed this a grid somehow
   update(){
@@ -125,8 +139,27 @@ export class MusicDrawTool extends StampTool {
       
       // console.log(this.baseGrid.indexRow, this.baseGrid.indexCol);
 
+
+      
+      this.visualObject.parent = this.scrollBoxPointer;
+      
+      // this.scrollBoxPointer.worldToLocal( this.dfiuhsdfVec.copy(this.system.pointer.worldSpace.clone().add(this.system.world.position)) );
+      this.scrollBoxPointer.worldToLocal( this.dfiuhsdfVec.copy(this.system.pointer.worldSpaceSans) );
+      
+      this.baseGrid.snap3d(this.dfiuhsdfVec.x, this.dfiuhsdfVec.y,0);
+
+
+      // this.dfiuhsdfVec
+      // 
+      // this.visualObject.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
+      // this.visualObject.color.setHex(0xffffff);
+
+
+
       this.visualObject.position.set(this.baseGrid.position3DCenter.x, this.baseGrid.position3DCenter.y, 0);
       this.visualObject.color.setHex(0xffffff);
+
+
       
       // this.visualObject.position.set(this.baseGrid.position3D.x, this.baseGrid.position3D.y, 0);
       // console.log("this.baseGrid.position3DCenter", this.baseGrid.position3DCenter);
