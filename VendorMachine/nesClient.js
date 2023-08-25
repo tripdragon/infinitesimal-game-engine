@@ -5,28 +5,23 @@
 */
 
 export default function init() {
-
     /* eslint no-undef: 0 */
 
     // Utilities
 
-    const version = '2';
-    const ignore = function () { };
+    const version = "2";
+    const ignore = function () {};
 
     const stringify = function (message) {
-
         try {
             return JSON.stringify(message);
-        }
-        catch (err) {
+        } catch (err) {
             throw new NesError(err, errorTypes.USER);
         }
     };
 
     const nextTick = function (callback) {
-
         return (err) => {
-
             setTimeout(() => callback(err), 0);
         };
     };
@@ -34,17 +29,16 @@ export default function init() {
     // NesError types
 
     const errorTypes = {
-        TIMEOUT: 'timeout',
-        DISCONNECT: 'disconnect',
-        SERVER: 'server',
-        PROTOCOL: 'protocol',
-        WS: 'ws',
-        USER: 'user'
+        TIMEOUT: "timeout",
+        DISCONNECT: "disconnect",
+        SERVER: "server",
+        PROTOCOL: "protocol",
+        WS: "ws",
+        USER: "user",
     };
 
     const NesError = function (err, type) {
-
-        if (typeof err === 'string') {
+        if (typeof err === "string") {
             err = new Error(err);
         }
 
@@ -53,8 +47,7 @@ export default function init() {
 
         try {
             throw err; // ensure stack trace for IE11
-        }
-        catch (withStack) {
+        } catch (withStack) {
             return withStack;
         }
     };
@@ -62,34 +55,33 @@ export default function init() {
     // Error codes
 
     const errorCodes = {
-        1000: 'Normal closure',
-        1001: 'Going away',
-        1002: 'Protocol error',
-        1003: 'Unsupported data',
-        1004: 'Reserved',
-        1005: 'No status received',
-        1006: 'Abnormal closure',
-        1007: 'Invalid frame payload data',
-        1008: 'Policy violation',
-        1009: 'Message too big',
-        1010: 'Mandatory extension',
-        1011: 'Internal server error',
-        1015: 'TLS handshake'
+        1000: "Normal closure",
+        1001: "Going away",
+        1002: "Protocol error",
+        1003: "Unsupported data",
+        1004: "Reserved",
+        1005: "No status received",
+        1006: "Abnormal closure",
+        1007: "Invalid frame payload data",
+        1008: "Policy violation",
+        1009: "Message too big",
+        1010: "Mandatory extension",
+        1011: "Internal server error",
+        1015: "TLS handshake",
     };
 
     // Client
 
     const Client = function (url, options) {
-
         options = options || {};
 
-        this._isBrowser = typeof WebSocket !== 'undefined';
+        this._isBrowser = typeof WebSocket !== "undefined";
 
         if (!this._isBrowser) {
             options.ws = options.ws || {};
 
             if (options.ws.maxPayload === undefined) {
-                options.ws.maxPayload = 0;              // Override default 100Mb limit in ws module to avoid breaking change
+                options.ws.maxPayload = 0; // Override default 100Mb limit in ws module to avoid breaking change
             }
         }
 
@@ -97,16 +89,16 @@ export default function init() {
 
         this._url = url;
         this._settings = options;
-        this._heartbeatTimeout = false;             // Server heartbeat configuration
+        this._heartbeatTimeout = false; // Server heartbeat configuration
 
         // State
 
         this._ws = null;
         this._reconnection = null;
         this._reconnectionTimer = null;
-        this._ids = 0;                              // Id counter
-        this._requests = {};                        // id -> { resolve, reject, timeout }
-        this._subscriptions = {};                   // path -> [callbacks]
+        this._ids = 0; // Id counter
+        this._requests = {}; // id -> { resolve, reject, timeout }
+        this._subscriptions = {}; // path -> [callbacks]
         this._heartbeat = null;
         this._packets = [];
         this._disconnectListeners = null;
@@ -115,50 +107,58 @@ export default function init() {
         // Events
 
         this.onError = (err) => console.error(err); // General error handler (only when an error cannot be associated with a request)
-        this.onConnect = ignore;                    // Called whenever a connection is established
-        this.onDisconnect = ignore;                 // Called whenever a connection is lost: function(willReconnect)
-        this.onHeartbeatTimeout = ignore;           // Called when a heartbeat timeout will cause a disconnection
+        this.onConnect = ignore; // Called whenever a connection is established
+        this.onDisconnect = ignore; // Called whenever a connection is lost: function(willReconnect)
+        this.onHeartbeatTimeout = ignore; // Called when a heartbeat timeout will cause a disconnection
         this.onUpdate = ignore;
 
         // Public properties
 
-        this.id = null;                             // Assigned when hello response is received
+        this.id = null; // Assigned when hello response is received
     };
 
-    Client.WebSocket = /* $lab:coverage:off$ */ (typeof WebSocket === 'undefined' ? null : WebSocket); /* $lab:coverage:on$ */
+    Client.WebSocket =
+        /* $lab:coverage:off$ */ typeof WebSocket === "undefined"
+            ? null
+            : WebSocket; /* $lab:coverage:on$ */
 
     Client.prototype.connect = function (options) {
-
         options = options || {};
 
         if (this._reconnection) {
-            return Promise.reject(new NesError('Cannot connect while client attempts to reconnect', errorTypes.USER));
+            return Promise.reject(
+                new NesError(
+                    "Cannot connect while client attempts to reconnect",
+                    errorTypes.USER
+                )
+            );
         }
 
         if (this._ws) {
-            return Promise.reject(new NesError('Already connected', errorTypes.USER));
+            return Promise.reject(
+                new NesError("Already connected", errorTypes.USER)
+            );
         }
 
-        if (options.reconnect !== false) {                  // Defaults to true
-            this._reconnection = {                          // Options: reconnect, delay, maxDelay
+        if (options.reconnect !== false) {
+            // Defaults to true
+            this._reconnection = {
+                // Options: reconnect, delay, maxDelay
                 wait: 0,
-                delay: options.delay || 1000,               // 1 second
-                maxDelay: options.maxDelay || 5000,         // 5 seconds
-                retries: options.retries || Infinity,       // Unlimited
+                delay: options.delay || 1000, // 1 second
+                maxDelay: options.maxDelay || 5000, // 5 seconds
+                retries: options.retries || Infinity, // Unlimited
                 settings: {
                     auth: options.auth,
-                    timeout: options.timeout
-                }
+                    timeout: options.timeout,
+                },
             };
-        }
-        else {
+        } else {
             this._reconnection = null;
         }
 
         return new Promise((resolve, reject) => {
-
             this._connect(options, true, (err) => {
-
                 if (err) {
                     return reject(err);
                 }
@@ -169,30 +169,35 @@ export default function init() {
     };
 
     Client.prototype._connect = function (options, initial, next) {
-
-        const ws = this._isBrowser ? new Client.WebSocket(this._url) : new Client.WebSocket(this._url, this._settings.ws);
+        const ws = this._isBrowser
+            ? new Client.WebSocket(this._url)
+            : new Client.WebSocket(this._url, this._settings.ws);
         this._ws = ws;
 
         clearTimeout(this._reconnectionTimer);
         this._reconnectionTimer = null;
 
         const reconnect = (event) => {
-
             if (ws.onopen) {
-                finalize(new NesError('Connection terminated while waiting to connect', errorTypes.WS));
+                finalize(
+                    new NesError(
+                        "Connection terminated while waiting to connect",
+                        errorTypes.WS
+                    )
+                );
             }
 
-            const wasRequested = this._disconnectRequested;         // Get value before _cleanup()
+            const wasRequested = this._disconnectRequested; // Get value before _cleanup()
 
             this._cleanup();
 
             const log = {
                 code: event.code,
-                explanation: errorCodes[event.code] || 'Unknown',
+                explanation: errorCodes[event.code] || "Unknown",
                 reason: event.reason,
                 wasClean: event.wasClean,
                 willReconnect: this._willReconnect(),
-                wasRequested
+                wasRequested,
             };
 
             this.onDisconnect(log.willReconnect, log);
@@ -200,8 +205,8 @@ export default function init() {
         };
 
         const finalize = (err) => {
-
-            if (next) {                     // Call only once when connect() is called
+            if (next) {
+                // Call only once when connect() is called
                 const nextHolder = next;
                 next = null;
                 return nextHolder(err);
@@ -211,41 +216,38 @@ export default function init() {
         };
 
         const timeoutHandler = () => {
-
             this._cleanup();
 
-            finalize(new NesError('Connection timed out', errorTypes.TIMEOUT));
+            finalize(new NesError("Connection timed out", errorTypes.TIMEOUT));
 
             if (initial) {
                 return this._reconnect();
             }
         };
 
-        const timeout = (options.timeout ? setTimeout(timeoutHandler, options.timeout) : null);
+        const timeout = options.timeout
+            ? setTimeout(timeoutHandler, options.timeout)
+            : null;
 
         ws.onopen = () => {
-
             clearTimeout(timeout);
             ws.onopen = null;
 
             this._hello(options.auth)
                 .then(() => {
-
                     this.onConnect();
                     finalize();
                 })
                 .catch((err) => {
-
                     if (err.path) {
                         delete this._subscriptions[err.path];
                     }
 
-                    this._disconnect(() => nextTick(finalize)(err), true);         // Stop reconnection when the hello message returns error
+                    this._disconnect(() => nextTick(finalize)(err), true); // Stop reconnection when the hello message returns error
                 });
         };
 
         ws.onerror = (event) => {
-
             clearTimeout(timeout);
 
             if (this._willReconnect()) {
@@ -253,20 +255,18 @@ export default function init() {
             }
 
             this._cleanup();
-            const error = new NesError('Socket error', errorTypes.WS);
+            const error = new NesError("Socket error", errorTypes.WS);
             return finalize(error);
         };
 
         ws.onclose = reconnect;
 
         ws.onmessage = (message) => {
-
             return this._onMessage(message);
         };
     };
 
     Client.prototype.overrideReconnectionAuth = function (auth) {
-
         if (!this._reconnection) {
             return false;
         }
@@ -276,28 +276,25 @@ export default function init() {
     };
 
     Client.prototype.reauthenticate = function (auth) {
-
         this.overrideReconnectionAuth(auth);
 
         const request = {
-            type: 'reauth',
-            auth
+            type: "reauth",
+            auth,
         };
 
         return this._send(request, true);
     };
 
     Client.prototype.disconnect = function () {
-
         return new Promise((resolve) => this._disconnect(resolve, false));
     };
 
     Client.prototype._disconnect = function (next, isInternal) {
-
         this._reconnection = null;
         clearTimeout(this._reconnectionTimer);
         this._reconnectionTimer = null;
-        const requested = this._disconnectRequested || !isInternal;       // Retain true
+        const requested = this._disconnectRequested || !isInternal; // Retain true
 
         if (this._disconnectListeners) {
             this._disconnectRequested = requested;
@@ -305,9 +302,11 @@ export default function init() {
             return;
         }
 
-        if (!this._ws ||
-            (this._ws.readyState !== Client.WebSocket.OPEN && this._ws.readyState !== Client.WebSocket.CONNECTING)) {
-
+        if (
+            !this._ws ||
+            (this._ws.readyState !== Client.WebSocket.OPEN &&
+                this._ws.readyState !== Client.WebSocket.CONNECTING)
+        ) {
             return next();
         }
 
@@ -317,14 +316,14 @@ export default function init() {
     };
 
     Client.prototype._cleanup = function () {
-
         if (this._ws) {
             const ws = this._ws;
             this._ws = null;
 
-            if (ws.readyState !== Client.WebSocket.CLOSED &&
-                ws.readyState !== Client.WebSocket.CLOSING) {
-
+            if (
+                ws.readyState !== Client.WebSocket.CLOSED &&
+                ws.readyState !== Client.WebSocket.CLOSING
+            ) {
                 ws.close();
             }
 
@@ -342,7 +341,10 @@ export default function init() {
 
         // Flush pending requests
 
-        const error = new NesError('Request failed - server disconnected', errorTypes.DISCONNECT);
+        const error = new NesError(
+            "Request failed - server disconnected",
+            errorTypes.DISCONNECT
+        );
 
         const requests = this._requests;
         this._requests = {};
@@ -363,7 +365,6 @@ export default function init() {
     };
 
     Client.prototype._reconnect = function () {
-
         // Reconnect
 
         const reconnection = this._reconnection;
@@ -376,7 +377,7 @@ export default function init() {
         }
 
         if (reconnection.retries < 1) {
-            return this._disconnect(ignore, true);      // Clear _reconnection state
+            return this._disconnect(ignore, true); // Clear _reconnection state
         }
 
         --reconnection.retries;
@@ -385,9 +386,7 @@ export default function init() {
         const timeout = Math.min(reconnection.wait, reconnection.maxDelay);
 
         this._reconnectionTimer = setTimeout(() => {
-
             this._connect(reconnection.settings, false, (err) => {
-
                 if (err) {
                     this.onError(err);
                     return this._reconnect();
@@ -397,52 +396,52 @@ export default function init() {
     };
 
     Client.prototype.request = function (options) {
-
-        if (typeof options === 'string') {
+        if (typeof options === "string") {
             options = {
-                method: 'GET',
-                path: options
+                method: "GET",
+                path: options,
             };
         }
 
         const request = {
-            type: 'request',
-            method: options.method || 'GET',
+            type: "request",
+            method: options.method || "GET",
             path: options.path,
             headers: options.headers,
-            payload: options.payload
+            payload: options.payload,
         };
 
         return this._send(request, true);
     };
 
     Client.prototype.message = function (message) {
-
         const request = {
-            type: 'message',
-            message
+            type: "message",
+            message,
         };
 
         return this._send(request, true);
     };
 
     Client.prototype._isReady = function () {
-
         return this._ws && this._ws.readyState === Client.WebSocket.OPEN;
     };
 
     Client.prototype._send = function (request, track) {
-
         if (!this._isReady()) {
-            return Promise.reject(new NesError('Failed to send message - server disconnected', errorTypes.DISCONNECT));
+            return Promise.reject(
+                new NesError(
+                    "Failed to send message - server disconnected",
+                    errorTypes.DISCONNECT
+                )
+            );
         }
 
         request.id = ++this._ids;
 
         try {
             var encoded = stringify(request);
-        }
-        catch (err) {
+        } catch (err) {
             return Promise.reject(err);
         }
 
@@ -452,8 +451,7 @@ export default function init() {
             try {
                 this._ws.send(encoded);
                 return Promise.resolve();
-            }
-            catch (err) {
+            } catch (err) {
                 return Promise.reject(new NesError(err, errorTypes.WS));
             }
         }
@@ -463,20 +461,20 @@ export default function init() {
         const record = {
             resolve: null,
             reject: null,
-            timeout: null
+            timeout: null,
         };
 
         const promise = new Promise((resolve, reject) => {
-
             record.resolve = resolve;
             record.reject = reject;
         });
 
         if (this._settings.timeout) {
             record.timeout = setTimeout(() => {
-
                 record.timeout = null;
-                return record.reject(new NesError('Request timed out', errorTypes.TIMEOUT));
+                return record.reject(
+                    new NesError("Request timed out", errorTypes.TIMEOUT)
+                );
             }, this._settings.timeout);
         }
 
@@ -484,8 +482,7 @@ export default function init() {
 
         try {
             this._ws.send(encoded);
-        }
-        catch (err) {
+        } catch (err) {
             clearTimeout(this._requests[request.id].timeout);
             delete this._requests[request.id];
             return Promise.reject(new NesError(err, errorTypes.WS));
@@ -495,10 +492,9 @@ export default function init() {
     };
 
     Client.prototype._hello = function (auth) {
-
         const request = {
-            type: 'hello',
-            version
+            type: "hello",
+            version,
         };
 
         if (auth) {
@@ -514,21 +510,18 @@ export default function init() {
     };
 
     Client.prototype.subscriptions = function () {
-
         return Object.keys(this._subscriptions);
     };
 
     Client.prototype.subscribe = function (path, handler) {
-
-        if (!path ||
-            path[0] !== '/') {
-
-            return Promise.reject(new NesError('Invalid path', errorTypes.USER));
+        if (!path || path[0] !== "/") {
+            return Promise.reject(
+                new NesError("Invalid path", errorTypes.USER)
+            );
         }
 
         const subs = this._subscriptions[path];
         if (subs) {
-
             // Already subscribed
 
             if (subs.indexOf(handler) === -1) {
@@ -541,20 +534,18 @@ export default function init() {
         this._subscriptions[path] = [handler];
 
         if (!this._isReady()) {
-
             // Queued subscription
 
             return Promise.resolve();
         }
 
         const request = {
-            type: 'sub',
-            path
+            type: "sub",
+            path,
         };
 
         const promise = this._send(request, true);
         promise.catch((ignoreErr) => {
-
             delete this._subscriptions[path];
         });
 
@@ -562,11 +553,10 @@ export default function init() {
     };
 
     Client.prototype.unsubscribe = function (path, handler) {
-
-        if (!path ||
-            path[0] !== '/') {
-
-            return Promise.reject(new NesError('Invalid path', errorTypes.USER));
+        if (!path || path[0] !== "/") {
+            return Promise.reject(
+                new NesError("Invalid path", errorTypes.USER)
+            );
         }
 
         const subs = this._subscriptions[path];
@@ -578,8 +568,7 @@ export default function init() {
         if (!handler) {
             delete this._subscriptions[path];
             sync = true;
-        }
-        else {
+        } else {
             const pos = subs.indexOf(handler);
             if (pos === -1) {
                 return Promise.resolve();
@@ -592,57 +581,59 @@ export default function init() {
             }
         }
 
-        if (!sync ||
-            !this._isReady()) {
-
+        if (!sync || !this._isReady()) {
             return Promise.resolve();
         }
 
         const request = {
-            type: 'unsub',
-            path
+            type: "unsub",
+            path,
         };
 
         const promise = this._send(request, true);
-        promise.catch(ignore);                          // Ignoring errors as the subscription handlers are already removed
+        promise.catch(ignore); // Ignoring errors as the subscription handlers are already removed
         return promise;
     };
 
     Client.prototype._onMessage = function (message) {
-
         this._beat();
 
         let data = message.data;
         const prefix = data[0];
-        if (prefix !== '{') {
+        if (prefix !== "{") {
             this._packets.push(data.slice(1));
-            if (prefix !== '!') {
+            if (prefix !== "!") {
                 return;
             }
 
-            data = this._packets.join('');
+            data = this._packets.join("");
             this._packets = [];
         }
 
         if (this._packets.length) {
             this._packets = [];
-            this.onError(new NesError('Received an incomplete message', errorTypes.PROTOCOL));
+            this.onError(
+                new NesError(
+                    "Received an incomplete message",
+                    errorTypes.PROTOCOL
+                )
+            );
         }
 
         try {
             var update = JSON.parse(data);
-        }
-        catch (err) {
+        } catch (err) {
             return this.onError(new NesError(err, errorTypes.PROTOCOL));
         }
 
         // Recreate error
 
         let error = null;
-        if (update.statusCode &&
-            update.statusCode >= 400) {
-
-            error = new NesError(update.payload.message || update.payload.error || 'Error', errorTypes.SERVER);
+        if (update.statusCode && update.statusCode >= 400) {
+            error = new NesError(
+                update.payload.message || update.payload.error || "Error",
+                errorTypes.SERVER
+            );
             error.statusCode = update.statusCode;
             error.data = update.payload;
             error.headers = update.headers;
@@ -651,31 +642,27 @@ export default function init() {
 
         // Ping
 
-        if (update.type === 'ping') {
-            return this._send({ type: 'ping' }, false).catch(ignore);         // Ignore errors
+        if (update.type === "ping") {
+            return this._send({ type: "ping" }, false).catch(ignore); // Ignore errors
         }
 
         // Broadcast and update
 
-        if (update.type === 'update') {
+        if (update.type === "update") {
             return this.onUpdate(update.message);
         }
 
         // Publish or Revoke
 
-        if (update.type === 'pub' ||
-            update.type === 'revoke') {
-
+        if (update.type === "pub" || update.type === "revoke") {
             const handlers = this._subscriptions[update.path];
-            if (update.type === 'revoke') {
+            if (update.type === "revoke") {
                 delete this._subscriptions[update.path];
             }
 
-            if (handlers &&
-                update.message !== undefined) {
-
+            if (handlers && update.message !== undefined) {
                 const flags = {};
-                if (update.type === 'revoke') {
+                if (update.type === "revoke") {
                     flags.revoked = true;
                 }
 
@@ -691,14 +678,18 @@ export default function init() {
 
         const request = this._requests[update.id];
         if (!request) {
-            return this.onError(new NesError('Received response for unknown request', errorTypes.PROTOCOL));
+            return this.onError(
+                new NesError(
+                    "Received response for unknown request",
+                    errorTypes.PROTOCOL
+                )
+            );
         }
 
         clearTimeout(request.timeout);
         delete this._requests[update.id];
 
         const next = (err, args) => {
-
             if (err) {
                 return request.reject(err);
             }
@@ -708,46 +699,53 @@ export default function init() {
 
         // Response
 
-        if (update.type === 'request') {
-            return next(error, { payload: update.payload, statusCode: update.statusCode, headers: update.headers });
+        if (update.type === "request") {
+            return next(error, {
+                payload: update.payload,
+                statusCode: update.statusCode,
+                headers: update.headers,
+            });
         }
 
         // Custom message
 
-        if (update.type === 'message') {
+        if (update.type === "message") {
             return next(error, { payload: update.message });
         }
 
         // Authentication
 
-        if (update.type === 'hello') {
+        if (update.type === "hello") {
             this.id = update.socket;
             if (update.heartbeat) {
-                this._heartbeatTimeout = update.heartbeat.interval + update.heartbeat.timeout;
-                this._beat();           // Call again once timeout is set
+                this._heartbeatTimeout =
+                    update.heartbeat.interval + update.heartbeat.timeout;
+                this._beat(); // Call again once timeout is set
             }
 
             return next(error);
         }
 
-        if (update.type === 'reauth') {
+        if (update.type === "reauth") {
             return next(error, true);
         }
 
         // Subscriptions
 
-        if (update.type === 'sub' ||
-            update.type === 'unsub') {
-
+        if (update.type === "sub" || update.type === "unsub") {
             return next(error);
         }
 
-        next(new NesError('Received invalid response', errorTypes.PROTOCOL));
-        return this.onError(new NesError('Received unknown response type: ' + update.type, errorTypes.PROTOCOL));
+        next(new NesError("Received invalid response", errorTypes.PROTOCOL));
+        return this.onError(
+            new NesError(
+                "Received unknown response type: " + update.type,
+                errorTypes.PROTOCOL
+            )
+        );
     };
 
     Client.prototype._beat = function () {
-
         if (!this._heartbeatTimeout) {
             return;
         }
@@ -755,15 +753,18 @@ export default function init() {
         clearTimeout(this._heartbeat);
 
         this._heartbeat = setTimeout(() => {
-
-            this.onError(new NesError('Disconnecting due to heartbeat timeout', errorTypes.TIMEOUT));
+            this.onError(
+                new NesError(
+                    "Disconnecting due to heartbeat timeout",
+                    errorTypes.TIMEOUT
+                )
+            );
             this.onHeartbeatTimeout(this._willReconnect());
             this._ws.close();
         }, this._heartbeatTimeout);
     };
 
     Client.prototype._willReconnect = function () {
-
         return !!(this._reconnection && this._reconnection.retries >= 1);
     };
 

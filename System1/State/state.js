@@ -4,6 +4,7 @@ console.log("TACOOOOOOOOOOOOOOOOOOOOS!!!");
 const DEBUG = true;
 
 import NetworkManager from "./network-manager";
+import { initDefaultNetworkedObjects } from "./default-networked-objects-manager";
 import merge from "../../VendorMachine/deepmerge.js";
 import uuid from "../../VendorMachine/uuid.js";
 import Throttle from "../../VendorMachine/throttle.js";
@@ -81,13 +82,13 @@ export const sendNetworkedEvent = ({ to, stateEvent }) => {
 };
 
 export const initState = ({ shouldConnectToNetwork = false, wsUrl } = {}) => {
-    internals.myTacoEl = document.getElementById(MY_TACO_ID);
-    internals.myScoreEl = document.getElementById(MY_SCORE_ID);
+    initDefaultNetworkedObjects();
 
     console.log("init stateee, shouldConnectToNetwork", shouldConnectToNetwork);
     const storageState = JSON.parse(
         localStorage.getItem(LOCALSTORAGE_KEY) || "{}"
     );
+
     // Only persist _sessionId from localStorage if we shouldConnectToNetwork
     const previousSessionId = [].concat(storageState._previousSessionIds).pop();
     const sessionId = shouldConnectToNetwork
