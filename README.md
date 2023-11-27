@@ -1,6 +1,6 @@
 
 # infinitesimal-game-engine
-mini
+mini kinda game engine
 
 web
 https://tripdragon.github.io/infinitesimal-game-engine/
