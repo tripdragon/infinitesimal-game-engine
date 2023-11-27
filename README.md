@@ -1,7 +1,6 @@
 
 # infinitesimal-game-engine
-chibi quarky
-chiuarky
+mini
 
 web
 https://tripdragon.github.io/infinitesimal-game-engine/
