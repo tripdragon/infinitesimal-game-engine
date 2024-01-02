@@ -162,6 +162,19 @@
       import {lerp} from '../Modules/mathness.js';
       var resolution = Math.pow(2,10); // 512
       var resolution = 512; // 512
+      // var resolution = 2**7; // 128
+      {
+        const urlParams = new URLSearchParams(window.location.search);
+        const res = urlParams.get('res');
+        let pow = urlParams.get('pow');
+        if (res) {
+          resolution = +res;
+        }
+        else if (pow) {
+          if(+pow > 12) pow = 12;
+          resolution = Math.pow(2,+pow);
+        }
+      }
       
       const canvas = document.getElementById("canvassss");
       canvas.width = resolution;
